@@ -1,5 +1,4 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import Image from "next/image";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import ChatCard from "@/components/Chat/ChatCard";
 import ChatCard2 from "@/components/Chat/ChatCard2";
