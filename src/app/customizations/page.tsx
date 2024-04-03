@@ -31,6 +31,11 @@ const TablesPage = () => {
   const handleColorSelect = (color: string) => {
     console.log('Selected color:', color);
   };
+  const handleSelectionChange = (key: Key) => {
+  // Assuming `key` can be directly used as a string. If not, you might need to convert or handle it differently.
+  setSelected(String(key)); // Converts `key` to a string if it's not already one.
+};
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Customizations" />
@@ -43,7 +48,7 @@ const TablesPage = () => {
                 size="md"
                 aria-label="Tabs form"
                 selectedKey={selected}
-                onSelectionChange={setSelected}
+                onSelectionChange={handleSelectionChange}
               >
                 <Tab key="appearance" title="Appearance">
                   <form className="flex flex-col gap-4">
