@@ -1,6 +1,7 @@
 import { ApexOptions } from "apexcharts";
 import React, { useState } from "react";
 import ReactApexChart from "react-apexcharts";
+import dynamic from 'next/dynamic';
 
 const options: ApexOptions = {
   legend: {
@@ -48,10 +49,6 @@ const options: ApexOptions = {
     width: [2, 2],
     curve: "straight",
   },
-  // labels: {
-  //   show: false,
-  //   position: "top",
-  // },
   grid: {
     xaxis: {
       lines: {
@@ -128,12 +125,7 @@ const ChartOne: React.FC = () => {
       {
         name: "Product One",
         data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45],
-      },
-
-      // {
-      //   name: "Product Two",
-      //   data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51],
-      // },
+      }
     ],
   });
 

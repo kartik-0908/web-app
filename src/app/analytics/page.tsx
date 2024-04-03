@@ -1,15 +1,15 @@
 "use client"
+import dynamic from 'next/dynamic';
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CardDataStats from "@/components/CardDataStats";
 import ChartOne from "@/components/Charts/ChartOne";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DatePickerOne from "@/components/FormElements/DatePicker/DatePickerOne";
 
-// export const metadata: Metadata = {
-//   title: "Next.js Calender | TailAdmin - Next.js Dashboard Template",
-//   description:
-//     "This is Next.js Calender page for TailAdmin  Tailwind CSS Admin Dashboard Template",
-// };
+const ChartOneDynamic = dynamic(() => import('@/components/Charts/ChartOne'), {
+  ssr: false,
+});
+
 
 const Analytics = () => {
   return (
@@ -118,7 +118,7 @@ const Analytics = () => {
             />
           </svg>
         </CardDataStats>
-        <ChartOne />
+        <ChartOneDynamic />
       </div>
     </DefaultLayout>
   );
