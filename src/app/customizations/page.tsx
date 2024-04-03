@@ -31,10 +31,10 @@ const TablesPage = () => {
   const handleColorSelect = (color: string) => {
     console.log('Selected color:', color);
   };
-  const handleSelectionChange = (key: Key) => {
-  // Assuming `key` can be directly used as a string. If not, you might need to convert or handle it differently.
-  setSelected(String(key)); // Converts `key` to a string if it's not already one.
-};
+  const handleSelectionChange = (key: React.Key) => {
+    // Assuming `key` can be directly used as a string. If not, you might need to convert or handle it differently.
+    setSelected(String(key)); // Converts `key` to a string if it's not already one.
+  };
 
   return (
     <DefaultLayout>
@@ -65,7 +65,7 @@ const TablesPage = () => {
                       {variants.map((variant) => (
                         <div key={variant} className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
                           <Select
-                            variant={variant}
+                            variant="flat"
                             label="Font Family"
                             className="max-w-xs"
                           >
@@ -76,7 +76,7 @@ const TablesPage = () => {
                             ))}
                           </Select>
                           <Select
-                            variant={variant}
+                            variant="flat"
                             label="Font Color"
                             className="max-w-xs"
                           >
