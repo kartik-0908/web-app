@@ -7,7 +7,6 @@ import { RadioGroup, Radio } from "@nextui-org/react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import ColorPicker from "./ColorPicker";
 import { Textarea } from "@nextui-org/react";
-import Image from "next/image";
 import { SearchIcon } from "./SearchIcon";
 
 const animals = [
@@ -148,7 +147,7 @@ const TablesPage = () => {
                     <Input label="Bot name" placeholder="Name of your Bot" type="password" />
                     <Textarea
                       label="Greeting Message"
-                      placeholder="Hello there ! I'm ...your name"
+                      placeholder="Hi There, How May I help you?"
                     />
                     <div className="flex justify-end">
                       <Button fullWidth color="primary">
@@ -235,8 +234,8 @@ const TablesPage = () => {
         </div>
         <div className="flex flex-col  col-span-5 max-w-[400px]">
           <div className="max-w-full h-[500px] bg-white rounded-2xl">
-            <div className="h-[75px] grid grid-cols-8 bg-black items-center rounded-t-2xl" 
-            style={{ backgroundColor: selectedColor }}>
+            <div className="h-[75px] grid grid-cols-8 bg-black items-center rounded-t-2xl"
+              style={{ backgroundColor: selectedColor }}>
               <div className="col-span-2 rounded-full">
                 <svg width="84" height="50" viewBox="0 0 256 256" xmlSpace="preserve">
                   <g
@@ -297,7 +296,7 @@ const TablesPage = () => {
                   <Card className="max-w-[230px]">
                     <CardBody>
                       <p>{message}</p>
-                    </CardBody> 
+                    </CardBody>
                   </Card>
                 </div>
               ))}

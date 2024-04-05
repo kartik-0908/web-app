@@ -1,7 +1,6 @@
 import { ApexOptions } from "apexcharts";
 import React, { useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import dynamic from 'next/dynamic';
 
 const options: ApexOptions = {
   legend: {
@@ -25,6 +24,15 @@ const options: ApexOptions = {
 
     toolbar: {
       show: true,
+      tools: {
+        download: '<img src="/images/download.png" width="20">',
+        selection: false,
+        zoom: false,
+        zoomin: false,
+        zoomout: false,
+        reset: false,
+        pan: false
+      }
     },
   },
   responsive: [
@@ -145,13 +153,13 @@ const ChartOne: React.FC = () => {
               <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-primary"></span>
             </span> */}
             <div>
-          <h4 className="text-xl font-semibold text-black dark:text-white">
-            Peak Interaction time
-          </h4>
-          <h1 className="text-3xl font-semibold text-black dark:text-white">
-            4 
-          </h1>
-        </div>
+              <h4 className="text-xl font-semibold text-black dark:text-white">
+                Peak Interaction Time
+              </h4>
+              <h1 className="text-3xl font-semibold text-black dark:text-white">
+                4
+              </h1>
+            </div>
           </div>
           {/* <div className="flex min-w-47.5">
             <span className="mr-2 mt-1 flex h-4 w-full max-w-4 items-center justify-center rounded-full border border-secondary">

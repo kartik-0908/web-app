@@ -11,6 +11,15 @@ const options: ApexOptions = {
     stacked: false,
     toolbar: {
       show: true,
+      tools: {
+        download: '<img src="/images/download.png" width="20">',
+        selection: false,
+        zoom: false,
+        zoomin: false,
+        zoomout: false,
+        reset: false,
+        pan: false
+      }
     },
     zoom: {
       enabled: false,
