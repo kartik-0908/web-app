@@ -1,6 +1,6 @@
 "use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import React from "react";
+import React, { useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 import { Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import { RadioGroup, Radio } from "@nextui-org/react";
@@ -26,7 +26,14 @@ const color = [
 
 const variants = ["flat"];
 
+const demo_mssgs = [
+  "Hi There, How May I help you?",
+  "Can you give me the brief about the latest discounts on the A387 Headset"
+]
+
 const TablesPage = () => {
+  const [newMessage, setNewMessage] = useState('');
+  const [messages, setMessages] = useState<string[]>(demo_mssgs);
   const [selected, setSelected] = React.useState("appearance");
   const colors = ['#4F46E5', '#EC4899', '#22C55E', '#F59E0B', '#EF4444', '#6366F1'];
 
@@ -36,6 +43,17 @@ const TablesPage = () => {
   const handleSelectionChange = (key: React.Key) => {
     // Assuming `key` can be directly used as a string. If not, you might need to convert or handle it differently.
     setSelected(String(key)); // Converts `key` to a string if it's not already one.
+  };
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewMessage(e.target.value);
+  };
+
+  const handleSendMessage = () => {
+    console.log("inseide sendmesage")
+    if (newMessage.trim() !== '') {
+      setMessages([...messages, newMessage]);
+      setNewMessage('');
+    }
   };
 
   return (
@@ -269,58 +287,37 @@ const TablesPage = () => {
               </div>
             </div>
             <div className="h-[400px] flex flex-col bg-white p-2 overflow-auto scrollbar-custom">
-              <div className="pt-2 flex justify-start">
-                <Card className="max-w-[230px]">
-                  <CardBody>
-                    <p>Make beautiful websites regardless of your design experience.</p>
-                  </CardBody>
-                </Card>
-              </div>
-              <div className="pt-2 flex justify-end ">
-                <Card className="max-w-[230px]">
-                  <CardBody>
-                    <p>Make beautiful websites regardless of your design experience.</p>
-                  </CardBody>
-                </Card>
-              </div>
-              <div className="pt-2 flex justify-start">
-                <Card className="max-w-[230px]">
-                  <CardBody>
-                    <p>Make beautiful websites regardless of your design experience.</p>
-                  </CardBody>
-                </Card>
-              </div>
-              <div className="pt-2 flex justify-end ">
-                <Card className="max-w-[230px]">
-                  <CardBody>
-                    <p>Make beautiful websites regardless of your design experience.</p>
-                  </CardBody>
-                </Card>
-              </div> <div className="pt-2 flex justify-start">
-                <Card className="max-w-[230px]">
-                  <CardBody>
-                    <p>Make beautiful websites regardless of your design experience.</p>
-                  </CardBody>
-                </Card>
-              </div>
-              <div className="pt-2 flex justify-end ">
-                <Card className="max-w-[230px]">
-                  <CardBody>
-                    <p>Make beautiful websites regardless of your design experience.</p>
-                  </CardBody>
-                </Card>
-              </div>
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`pt-2 flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'
+                    }`}
+                >
+                  <Card className="max-w-[230px]">
+                    <CardBody>
+                      <p>{message}</p>
+                    </CardBody>
+                  </Card>
+                </div>
+              ))}
             </div>
+            <div className="">
+              <Input
+                type="text"
+                placeholder="Type Here ...."
+                labelPlacement="outside"
+                endContent={
+                  <SearchIcon
+                    onClick={handleSendMessage}
+                  />
+                }
+                className="bg-transparent min-h-[50px]"
+                value={newMessage}
+                onChange={handleMessageChange}
+              />
 
-            <Input
-              type="email"
-              placeholder="you@example.com"
-              labelPlacement="outside"
-              endContent={
-                <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
-              }
-              className=""
-            />
+
+            </div>
 
           </div>
         </div>
