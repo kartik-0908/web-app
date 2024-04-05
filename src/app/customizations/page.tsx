@@ -7,6 +7,8 @@ import { RadioGroup, Radio } from "@nextui-org/react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import ColorPicker from "./ColorPicker";
 import { Textarea } from "@nextui-org/react";
+import Image from "next/image";
+import { SearchIcon } from "./SearchIcon";
 
 const animals = [
   { label: "Cat", value: "cat", description: "The second most popular pet in the world" },
@@ -39,7 +41,7 @@ const TablesPage = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Customizations" />
-      <div className="grid grid-cols-12">
+      <div className="grid grid-cols-12 gap-4">
         <div className="flex flex-col w-full col-span-7">
           <Card className="max-w-full ">
             <CardBody className="overflow-hidden">
@@ -213,13 +215,107 @@ const TablesPage = () => {
             </CardBody>
           </Card>
         </div>
+        <div className="flex flex-col  col-span-5">
+          <div className="max-w-full h-[500px] bg-white ">
+            <div className="overflow-hidden">
+              <div className="h-[75px] grid grid-cols-8 bg-black items-center">
+                <div className="bg-black col-span-2">
+                  <Image
+                    width={100}
+                    height={100}
+                    src={"/images/chat widget/chat_widget_header.jpg"}
+                    alt="Logo"
+                  />
+
+                </div>
+                <div className="bg-transaparent col-span-5">
+                  <h1 className="text-white text-3xl font-bold p-4 ">
+                    Anya
+                  </h1>
+                </div>
+                <div className="bg-black col-span-1">
+
+                 Cross
+                </div>
+              </div>
+              <div className="h-[400px] flex flex-col bg-white p-2 overflow-auto scrollbar-custom">
+                <div className="pt-2 flex justify-start">
+                  <Card className="max-w-[230px]">
+                    <CardBody>
+                      <p>Make beautiful websites regardless of your design experience.</p>
+                    </CardBody>
+                  </Card>
+                </div>
+                <div className="pt-2 flex justify-end ">
+                  <Card className="max-w-[230px]">
+                    <CardBody>
+                      <p>Make beautiful websites regardless of your design experience.</p>
+                    </CardBody>
+                  </Card>
+                </div>
+                <div className="pt-2 flex justify-start">
+                  <Card className="max-w-[230px]">
+                    <CardBody>
+                      <p>Make beautiful websites regardless of your design experience.</p>
+                    </CardBody>
+                  </Card>
+                </div>
+                <div className="pt-2 flex justify-end ">
+                  <Card className="max-w-[230px]">
+                    <CardBody>
+                      <p>Make beautiful websites regardless of your design experience.</p>
+                    </CardBody>
+                  </Card>
+                </div> <div className="pt-2 flex justify-start">
+                  <Card className="max-w-[230px]">
+                    <CardBody>
+                      <p>Make beautiful websites regardless of your design experience.</p>
+                    </CardBody>
+                  </Card>
+                </div>
+                <div className="pt-2 flex justify-end ">
+                  <Card className="max-w-[230px]">
+                    <CardBody>
+                      <p>Make beautiful websites regardless of your design experience.</p>
+                    </CardBody>
+                  </Card>
+                </div>
+              </div>
+
+              <Input
+                type="email"
+                placeholder="you@example.com"
+                labelPlacement="outside"
+                endContent={
+                  <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
+                }
+                className=""
+              />
+
+            </div>
+          </div>
+        </div>
 
       </div>
-
-
-
-
+      <style jsx>{`
+        .scrollbar-custom {
+          scrollbar-width: thin;
+          scrollbar-color: #4B5563 #F3F4F6;
+        }
+        .scrollbar-custom::-webkit-scrollbar {
+          width: 12px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-track {
+          background: #F3F4F6;
+        }
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+          background-color: #4B5563;
+          border-radius: 9999px;
+          border: 3px solid #F3F4F6;
+        }
+      `}</style>
     </DefaultLayout>
+
   );
 };
 
