@@ -132,7 +132,7 @@ const DropdownUser = () => {
               fill=""
             />
           </svg>
-          Log Out
+          <a href="/api/auth/logout">LOGG OUT </a>
         </button>
       </div>
       {/* <!-- Dropdown End --> */}
