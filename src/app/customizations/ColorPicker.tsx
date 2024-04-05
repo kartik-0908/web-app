@@ -13,11 +13,12 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, onSelect }) => {
 
   const isColorInPredefined = (color: string) => colors.includes(color);
 
-  const handleColorSelect = (color: string) => {
+  const handleColorSelect = (event: React.MouseEvent<HTMLButtonElement>, color: string) => {
+    event.preventDefault();
     setCurrentColor(color);
-      setSelectedColor(color);
-    setDisplayColorPicker(false); // Close the picker when a predefined color is selected
-    onSelect(color); // Apply the selected color
+    setSelectedColor(color);
+    setDisplayColorPicker(false);
+    onSelect(color);
   };
 
   const handleApplyColor = () => {
@@ -30,7 +31,8 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, onSelect }) => {
     setCurrentColor(color.hex);
   };
 
-  const toggleColorPicker = () => {
+  const toggleColorPicker = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     setDisplayColorPicker(!displayColorPicker);
   };
 
@@ -44,14 +46,14 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, onSelect }) => {
           key={`${color}-${index}`}
           className={`h-8 w-8 rounded-full ${selectedColor === color ? 'ring-2 ring-offset-2 ring-blue-500' : ''}`}
           style={{ backgroundColor: color }}
-          onClick={() => handleColorSelect(color)}
+          onClick={(event) => handleColorSelect(event, color)}
         />
       ))}
-      <button onClick={toggleColorPicker} className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-300 text-lg">
+      <button onClick={(event) => toggleColorPicker(event)} className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-300 text-lg">
         ...
       </button>
       {displayColorPicker && (
-        <div className="fixed inset-0 z-10 flex items-center justify-center">
+        <div className="fixed inset-0 z-999 flex items-center justify-center">
           <div className="bg-white p-5 shadow-lg rounded-lg">
             <SketchPicker color={currentColor} onChangeComplete={handleChangeComplete} />
             <button

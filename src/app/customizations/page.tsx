@@ -36,7 +36,7 @@ const TablesPage = () => {
   const [messages, setMessages] = useState<string[]>(demo_mssgs);
   const [selected, setSelected] = React.useState("appearance");
   const colors = ['#4F46E5', '#EC4899', '#22C55E', '#F59E0B', '#EF4444', '#6366F1'];
-
+  const [selectedColor, setSelectedColor] = useState<string>('#4F6E5')
   const handleColorSelect = (color: string) => {
     console.log('Selected color:', color);
   };
@@ -76,7 +76,7 @@ const TablesPage = () => {
                       Choose Color
                     </div>
                     <div className="pl-4" >
-                      <ColorPicker colors={colors} onSelect={handleColorSelect} />
+                      <ColorPicker colors={colors} onSelect={setSelectedColor} />
                     </div>
                     <div className="w-full flex flex-col gap-4">
                       <div className="pt-4" >
@@ -235,8 +235,9 @@ const TablesPage = () => {
         </div>
         <div className="flex flex-col  col-span-5 max-w-[400px]">
           <div className="max-w-full h-[500px] bg-white rounded-2xl">
-            <div className="h-[75px] grid grid-cols-8 bg-black items-center rounded-t-2xl">
-              <div className="bg-black col-span-2 rounded-full">
+            <div className="h-[75px] grid grid-cols-8 bg-black items-center rounded-t-2xl" 
+            style={{ backgroundColor: selectedColor }}>
+              <div className="col-span-2 rounded-full">
                 <svg width="84" height="50" viewBox="0 0 256 256" xmlSpace="preserve">
                   <g
                     style={{
@@ -276,7 +277,7 @@ const TablesPage = () => {
                   Anya
                 </h1>
               </div>
-              <div className="bg-black col-span-1">
+              <div className="col-span-1">
 
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                   <path fillRule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
@@ -286,7 +287,7 @@ const TablesPage = () => {
 
               </div>
             </div>
-            <div className="h-[400px] flex flex-col bg-white p-2 overflow-auto scrollbar-custom">
+            <div className="h-[400px] flex flex-col bg-white p-3 overflow-auto scrollbar-custom">
               {messages.map((message, index) => (
                 <div
                   key={index}
@@ -296,7 +297,7 @@ const TablesPage = () => {
                   <Card className="max-w-[230px]">
                     <CardBody>
                       <p>{message}</p>
-                    </CardBody>
+                    </CardBody> 
                   </Card>
                 </div>
               ))}
