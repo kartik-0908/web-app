@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { Card, CardHeader, CardBody, Image, CardFooter } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
+import Signinbutton from "@/components/Welcome/signinbutton";
 
 export const metadata: Metadata = {
   title:
@@ -33,7 +34,7 @@ export default function Home() {
           <div className="w-[400px]  rounded-lg border border-stroke bg-white  dark:border-strokedark dark:bg-boxdark">
             <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
               <h3 className="font-medium text-black dark:text-white">
-                Sign In 
+                Sign In
               </h3>
             </div>
             <form action="#">
@@ -68,10 +69,9 @@ export default function Home() {
                     Forget password?
                   </Link>
                 </div>
+                <Signinbutton/>
 
-                <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                  Sign In
-                </button>
+                
               </div>
             </form>
           </div>
