@@ -301,20 +301,14 @@ const TablesPage = () => {
                 </div>
               ))}
             </div>
-            <div className="">
-              <Input
-                type="text"
-                placeholder="Type Here ...."
-                labelPlacement="outside"
-                endContent={
-                  <SearchIcon
-                    onClick={handleSendMessage}
-                  />
-                }
-                className="bg-transparent min-h-[50px]"
-                value={newMessage}
-                onChange={handleMessageChange}
-              />
+            <div className="h-[70px] grid grid-cols-8 items-center"
+              style={{ backgroundColor: selectedColor }}>
+              <div className="col-span-8">
+                              
+
+
+
+              </div>
 
 
             </div>

@@ -5,13 +5,13 @@ export const GET = handleAuth({
     authorizationParams: {
       prompt: "login",
     },
-    returnTo: "/home",
+    returnTo: "/install",
   }),
   signup: handleLogin({
     authorizationParams: {
       prompt: "login",
       screen_hint: "signup",
     },
-    returnTo: "/home", // This is the default behavior
+    returnTo: "/install", // This is the default behavior
   }),
 });
