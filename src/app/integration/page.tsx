@@ -1,11 +1,10 @@
 "use client"
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { redirect } from "next/navigation";
 
 const Settings = () => {
-  const [inputValue, setInputValue] = useState("");
   const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {

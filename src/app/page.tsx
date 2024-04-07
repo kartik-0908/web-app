@@ -1,8 +1,6 @@
 import { Metadata } from "next";
-import { Card, CardHeader, CardBody, Image, CardFooter } from "@nextui-org/react";
-import { Button } from "@nextui-org/react";
-import Link from "next/link";
-import Signinbutton from "@/components/Welcome/signinbutton";
+import { Card, CardHeader,  Image  } from "@nextui-org/react";
+import Signinform from "@/components/Welcome/signinform";
 
 export const metadata: Metadata = {
   title:
@@ -31,56 +29,11 @@ export default function Home() {
           </Card>
         </div>
         <div className="bg-black flex justify-center items-center h-screen">
-          <div className="w-[400px]  rounded-lg border border-stroke bg-white  dark:border-strokedark dark:bg-boxdark">
-            <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
-              <h3 className="font-medium text-black dark:text-white">
-                Sign In
-              </h3>
-            </div>
-            <form action="#">
-              <div className="p-6.5">
-                <div className="mb-4.5">
-                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="Enter password"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-                </div>
-
-                <div className="mb-5.5 mt-5 flex items-center justify-between">
-                  <Link
-                    href="#"
-                    className="text-sm text-primary hover:underline"
-                  >
-                    Forget password?
-                  </Link>
-                </div>
-                <Signinbutton/>
-
-                
-              </div>
-            </form>
+          <div className="rounded-lg border border-stroke bg-white  dark:border-strokedark dark:bg-boxdark">
+            <Signinform />
           </div>
         </div>
-
       </div>
-
-
-
     </>
   );
 }

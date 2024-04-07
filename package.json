@@ -12,8 +12,10 @@
     "@auth0/auth0-react": "^2.2.4",
     "@auth0/nextjs-auth0": "^3.5.0",
     "@nextui-org/react": "^2.2.10",
+    "@prisma/client": "^5.12.1",
     "apexcharts": "^3.45.2",
     "axios": "^1.6.8",
+    "bcryptjs": "^2.4.3",
     "flatpickr": "^4.6.13",
     "framer-motion": "^11.0.24",
     "jsvectormap": "^1.5.3",
@@ -25,6 +27,8 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/next-auth": "^3.15.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-color": "^3.0.12",
@@ -35,6 +39,7 @@
     "postcss": "^8",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
+    "prisma": "^5.12.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

@@ -1,23 +1,11 @@
-import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs';
 
-export const authOptions = {
-    providers: [
-        CredentialsProvider({
-            name: 'Credentials',
-            credentials: {
-                username: { label: 'email', type: 'text', placeholder: '' },
-                password: { label: 'password', type: 'password', placeholder: '' },
-            },
-            async authorize(credentials: any) {
 
-                return {
-                    id: "user1"
-                };
-            },
-        })
-    ],
-  secret: process.env.NEXTAUTH_SECRET || 'secr3t',
-    pages: {
-        signIn: '/',
-    },
-};
+export async function hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
+  }
+  
+  export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
+    return bcrypt.compare(password, hashedPassword);
+  }
