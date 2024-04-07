@@ -7,7 +7,8 @@ export default function Home() {
   return (
     <>
       <DefaultLayout>
-        <ECommerce />
+        <h1>hello</h1>
+        {/* <ECommerce /> */}
       </DefaultLayout>
     </>
   );
