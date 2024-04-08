@@ -1,19 +1,11 @@
 "use client"
 import React, { useState } from "react";
-import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 
 export default function () {
   const [selected, setSelected] = useState<string>('login');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const { data: session } = useSession();
-  const router = useRouter();
-
-  if (session) {
-    router.replace('/home');
-    return null;
-  }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -22,13 +14,12 @@ export default function () {
     const password = form.password.value;
 
     const result = await signIn<'credentials'>('credentials', {
-      redirect: false,
       email,
       password,
     });
 
     if (result?.ok) {
-      router.push(selected === 'login' ? '/home' : '/install');
+      // router.push(selected === 'login' ? '/home' : '/install');
     } else {
       setErrorMessage('Failed to authenticate. Please check your credentials and try again.');
     }

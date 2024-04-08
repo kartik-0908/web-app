@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import ChartOne from "../Charts/ChartOne";
 import ChartTwo from "../Charts/ChartTwo";
@@ -7,7 +6,9 @@ import Loader from "../common/Loader";
 
 const ECommerce: React.FC = () => {
   const [loading, setloading] = useState(true);
+
   useEffect(() => {
+    
     setloading(false);
   }, [])
   if (loading) {

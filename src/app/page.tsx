@@ -1,6 +1,12 @@
 import { Metadata } from "next";
 import { Card, CardHeader,  Image  } from "@nextui-org/react";
 import Signinform from "@/components/Welcome/signinform";
+import { getServerSession } from "next-auth";
+import nextAuthOptions from "../../lib/nextauth-config";
+import { isShopInstalled } from "../../prisma/services/user";
+import { redirect } from "next/navigation";
+
+
 
 export const metadata: Metadata = {
   title:
@@ -8,7 +14,12 @@ export const metadata: Metadata = {
   description: "This is Next.js Home for TailAdmin Dashboard Template",
 };
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession(nextAuthOptions);
+  if (session) {
+      redirect("/home");
+  }
+
   return (
     <>
       <div className="grid grid-cols-2">
