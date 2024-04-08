@@ -2,13 +2,13 @@
 import dynamic from 'next/dynamic';
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CardDataStats from "@/components/CardDataStats";
-import ChartOne from "@/components/Charts/ChartOne";
+import {ChartOne} from "@/components/Charts/ChartOne";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DatePickerOne from "@/components/FormElements/DatePicker/DatePickerOne";
 
-const ChartOneDynamic = dynamic(() => import('@/components/Charts/ChartOne'), {
-  ssr: false,
-});
+// const ChartOneDynamic = dynamic(() => import('@/components/Charts/ChartOne'), {
+//   ssr: false,
+// });
 
 
 const Analytics = () => {
@@ -118,7 +118,7 @@ const Analytics = () => {
             />
           </svg>
         </CardDataStats>
-        <ChartOneDynamic />
+        {/* <ChartOneDynamic /> */}
       </div>
     </DefaultLayout>
   );
