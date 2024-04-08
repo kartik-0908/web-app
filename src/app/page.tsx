@@ -3,7 +3,6 @@ import { Card, CardHeader,  Image  } from "@nextui-org/react";
 import Signinform from "@/components/Welcome/signinform";
 import { getServerSession } from "next-auth";
 import nextAuthOptions from "../../lib/nextauth-config";
-import { isShopInstalled } from "../../prisma/services/user";
 import { redirect } from "next/navigation";
 
 
@@ -23,7 +22,7 @@ export default async function Home() {
   return (
     <>
       <div className="grid grid-cols-2">
-        <div className="p-6 h-screen bg-gradient-to-r from-fuchsia-500 to-cyan-500">
+        <div className="p-32 h-screen bg-gradient-to-br from-dark-blue to-light-blue">
           <Card isFooterBlurred className="h-full">
             <CardHeader className="absolute z-10 top-1 flex-col">
               <h4 className="font-bold text-6xl justify-center align-center">Welcome to YUGAA</h4>

@@ -22,6 +22,8 @@ const config: Config = {
     },
     extend: {
       colors: {
+        'dark-blue': '#1c2434', // rgb(28, 36, 52)
+        'light-blue': '#9ebeff', // rgb(158, 190, 255)
         current: "currentColor",
         transparent: "transparent",
         white: "#FFFFFF",

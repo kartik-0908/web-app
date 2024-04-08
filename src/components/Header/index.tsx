@@ -49,19 +49,25 @@ const Header = (props: {
           </button>
           {/* <!-- Hamburger Toggle BTN --> */}
 
-          <Link  href="/">
-            <Image
+          <Link href="/">
+            {/* <Image
               width={32}
               height={32}
-              src={"/images/logo/logo-icon.svg"}
+              src={"/images/logo/logo.png"}
               alt="Logo"
-            />
-          </Link>
+            /> */}5          </Link>
         </div>
 
         <div className="">
           <div className="relative ">
-            <h1 className="text-3xl font-bold dark:text-white text-center">Y U G A A </h1>
+            <Link href="/">
+              <Image
+                width={160}
+                height={32}
+                src={"/images/logo/logoblue.png"}
+                alt="Logo"
+              />
+            </Link>
           </div>
         </div>
 

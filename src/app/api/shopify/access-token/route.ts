@@ -1,9 +1,11 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
+import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from 'next/server';
+import { store_token } from '../../../../../prisma/services/user';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
+  const session = await getServerSession();
   const { shop, code } = body;
 
   try {
@@ -16,8 +18,9 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
-    console.log(response.data.access_token)
-
+    if (session && session.user && session.user.email) {
+      await store_token(response.data.access_token, session?.user?.email, shop)
+    }
     return NextResponse.json({ status: true });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to retrieve access token' });
