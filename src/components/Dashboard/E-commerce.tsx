@@ -73,14 +73,11 @@ const ECommerce: React.FC = () => {
             currentWeekData={currentWeekData}
           />
           <ChartTwo
-
-          //  totalConversations={data.totalConversations} 
-
-          // conversationDistribution={data.conversationDistribution}
+          last7days = {last7Days}
           />
           <div className="col-span-12">
             <ChatCard
-            // lastThreeConversations={data.lastThreeConversations}
+            lastThreeConversations={lastThreeConversations}
             />
           </div>
         </div>
