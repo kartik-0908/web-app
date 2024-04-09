@@ -21,23 +21,6 @@ interface Conversation {
 }
 
 
-
-interface ChartTwoProps {
-  conversationDistribution: number[];
-}
-
-interface ChatCardProps {
-  lastThreeConversations: Conversation[]; // Adjust based on your actual conversation structure
-}
-
-type ECommerceData = {
-  lastThreeConversations: Conversation[];
-  last7Days: number[],
-  currentWeekData: number[][]
-}
-
-
-
 const ECommerce: React.FC = () => {
   const [loading, setloading] = useState(false);
   const [currentWeekData, setcurrentWeekData] = useState<number[][][]>([]);

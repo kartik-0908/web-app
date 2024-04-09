@@ -23,6 +23,7 @@ model Message {
   senderId       Int
   text           String
   senderType     String
+  unanswered      Boolean      @default(false)
   Conversation   Conversation @relation(fields: [conversationId], references: [id])
 
   @@index([conversationId])

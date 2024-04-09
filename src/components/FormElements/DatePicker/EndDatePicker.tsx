@@ -1,5 +1,4 @@
 import Flatpickr from 'react-flatpickr';
-import { useState } from "react";
 
 interface DatePickerOneProps {
   value: Date;

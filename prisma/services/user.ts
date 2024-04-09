@@ -1,5 +1,7 @@
 import client from '../index';
 import { hashPassword, verifyPassword as verifyUserPassword } from '../../lib/auth';
+import { start } from 'repl';
+import { emit } from 'process';
 
 export const findUserByEmail = async (email: string) => {
   return await client.user.findUnique({
@@ -42,7 +44,7 @@ export const isShopInstalled = async (email: string) => {
   return shop !== null;
 }
 
-export const store_token = async (token: string, email: string, shop: string)=>{
+export const store_token = async (token: string, email: string, shop: string) => {
   const new_installed_shop = await client.shopify_installed_shop.create({
     data: {
       shop: shop,
@@ -140,8 +142,8 @@ export const getHomeData = async (email: string) => {
   const shop = await getShop(email);
   console.log("shop" + shop)
   if (shop) {
-    const currentWeekData = await  getWeeklyConversationStartTimes(shop)
-    const last7Days = await  getConversationCountsForLast7Days(shop)
+    const currentWeekData = await getWeeklyConversationStartTimes(shop)
+    const last7Days = await getConversationCountsForLast7Days(shop)
     const lastThreeConversations = await getlastThreeConversations(shop)
     return {
       currentWeekData,
@@ -149,6 +151,104 @@ export const getHomeData = async (email: string) => {
       lastThreeConversations,
     }
   }
+}
+
+async function getConversationStats(startDate: Date, endDate: Date) {
+  const totalConversations = await client.conversation.count({
+    where: {
+      startedAt: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+  });
+
+  const totalMessages = await client.message.count({
+    where: {
+      Conversation: {
+        startedAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    },
+  });
+
+  // Number of Unanswered Messages in those Conversations
+  const unansweredMessages = await client.message.count({
+    where: {
+      unanswered: true,
+      Conversation: {
+        startedAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    },
+  });
+
+  // For average duration, you would need to calculate the difference between the start and end of each conversation
+  // This part is highly dependent on how you track the end of a conversation. If it's the timestamp of the last message,
+  // you would need to fetch all conversations within the date range, calculate the duration of each, and then find the average.
+
+  const conversations = await client.conversation.findMany({
+    where: {
+      startedAt: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    include: {
+      Message: {
+        orderBy: {
+          timestamp: 'desc',
+        },
+        take: 1, // Only fetch the last message of each conversation
+      },
+    },
+  });
+
+  let totalDurationSeconds = 0;
+
+  conversations.forEach(conversation => {
+    if (conversation.Message.length > 0) {
+      const lastMessageTimestamp = conversation.Message[0].timestamp;
+      const duration = lastMessageTimestamp.getTime() - conversation.startedAt.getTime();
+      totalDurationSeconds += duration / 1000; // Convert milliseconds to seconds
+    }
+  });
+
+  // Calculate the average duration in seconds
+  const averageDurationSeconds = totalDurationSeconds / conversations.length;
+
+  // Return aggregated data
+  return {
+    totalConversations,
+    totalMessages,
+    unansweredMessages,
+    averageDurationSeconds
+  };
+}
+
+export const getAnalyticsData = async (email: string, startDate: string, endDate: string) => {
+  const shop = await getShop(email);
+  console.log("inside getanalytics" + email)
+  console.log("shop" + shop)
+  console.log("shop" + startDate)
+  console.log("shop" + endDate)
+  if(shop){
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
+    if (isNaN(startDateObj.getTime()) || isNaN(endDateObj.getTime())) {
+      throw new Error("Invalid date format. Please ensure your dates are in a recognizable format.");
+    }
+    const data = await getConversationStats(startDateObj, endDateObj)
+    return {
+      analyticsData: data
+    }
+  }
+
+ 
 }
 
 

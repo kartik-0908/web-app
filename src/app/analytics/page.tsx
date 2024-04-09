@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import StartDatePicker from '@/components/FormElements/DatePicker/StartDatePicker';
 import EndDatePicker from '@/components/FormElements/DatePicker/EndDatePicker';
 import { start } from 'repl';
+import axios from 'axios';
 
 // const ChartOneDynamic = dynamic(() => import('@/components/Charts/ChartOne'), {
 //   ssr: false,
@@ -15,34 +16,55 @@ import { start } from 'repl';
 
 const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
   // Mock data fetching delay
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ data: 'Your analytics data based on date range' });
-    }, 1000);
+  const formattedStartDate = startDate.toISOString().split('T')[0];
+  const formattedEndDate = endDate.toISOString().split('T')[0];
+  const response = await axios.get('/api/v1/data/analytics', {
+    params: {
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+    },
   });
+
+  return response;
 };
 
 
 const Analytics = () => {
   const [startDate, setStartDate] = useState<Date>(() => {
     const date = new Date();
-    date.setFullYear(date.getFullYear() - 1);
+    date.setMonth(date.getMonth() - 1);
     return date;
   });
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [loading, setLoading] = useState<boolean>(false);
+  const [totalmssg, settotalmssg] = useState(0);
+  const [Unanswered, setUnanswered] = useState(0);
+  const [totalconv, settotalconv] = useState(0);
+  const [avgDuration, setavgDuration] = useState(0);
   // const [analyticsData, setAnalyticsData] = useState(null);
   useEffect(() => {
     const fetchAndSetData = async () => {
       console.log(startDate)
       setLoading(true);
       const data = await fetchAnalyticsData(startDate, endDate);
+      const { analyticsData } = data.data.data;
+      settotalmssg(analyticsData.totalMessages)
+      settotalconv(analyticsData.totalConversations)
+      setavgDuration(analyticsData.averageDurationSeconds)
+      setUnanswered(analyticsData.unansweredMessages)
+
       // setAnalyticsData(data);
       setLoading(false);
     };
 
     fetchAndSetData();
   }, [startDate, endDate]);
+  function formatDuration(durationInSeconds: number): string {
+    const minutes = Math.floor(durationInSeconds / 60);
+    const minutesPart = minutes > 0 ? `${minutes} minute${minutes > 1 ? 's' : ''}` : '';
+
+    return minutesPart;
+  }
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Analytics" />
@@ -51,16 +73,16 @@ const Analytics = () => {
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
             Starting Date
           </label>
-          <StartDatePicker 
-          value={startDate} onChange={(date: Date) => setStartDate(date)}
+          <StartDatePicker
+            value={startDate} onChange={(date: Date) => setStartDate(date)}
           ></StartDatePicker>
         </div>
         <div className="col-span-6 p-6 pt-0" >
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
             Ending Date
           </label>
-          <EndDatePicker 
-          value={endDate} onChange={(date: Date) => setEndDate(date)}
+          <EndDatePicker
+            value={endDate} onChange={(date: Date) => setEndDate(date)}
           ></EndDatePicker>
 
         </div>
@@ -72,9 +94,11 @@ const Analytics = () => {
             Loading Analytics
           </div>
         ) : (
-          <div className="grid grid-cols-12 gap-2 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+          <div className="grid  gap-2 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
 
-            <CardDataStats title="Interactions" total="3.456K" rate="0.43%" levelUp>
+            <CardDataStats title="Answered Questions"
+              total={`${totalmssg - Unanswered}`}
+              rate="0.43%" levelUp>
               <svg
                 className="fill-primary dark:fill-white"
                 width="22"
@@ -93,7 +117,9 @@ const Analytics = () => {
                 />
               </svg>
             </CardDataStats>
-            <CardDataStats title="Total Profit" total="$45,2K" rate="4.35%" levelUp>
+            <CardDataStats title="Unanswered Questions"
+              total={Unanswered.toString()}
+              rate="4.35%" levelUp>
               <svg
                 className="fill-primary dark:fill-white"
                 width="20"
@@ -116,7 +142,9 @@ const Analytics = () => {
                 />
               </svg>
             </CardDataStats>
-            <CardDataStats title="Total Product" total="2.450" rate="2.59%" levelUp>
+            <CardDataStats title="Time Saved"
+              total={`${(totalconv * 6.3).toFixed(1)} minutes`}
+              rate="2.59%" levelUp>
               <svg
                 className="fill-primary dark:fill-white"
                 width="22"
@@ -135,7 +163,9 @@ const Analytics = () => {
                 />
               </svg>
             </CardDataStats>
-            <CardDataStats title="Total Users" total="3.456" rate="0.95%" levelDown>
+            <CardDataStats title="Average Session Duration"
+              total={formatDuration(avgDuration)} 
+              rate="0.95%" levelDown>
               <svg
                 className="fill-primary dark:fill-white"
                 width="22"
