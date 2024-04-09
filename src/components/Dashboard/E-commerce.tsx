@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {ChartOne} from "../Charts/ChartOne";
 import ChartTwo from "../Charts/ChartTwo";
 import ChatCard from "../Chat/ChatCard";
 import Loader from "../common/Loader";
+import ScatterChart from "../Charts/scatterchart";
 
 interface Message {
   id: string;
@@ -20,11 +20,7 @@ interface Conversation {
   Message: Message[];
 }
 
-interface ChartOneProps {
-  totalConversations: number;
-  maxSumIndex: number;
-  convArray: number[]; // Adjust the naming to camelCase
-}
+
 
 interface ChartTwoProps {
   conversationDistribution: number[];
@@ -35,31 +31,32 @@ interface ChatCardProps {
 }
 
 type ECommerceData = {
-  convArray: number[];
-  conversationDistribution: number[];
   lastThreeConversations: Conversation[];
-  maxSumIndex: number;
-  totalConversations: number;
+  last7Days: number[],
+  currentWeekData: number[][]
 }
 
 
 
 const ECommerce: React.FC = () => {
-  const [loading, setloading] = useState(true);
-  const [data, setData] = useState<ECommerceData>({
-    convArray: [],
-    conversationDistribution: [],
-    lastThreeConversations: [],
-    maxSumIndex: 0,
-    totalConversations: 0,
-  });
+  const [loading, setloading] = useState(false);
+  const [currentWeekData, setcurrentWeekData] = useState<number[][][]>([]);
+  const [lastThreeConversations, setlastThreeConversations] = useState([]);
+  const [last7Days, setlast7Days] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const {data} = await axios.get('/api/v1/data/home')
-      setData(data.data);
-      const conv_array = data.data
-      console.log(conv_array)
+      const { data } = await axios.get('/api/v1/data/home')
+      const { currentWeekData } = data.data;
+      const { last7Days } = data.data;
+      const { lastThreeConversations } = data.data;
+      setcurrentWeekData(currentWeekData)
+      setlast7Days(last7Days)
+      setlastThreeConversations(lastThreeConversations)
+      console.log(currentWeekData)
+      console.log(last7Days)
+      console.log(lastThreeConversations)
+      // console.log(latestData)
       setloading(false)
     }
     fetchData();
@@ -72,18 +69,19 @@ const ECommerce: React.FC = () => {
     return (
       <>
         <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-          <ChartOne
-           maxSumIndex={data.maxSumIndex}
-           convArray={data.convArray} />
-          <ChartTwo 
+          <ScatterChart
+            currentWeekData={currentWeekData}
+          />
+          <ChartTwo
+
           //  totalConversations={data.totalConversations} 
 
           // conversationDistribution={data.conversationDistribution}
           />
           <div className="col-span-12">
-            <ChatCard 
+            <ChatCard
             // lastThreeConversations={data.lastThreeConversations}
-             />
+            />
           </div>
         </div>
       </>

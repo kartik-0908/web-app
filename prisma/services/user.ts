@@ -64,12 +64,6 @@ async function getShop(email: string) {
     return (existingUser.shop);
   }
 }
-async function getTotalConversations(shopDomain: string) {
-  const result = await client.conversation.count({
-    where: { shopDomain },
-  });
-  return (result);
-}
 async function getlastThreeConversations(shopDomain: string) {
   const result = client.conversation.findMany({
     where: { shopDomain },
@@ -84,101 +78,75 @@ async function getlastThreeConversations(shopDomain: string) {
   });
   return (result);
 }
-interface HourlyConversationCount {
-  hour: number;
-  count: number;
-}
-async function getHourlyConversationCounts(shopDomain: string): Promise<number[]> {
-  try {
-    const hourlyConversationCounts: HourlyConversationCount[] = await client.$queryRaw`
-      SELECT EXTRACT(HOUR FROM "startedAt") AS hour, COUNT(*) AS count
-      FROM "Conversation"
-      WHERE "shopDomain" = ${shopDomain}
-      GROUP BY EXTRACT(HOUR FROM "startedAt")
-      ORDER BY hour;
-    `;
+async function getWeeklyConversationStartTimes(shopDomain: string): Promise<Array<Array<[number, number]>>> {
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - startDate.getDay() + (startDate.getDay() === 0 ? -6 : 1)); // Adjust to start from the last Monday
+  startDate.setHours(0, 0, 0, 0); // Set to the start of the day
 
-    const result = new Array(24).fill(0);
-
-    hourlyConversationCounts.forEach((entry) => {
-      result[entry.hour] = Number(entry.count);
-    });
-
-    return result;
-  } catch (error) {
-    console.error('Error fetching hourly conversation counts:', error);
-    return new Array(24).fill(0);
-  }
-}
-
-function findMaxSumIndex(hourlyConversationCounts: number[]): number {
-  let maxSum = 0;
-  let maxIndex = 0;
-  const n = hourlyConversationCounts.length; // Although 'n' is defined, it's not used in your function. You might want to use it or remove it.
-
-  for (let i = 0; i < 24; i++) {
-    let currSum = 0;
-    let j = i;
-    let k = 12; // Assuming you want to calculate the sum of a fixed window size of 12 hours
-    while (k) {
-      currSum += hourlyConversationCounts[j % n]; // Use 'n' for safety, ensuring 'j' does not exceed array bounds.
-      j++;
-      k--;
-    }
-    if (currSum > maxSum) {
-      maxIndex = i;
-      maxSum = currSum;
-    }
-  }
-
-  return maxIndex;
-}
-
-function findArray(maxIndex: number, hourlyConversationCounts: number[]): number[] {
-  const result: number[] = new Array(12).fill(0);
-
-  for (let i = 0; i < 12; i++) {
-    result[i] = hourlyConversationCounts[maxIndex % 24]; // Ensure the index wraps around using modulo operation
-    maxIndex++;
-  }
-
-  return result;
-}
-async function getConversationDistribution(shopDomain: string) {
-  const distribution = await client.conversation_dist.findUnique({
+  const conversations = await client.conversation.findMany({
     where: {
-      shopDomain: shopDomain
+      shopDomain: shopDomain,
+      startedAt: {
+        gte: startDate,
+      },
+    },
+    orderBy: {
+      startedAt: 'asc',
+    },
+  });
+
+  // Initialize an array to hold conversation start times for each day of the current week
+  const weekData: Array<Array<[number, number]>> = [[], [], [], [], [], [], []];
+
+  conversations.forEach(conversation => {
+    const dayIndex = conversation.startedAt.getDay() - 1; // Adjust index (0 = Monday, 6 = Sunday)
+    const hour = conversation.startedAt.getHours();
+    const minute = conversation.startedAt.getMinutes();
+    if (dayIndex >= 0) { // Ignore conversations from before the current week
+      weekData[dayIndex].push([hour, minute]);
+    }
+  });
+  return weekData;
+}
+
+async function getConversationCountsForLast7Days(shopDomain: string): Promise<number[]> {
+  const counts = new Array(7).fill(0); // Initialize an array of 7 days with 0
+  const endDate = new Date(); // Today
+  const startDate = new Date();
+  startDate.setDate(endDate.getDate() - 6); // Set to 7 days ago
+  startDate.setHours(0, 0, 0, 0); // Start of the day, 7 days ago
+
+  const conversations = await client.conversation.findMany({
+    where: {
+      shopDomain: shopDomain,
+      startedAt: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+  });
+
+  conversations.forEach(conversation => {
+    const diff = Math.floor((conversation.startedAt.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    if (diff >= 0 && diff < 7) {
+      counts[diff]++; // Increment the count for the corresponding day
     }
   });
 
-  return distribution ? [
-    distribution.Monday,
-    distribution.Tuesday,
-    distribution.Wednesday,
-    distribution.Thursday,
-    distribution.Friday,
-    distribution.Saturday,
-    distribution.Sunday,
-  ] : [0, 0, 0, 0, 0, 0, 0];
+  return counts;
 }
-
 
 export const getHomeData = async (email: string) => {
   const shop = await getShop(email);
   console.log("shop" + shop)
   if (shop) {
-    const totalConversations = await getTotalConversations(shop)
+    const currentWeekData = await  getWeeklyConversationStartTimes(shop)
+    const last7Days = await  getConversationCountsForLast7Days(shop)
     const lastThreeConversations = await getlastThreeConversations(shop)
-    const hourlyConversationCounts = await getHourlyConversationCounts(shop);
-    const maxSumIndex = findMaxSumIndex(hourlyConversationCounts);
-    const conv_array = findArray(maxSumIndex, hourlyConversationCounts);
-    const conversationDistribution = await getConversationDistribution(shop);
     return {
-      conversationDistribution,
-      totalConversations,
+      currentWeekData,
+      last7Days,
       lastThreeConversations,
-      maxSumIndex,
-      conv_array
     }
   }
 }
