@@ -1,30 +1,33 @@
-import flatpickr from "flatpickr";
-import { useEffect } from "react";
+import Flatpickr from 'react-flatpickr';
+import { useState } from "react";
 
-const DatePickerOne = () => {
-  useEffect(() => {
-    // Init flatpickr
-    flatpickr(".form-datepicker", {
-      mode: "single",
-      static: true,
-      monthSelectorType: "static",
-      dateFormat: "M j, Y",
-      prevArrow:
-        '<svg className="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
-      nextArrow:
-        '<svg className="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M1.4 10.8L0 9.4l4-4-4-4L1.4 0l5.4 5.4z" /></svg>',
-    });
-  }, []);
+interface DatePickerOneProps {
+  value: Date;
+  onChange: (date: Date) => void;
+}
+
+const EndDatePicker:React.FC<DatePickerOneProps> = ({ value, onChange }) => {
 
   return (
     <div>
-    
-      <div className="relative">
-        <input
-          className="form-datepicker w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-          placeholder="mm/dd/yyyy"
-          data-class="flatpickr-right"
-        />
+      <div className="relative  ">
+        <div>
+          <Flatpickr
+          className='bg-transparent w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
+            options={{
+              prevArrow: '<svg className="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
+              nextArrow: '<svg className="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M1.4 10.8L0 9.4l4-4-4-4L1.4 0l5.4 5.4z" /></svg>'
+              , mode: "single",
+              static: true,
+              monthSelectorType: "static",
+              dateFormat: "M j, Y",
+            }}
+            value={value}
+            onChange={([date]) => {
+              onChange(date);
+            }}
+          />
+        </div>
 
         <div className="pointer-events-none absolute inset-0 left-auto right-5 flex items-center">
           <svg
@@ -45,4 +48,4 @@ const DatePickerOne = () => {
   );
 };
 
-export default DatePickerOne;
+export default EndDatePicker;
