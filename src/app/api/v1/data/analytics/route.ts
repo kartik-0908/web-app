@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
         try {
             // Adjust getAnalyticsData to your needs. Ensure it returns a type that matches AnalyticsData.
             const analyticsData = await getAnalyticsData(session.user.email,startDate, endDate);
-            // console.log(analyticsData)
+            console.log(analyticsData)
             return new NextResponse(JSON.stringify({
                 data: analyticsData
             }));

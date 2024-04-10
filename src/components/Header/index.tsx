@@ -55,7 +55,7 @@ const Header = (props: {
               height={32}
               src={"/images/logo/logo.png"}
               alt="Logo"
-            /> */}5          </Link>
+            /> */}         </Link>
         </div>
 
         <div className="">

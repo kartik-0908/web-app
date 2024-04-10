@@ -15,7 +15,6 @@ import axios from 'axios';
 // });
 
 const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
-  // Mock data fetching delay
   const formattedStartDate = startDate.toISOString().split('T')[0];
   const formattedEndDate = endDate.toISOString().split('T')[0];
   const response = await axios.get('/api/v1/data/analytics', {
@@ -41,19 +40,18 @@ const Analytics = () => {
   const [Unanswered, setUnanswered] = useState(0);
   const [totalconv, settotalconv] = useState(0);
   const [avgDuration, setavgDuration] = useState(0);
-  // const [analyticsData, setAnalyticsData] = useState(null);
   useEffect(() => {
     const fetchAndSetData = async () => {
       console.log(startDate)
       setLoading(true);
       const data = await fetchAnalyticsData(startDate, endDate);
       const { analyticsData } = data.data.data;
+      console.log(analyticsData)
       settotalmssg(analyticsData.totalMessages)
       settotalconv(analyticsData.totalConversations)
       setavgDuration(analyticsData.averageDurationSeconds)
       setUnanswered(analyticsData.unansweredMessages)
 
-      // setAnalyticsData(data);
       setLoading(false);
     };
 
@@ -98,7 +96,6 @@ const Analytics = () => {
 
             <CardDataStats title="Answered Questions"
               total={`${totalmssg - Unanswered}`}
-              rate="0.43%" levelUp
               >
               <svg
                 className="fill-primary dark:fill-white"
@@ -120,7 +117,7 @@ const Analytics = () => {
             </CardDataStats>
             <CardDataStats title="Unanswered Questions"
               total={Unanswered.toString()}
-              rate="4.35%" levelUp>
+              >
               <svg
                 className="fill-primary dark:fill-white"
                 width="20"
@@ -145,7 +142,7 @@ const Analytics = () => {
             </CardDataStats>
             <CardDataStats title="Time Saved"
               total={`${(totalconv * 6.3).toFixed(1)} minutes`}
-              rate="2.59%" levelUp>
+              >
               <svg
                 className="fill-primary dark:fill-white"
                 width="22"
@@ -166,7 +163,7 @@ const Analytics = () => {
             </CardDataStats>
             <CardDataStats title="Average Session Duration"
               total={formatDuration(avgDuration)} 
-              rate="0.95%" levelDown>
+              >
               <svg
                 className="fill-primary dark:fill-white"
                 width="22"

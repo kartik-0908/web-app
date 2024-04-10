@@ -38,7 +38,7 @@ const Chat = () => {
 
         <div className="grid grid-cols-5">
           <div className="col-span-5 xl:col-span-2">
-            {/* <ChatCard/> */}
+            <ChatCard2/>
           </div>
           <div className="col-span-5 xl:col-span-3">
            <ChatCard2/>

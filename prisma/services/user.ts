@@ -20,9 +20,9 @@ export const createUser = async ({ email, password }: { email: string; password:
   });
   const defaultCustomization = await client.chatbotCustomization.create({
     data: {
-      botName: 'Anya',
+      botName: 'Yugaa',
       greetingMessage: 'Hello, how can I assist you?',
-      selectedColor: "#4F6E5",
+      selectedColor: "#1C2434",
       fontFamily: "Arial, sans-serif",
       fontColor: "Black",
       widgetPosition: "right",
@@ -178,6 +178,7 @@ export const getHomeData = async (email: string) => {
 }
 
 async function getConversationStats(startDate: Date, endDate: Date) {
+  endDate.setDate(endDate.getDate() + 1);
   const totalConversations = await client.conversation.count({
     where: {
       startedAt: {
@@ -198,7 +199,6 @@ async function getConversationStats(startDate: Date, endDate: Date) {
     },
   });
 
-  // Number of Unanswered Messages in those Conversations
   const unansweredMessages = await client.message.count({
     where: {
       unanswered: true,
@@ -211,9 +211,6 @@ async function getConversationStats(startDate: Date, endDate: Date) {
     },
   });
 
-  // For average duration, you would need to calculate the difference between the start and end of each conversation
-  // This part is highly dependent on how you track the end of a conversation. If it's the timestamp of the last message,
-  // you would need to fetch all conversations within the date range, calculate the duration of each, and then find the average.
 
   const conversations = await client.conversation.findMany({
     where: {
@@ -393,4 +390,36 @@ export const updateBehavioralCustomization = async (
   });
 
   return updatedCustomization;
+};
+
+
+export const getChatsData = async (email: string, page: number, limit: number) => {
+  const shop = await getShop(email);
+  console.log("shop" + shop);
+
+  if (shop) {
+    const skip = (page - 1) * limit;
+
+    const conversations = await client.conversation.findMany({
+      where: {
+        shopDomain: shop,
+      },
+      skip,
+      take: limit,
+      orderBy: {
+        startedAt: 'desc',
+      },
+      include: {
+        Message: {
+          orderBy: {
+            timestamp: 'asc',
+          },
+        },
+      },
+    });
+
+    return conversations;
+  }
+
+  return null;
 };
