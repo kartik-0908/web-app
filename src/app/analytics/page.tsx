@@ -98,7 +98,8 @@ const Analytics = () => {
 
             <CardDataStats title="Answered Questions"
               total={`${totalmssg - Unanswered}`}
-              rate="0.43%" levelUp>
+              rate="0.43%" levelUp
+              >
               <svg
                 className="fill-primary dark:fill-white"
                 width="22"

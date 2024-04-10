@@ -18,6 +18,30 @@ export const createUser = async ({ email, password }: { email: string; password:
       password: hashedPassword,
     },
   });
+  const defaultCustomization = await client.chatbotCustomization.create({
+    data: {
+      botName: 'Anya',
+      greetingMessage: 'Hello, how can I assist you?',
+      selectedColor: "#4F6E5",
+      fontFamily: "Arial, sans-serif",
+      fontColor: "Black",
+      widgetPosition: "right",
+      toneAndStyle: "Conversational and friendly, with a touch of humor when appropriate. Maintain a professional tone for business-related queries.",
+      userGuidance: "Provide clear guidance and instructions. Clearly instruct users on how to navigate the chatbot, ask for information, or perform specific actions.",
+      positiveReinforcement: "Include positive phrases to acknowledge user inputs. Express gratitude and provide positive feedback where applicable to enhance user experience.",
+      errorHandling: "Clearly communicate errors with user-friendly messages. Provide suggestions for correction and avoid technical jargon. Apologize when necessary",
+      politeness: "Always use polite phrases and courteous language. Avoid language that may be perceived as rude or insensitive. Thank users for their inputs.",
+      clarityAndSimplicity: "Prioritize straightforward language. Avoid complex jargon and use concise sentences. Break down information into easily digestible chunks.",
+      personalization: "Address users by name whenever possible. Reference past interactions to create a personalized experience. Use personalized greetings based on user history.",
+      responseLength: "Medium",
+      clarificationPrompt: "I need more information top assist you. Could you provide additional details",
+      apologyAndRetryAttempt: "I apologize for any confusion. Could you please provide your query again?",
+      errorMessageStyle: "Standard",
+      user: {
+        connect: { email: email },
+      },
+    },
+  });
   console.log(resp);
   return resp;
 };
@@ -236,7 +260,7 @@ export const getAnalyticsData = async (email: string, startDate: string, endDate
   console.log("shop" + shop)
   console.log("shop" + startDate)
   console.log("shop" + endDate)
-  if(shop){
+  if (shop) {
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(endDate);
     if (isNaN(startDateObj.getTime()) || isNaN(endDateObj.getTime())) {
@@ -248,7 +272,125 @@ export const getAnalyticsData = async (email: string, startDate: string, endDate
     }
   }
 
- 
+
 }
 
 
+export const getCustomizationData = async (email: string) => {
+  if (email) {
+    const customizations = await client.chatbotCustomization.findMany({
+      where: {
+        userEmail: email,
+      },
+      include: {
+        user: true,
+      },
+    });
+    return customizations
+  }
+}
+export const updateAppearance = async (
+  email: string,
+  selectedColor: string,
+  fontFamily: string,
+  fontColor: string,
+  widgetPosition: string,
+) => {
+  if (!email) {
+    throw new Error("Email is required");
+  }
+
+  const updatedCustomization = await client.chatbotCustomization.updateMany({
+    where: {
+      userEmail: email,
+    },
+    data: {
+      selectedColor,
+      fontFamily,
+      fontColor,
+      widgetPosition,
+    },
+  });
+  return updatedCustomization;
+};
+
+export const updateCustomGreetings = async (
+  email: string,
+  botName: string,
+  greetingMessage: string,
+) => {
+  if (!email) {
+    throw new Error("Email is required");
+  }
+
+  const updatedCustomization = await client.chatbotCustomization.updateMany({
+    where: {
+      userEmail: email,
+    },
+    data: {
+      botName,
+      greetingMessage,
+    },
+  });
+
+  return updatedCustomization;
+};
+
+export const updateLanguageCustomization = async (
+  email: string,
+  toneAndStyle: string,
+  userGuidance: string,
+  positiveReinforcement: string,
+  errorHandling: string,
+  politeness: string,
+  clarityAndSimplicity: string,
+  personalization: string,
+) => {
+  if (!email) {
+    throw new Error("Email is required");
+  }
+
+  const updatedCustomization = await client.chatbotCustomization.updateMany({
+    where: {
+      userEmail: email,
+    },
+    data: {
+      toneAndStyle,
+      userGuidance,
+      positiveReinforcement,
+      errorHandling,
+      politeness,
+      clarityAndSimplicity,
+      personalization,
+    },
+  });
+
+  return updatedCustomization;
+};
+
+
+export const updateBehavioralCustomization = async (
+  email: string,
+  responseLength: string,
+  clarificationPrompt: string,
+  apologyAndRetryAttempt: string,
+  errorMessageStyle: string,
+) => {
+  if (!email) {
+    throw new Error("Email is required");
+  }
+
+  const updatedCustomization = await client.chatbotCustomization.updateMany({
+    where: {
+      userEmail: email,
+    },
+    data: {
+      responseLength,
+      clarificationPrompt,
+      apologyAndRetryAttempt,
+      errorMessageStyle,
+    },
+  });
+
+  return updatedCustomization;
+};

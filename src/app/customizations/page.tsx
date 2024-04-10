@@ -1,58 +1,201 @@
 "use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 import { Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import { RadioGroup, Radio } from "@nextui-org/react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import ColorPicker from "./ColorPicker";
 import { Textarea } from "@nextui-org/react";
-import { SearchIcon } from "./SearchIcon";
+import axios from "axios";
 
-const animals = [
-  { label: "Cat", value: "cat", description: "The second most popular pet in the world" },
-  { label: "Dog", value: "dog", description: "The most popular pet in the world" },
-  { label: "Elephant", value: "elephant", description: "The largest land animal" },
-  { label: "Lion", value: "lion", description: "The king of the jungle" },
-  { label: "Tiger", value: "tiger", description: "The largest cat species" },
-  { label: "Giraffe", value: "giraffe", description: "The tallest land animal" },
+const fonts = [
+  { label: 'Arial', value: 'Arial, sans-serif' },
+  { label: 'Verdana', value: 'Verdana, sans-serif' },
+  { label: 'Helvetica', value: 'Helvetica, sans-serif' },
+  { label: 'Tahoma', value: 'Tahoma, sans-serif' },
+  { label: 'Trebuchet MS', value: 'Trebuchet MS, sans-serif' },
+  { label: 'Times New Roman', value: 'Times New Roman, serif' },
+  { label: 'Georgia', value: 'Georgia, serif' },
+  { label: 'Garamond', value: 'Garamond, serif' },
+  { label: 'Courier New', value: 'Courier New, monospace' },
+  { label: 'Brush Script MT', value: 'Brush Script MT, cursive' },
 ];
-
 const color = [
-  { label: "White", value: "white" },
-  { label: "Dark", value: "dark" },
+  { label: "White", value: "White" },
+  { label: "Black", value: "Black" },
 ]
 
 const variants = ["flat"];
-
 const demo_mssgs = [
-  "Hi There, How May I help you?",
+  "Hi, How may i help you",
   "Can you give me the brief about the latest discounts on the A387 Headset"
 ]
+
+
 
 const TablesPage = () => {
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<string[]>(demo_mssgs);
   const [selected, setSelected] = React.useState("appearance");
   const colors = ['#4F46E5', '#EC4899', '#22C55E', '#F59E0B', '#EF4444', '#6366F1'];
-  const [selectedColor, setSelectedColor] = useState<string>('#4F6E5')
+  const [selectedColor, setSelectedColor] = useState<string>('')
+  const [botName, setBotName] = useState('');
+  const [fontFamily, setFontFamily] = useState('');
+  const [fontColor, setFontColor] = useState('');
+  const [widgetPosition, setWidgetPosition] = useState('');
+  const [greetingmessage, setgreetingmessage] = useState('');
+  const [toneAndStyle, setToneAndStyle] = useState('');
+  const [userGuidance, setUserGuidance] = useState('');
+  const [positiveReinforcement, setPositiveReinforcement] = useState('');
+  const [errorHandling, setErrorHandling] = useState('');
+  const [politeness, setPoliteness] = useState('');
+  const [clarityAndSimplicity, setClarityAndSimplicity] = useState('');
+  const [personalization, setPersonalization] = useState('');
+  const [responseLength, setResponseLength] = useState('');
+  const [clarificationPrompt, setClarificationPrompt] = useState('');
+  const [apologyAndRetryAttempt, setApologyAndRetryAttempt] = useState('');
+  const [errorMessageStyle, setErrorMessageStyle] = useState('');
+  const [buttonloading, setbuttonloading] = useState(false);
   const handleColorSelect = (color: string) => {
     console.log('Selected color:', color);
   };
   const handleSelectionChange = (key: React.Key) => {
-    // Assuming `key` can be directly used as a string. If not, you might need to convert or handle it differently.
-    setSelected(String(key)); // Converts `key` to a string if it's not already one.
-  };
-  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewMessage(e.target.value);
+    setSelected(String(key));
   };
 
-  const handleSendMessage = () => {
-    console.log("inseide sendmesage")
-    if (newMessage.trim() !== '') {
-      setMessages([...messages, newMessage]);
-      setNewMessage('');
+  // const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setNewMessage(e.target.value);
+  // };
+
+  // const handleSendMessage = () => {
+  //   console.log("inseide sendmesage")
+  //   if (newMessage.trim() !== '') {
+  //     setMessages([...messages, newMessage]);
+  //     setNewMessage('');
+  //   }
+  // };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await axios.get('/api/v1/data/customization')
+      const customizationData = data.data[0];
+      console.log(customizationData)
+
+      setBotName(customizationData.botName);
+      setFontFamily(customizationData.fontFamily);
+      setFontColor(customizationData.fontColor);
+      setgreetingmessage(customizationData.greetingMessage);
+      setWidgetPosition(customizationData.widgetPosition);
+      setToneAndStyle(customizationData.toneAndStyle);
+      setUserGuidance(customizationData.userGuidance);
+      setPositiveReinforcement(customizationData.positiveReinforcement);
+      setErrorHandling(customizationData.errorHandling);
+      setPoliteness(customizationData.politeness);
+      setClarityAndSimplicity(customizationData.clarityAndSimplicity);
+      setPersonalization(customizationData.personalization);
+      setResponseLength(customizationData.responseLength);
+      setClarificationPrompt(customizationData.clarificationPrompt);
+      setApologyAndRetryAttempt(customizationData.apologyAndRetryAttempt);
+      setErrorMessageStyle(customizationData.errorMessageStyle);
+      setSelectedColor(customizationData.selectedColor);
+      // console.log(fontFamily)
     }
+    fetchData();
+
+  }, [])
+
+  const handleAppearanceSave = async (e: any) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    setbuttonloading(true)
+    const formData = {
+      selectedColor,
+      fontFamily,
+      fontColor,
+      widgetPosition,
+    };
+
+    // Replace with your backend endpoint and use your preferred method (fetch, axios, etc.)
+    try {
+      const response = await axios.post('api/v1/data/customization/appearance', formData);
+      const data = response.data;
+      // Handle success (e.g., show success message)
+      console.log('Success:', data);
+    } catch (error) {
+      // Handle error (e.g., show error message)
+    }
+    setbuttonloading(false)
+
+  };
+  const handlegreetingSave = async (e: any) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    setbuttonloading(true)
+
+    const formData = {
+      botName,
+      greetingmessage,
+    };
+
+    // Replace with your backend endpoint and use your preferred method (fetch, axios, etc.)
+    try {
+      const response = await axios.post('api/v1/data/customization/greeting', formData);
+      const data = response.data;
+      // Handle success (e.g., show success message)
+      console.log('Success:', data);
+    } catch (error) {
+      // Handle error (e.g., show error message)
+    }
+    setbuttonloading(false)
+
+  };
+  const handlelanguageSave = async (e: any) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    setbuttonloading(true)
+
+    const formData = {
+      toneAndStyle,
+      userGuidance,
+      positiveReinforcement,
+      errorHandling,
+      politeness,
+      clarityAndSimplicity,
+      personalization
+    };
+
+    // Replace with your backend endpoint and use your preferred method (fetch, axios, etc.)
+    try {
+      const response = await axios.post('api/v1/data/customization/language', formData);
+      const data = response.data;
+      // Handle success (e.g., show success message)
+      console.log('Success:', data);
+    } catch (error) {
+      // Handle error (e.g., show error message)
+    }
+    setbuttonloading(false)
+
+  };
+  const handlebehaviourSave = async (e: any) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    setbuttonloading(true)
+
+    const formData = {
+      responseLength,
+      clarificationPrompt,
+      apologyAndRetryAttempt,
+      errorMessageStyle
+    };
+
+    // Replace with your backend endpoint and use your preferred method (fetch, axios, etc.)
+    try {
+      const response = await axios.post('api/v1/data/customization/behaviour', formData);
+      const data = response.data;
+      // Handle success (e.g., show success message)
+      console.log('Success:', data);
+    } catch (error) {
+      // Handle error (e.g., show error message)
+    }
+    setbuttonloading(false)
+
   };
 
   return (
@@ -75,38 +218,50 @@ const TablesPage = () => {
                       Choose Color
                     </div>
                     <div className="pl-4" >
-                      <ColorPicker colors={colors} onSelect={setSelectedColor} />
+                      <ColorPicker
+                        defaultColor={selectedColor}
+                        colors={colors}
+                        onSelect={(color) => setSelectedColor(color)} />
                     </div>
                     <div className="w-full flex flex-col gap-4">
                       <div className="pt-4" >
                         Font Settings
                       </div>
-                      {variants.map((variant) => (
-                        <div key={variant} className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-                          <Select
-                            variant="flat"
-                            label="Font Family"
-                            className="max-w-xs"
-                          >
-                            {animals.map((animal) => (
-                              <SelectItem key={animal.value} value={animal.value}>
-                                {animal.label}
-                              </SelectItem>
-                            ))}
-                          </Select>
-                          <Select
-                            variant="flat"
-                            label="Font Color"
-                            className="max-w-xs"
-                          >
-                            {color.map((color) => (
-                              <SelectItem key={color.value} value={color.value}>
-                                {color.label}
-                              </SelectItem>
-                            ))}
-                          </Select>
-                        </div>
-                      ))}
+                      <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
+                        <Select
+                          variant="flat"
+                          label="Font Family"
+                          className="max-w-xs"
+                          selectedKeys={[fontFamily]}
+                          onSelectionChange={(keys) => {
+                            const selectedKey = Array.from(keys)[0];
+                            setFontFamily(String(selectedKey));
+                          }}
+                        >
+                          {fonts.map((fonts) => (
+                            <SelectItem key={fonts.value} value={fonts.value}>
+                              {fonts.label}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                        <Select
+                          variant="flat"
+                          label="Font Color"
+                          className="max-w-xs"
+                          selectedKeys={[fontColor]}
+                          onSelectionChange={(keys) => {
+                            const selectedKey = Array.from(keys)[0];
+                            setFontColor(String(selectedKey));
+                          }}
+
+                        >
+                          {color.map((color) => (
+                            <SelectItem key={color.value} value={color.value}>
+                              {color.label}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      </div>
                       <h3 className="font-medium text-black dark:text-white">
                         Upload Logo
                       </h3>
@@ -131,27 +286,102 @@ const TablesPage = () => {
                     <RadioGroup
                       label="Widget Psotion"
                       orientation="horizontal"
+                      value={widgetPosition}
+                      onValueChange={setWidgetPosition}
                     >
-                      <Radio value="buenos-aires">Left</Radio>
-                      <Radio value="sydney">Right</Radio>
+                      <Radio value="left">Left</Radio>
+                      <Radio value="right">Right</Radio>
                     </RadioGroup>
                     <div className="flex gap-2 justify-end">
-                      <Button fullWidth color="primary">
-                        Save
+                      <Button
+                        onClick={handleAppearanceSave}
+                        isLoading={buttonloading}
+                        spinner={
+                          <div className="flex flex-row">
+                            <svg
+                              className="animate-spin h-5 w-5 text-current"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              />
+                              <path
+                                className="opacity-75"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                fill="currentColor"
+                              />
+                            </svg>
+
+                            <h1>   Saving Changes</h1>
+                          </div>
+                        }
+
+                        fullWidth color="primary">
+                        {buttonloading ? "" : "Save"}
+
                       </Button>
                     </div>
                   </form>
                 </Tab>
                 <Tab key="greetings" title="Custom Greetings">
                   <form className="flex flex-col gap-4 h-[300px]">
-                    <Input label="Bot name" placeholder="Name of your Bot" type="password" />
+                    <Input
+                      label="Bot Name"
+                      placeholder="Name of your Bot"
+                      type="text"
+                      defaultValue={botName}
+                      onValueChange={(value) => {
+                        setBotName(value)
+                      }}
+                    />
                     <Textarea
                       label="Greeting Message"
                       placeholder="Hi There, How May I help you?"
+                      defaultValue={greetingmessage}
+                      onValueChange={(value) => {
+                        setgreetingmessage(value)
+                      }}
                     />
                     <div className="flex justify-end">
-                      <Button fullWidth color="primary">
-                        Save
+                      <Button
+                        onClick={handlegreetingSave}
+                        isLoading={buttonloading}
+                        spinner={
+                          <div className="flex flex-row">
+                            <svg
+                              className="animate-spin h-5 w-5 text-current"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              />
+                              <path
+                                className="opacity-75"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                fill="currentColor"
+                              />
+                            </svg>
+
+                            <h1>   Saving Changes</h1>
+                          </div>
+                        }
+
+                        fullWidth color="primary">
+                        {buttonloading ? "" : "Save"}
                       </Button>
                     </div>
                   </form>
@@ -160,35 +390,92 @@ const TablesPage = () => {
                   <form className="flex flex-col gap-4 ">
                     <Textarea
                       label="Tone and Style"
-                      placeholder="Conversational and friendly, with a touch of humor when appropriate. Maintain a professional tone for business-related queries."
+                      defaultValue={toneAndStyle}
+                      onValueChange={(value) => {
+                        setToneAndStyle(value)
+                      }}
                     />
                     <Textarea
                       label="User Guidance"
-                      placeholder="Provide clear guidance and instructions. Clearly instruct users on how to navigate the chatbot, ask for information, or perform specific actions."
+                      defaultValue={userGuidance}
+                      onValueChange={(value) => {
+                        setUserGuidance(value)
+                      }}
                     />
                     <Textarea
                       label="Positive reinforcement"
                       placeholder="Include positive phrases to acknowledge user inputs. Express gratitude and provide positive feedback where applicable to enhance user experience."
+                      defaultValue={positiveReinforcement}
+                      onValueChange={(value) => {
+                        setPositiveReinforcement(value)
+                      }}
                     />
                     <Textarea
                       label="Error Handling"
                       placeholder="Clearly communicate errors with user-friendly messages. Provide suggestions for correction and avoid technical jargon. Apologize when necessary."
+                      defaultValue={errorHandling}
+                      onValueChange={(value) => {
+                        setErrorHandling(value)
+                      }}
+
                     />
                     <Textarea
                       label="Politeness"
                       placeholder="Always use polite phrases and courteous language. Avoid language that may be perceived as rude or insensitive. Thank users for their inputs."
+                      defaultValue={politeness}
+                      onValueChange={(value) => {
+                        setPoliteness(value)
+                      }}
+
                     />
                     <Textarea
                       label="Clarity and simplicity"
                       placeholder="Prioritize straightforward language. Avoid complex jargon and use concise sentences. Break down information into easily digestible chunks."
+                      defaultValue={clarityAndSimplicity}
+                      onValueChange={(value) => {
+                        setToneAndStyle(value)
+                      }}
                     />
                     <Textarea
                       label="Personalization"
                       placeholder="Address users by name whenever possible. Reference past interactions to create a personalized experience. Use personalized greetings based on user history."
+                      defaultValue={personalization}
+                      onValueChange={(value) => {
+                        setPersonalization(value)
+                      }}
+
                     />
                     <div className="flex gap-2 justify-end">
-                      <Button fullWidth color="primary">
-                        Sign up
+                      <Button
+                        onClick={handlelanguageSave}
+                        isLoading={buttonloading}
+                        spinner={
+                          <div className="flex flex-row">
+                            <svg
+                              className="animate-spin h-5 w-5 text-current"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              />
+                              <path
+                                className="opacity-75"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                            <h1>   Saving Changes</h1>
+                          </div>
+                        }
+                        fullWidth color="primary">
+                        {buttonloading ? "" : "Save"}
                       </Button>
                     </div>
                   </form>
@@ -198,23 +485,44 @@ const TablesPage = () => {
                     <div>
                       <h1>Response Length</h1>
                     </div>
-                    <Tabs key="bordered" variant="bordered" aria-label="Tabs variants">
-                      <Tab key="short" title="Short" />
+                    <Tabs
+                      selectedKey={responseLength}
+                      onSelectionChange={(key: React.Key) => {
+                        setResponseLength(String(key))
+                      }}
+                      key="bordered"
+                      variant="bordered"
+                      aria-label="Tabs variants">
+                      <Tab key="Short" title="Short" />
                       <Tab key="Medium" title="Medium" />
                       <Tab key="Long" title="Long" />
                     </Tabs>
                     <Textarea
                       label="Clarification Prompt"
-                      placeholder=""
+                      defaultValue={clarificationPrompt}
+                      onValueChange={(value) => {
+                        setClarificationPrompt(value)
+                      }}
+
+
                     />
                     <Textarea
                       label="Apology and Retry Attempt"
-                      placeholder=""
+                      defaultValue={apologyAndRetryAttempt}
+                      onValueChange={(value) => {
+                        setApologyAndRetryAttempt(value)
+                      }}
+
                     />
                     <div>
                       <h1>Error Message Style</h1>
                     </div>
-                    <Tabs key="bordered" variant="bordered" aria-label="Tabs variants">
+                    <Tabs
+                      selectedKey={errorMessageStyle}
+                      onSelectionChange={(key: React.Key) => {
+                        setErrorMessageStyle(String(key))
+                      }}
+                      key="bordered" variant="bordered" aria-label="Tabs variants">
                       <Tab key="Humorous" title="Humorous" />
                       <Tab key="Standard" title="Standard" />
                       <Tab key="Casual" title="Casual" />
@@ -222,8 +530,37 @@ const TablesPage = () => {
                       <Tab key="Empathetic" title="Empathetic" />
                     </Tabs>
                     <div className="flex gap-2 justify-end">
-                      <Button fullWidth color="primary">
-                        Save
+                      <Button
+                        isLoading={buttonloading}
+                        onClick={handlebehaviourSave}
+                        spinner={
+                          <div className="flex flex-row">
+                            <svg
+                              className="animate-spin h-5 w-5 text-current"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              />
+                              <path
+                                className="opacity-75"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                fill="currentColor"
+                              />
+                            </svg>
+
+                            <h1>   Saving Changes</h1>
+                          </div>
+                        }
+                        fullWidth color="primary">
+                        {buttonloading ? "" : "Save"}
                       </Button>
                     </div>
                   </form>
@@ -233,9 +570,14 @@ const TablesPage = () => {
           </Card>
         </div>
         <div className="flex flex-col  col-span-5 max-w-[400px]">
-          <div className="max-w-full h-[500px] bg-white rounded-2xl">
+          <div
+            style={{ fontFamily: fontFamily }}
+            className="max-w-full h-[500px] bg-white rounded-2xl">
             <div className="h-[75px] grid grid-cols-8 bg-black items-center rounded-t-2xl"
-              style={{ backgroundColor: selectedColor }}>
+              style={{
+                backgroundColor: selectedColor,
+                color: fontColor
+              }}>
               <div className="col-span-2 rounded-full">
                 <svg width="84" height="50" viewBox="0 0 256 256" xmlSpace="preserve">
                   <g
@@ -272,8 +614,8 @@ const TablesPage = () => {
 
               </div>
               <div className="bg-transaparent col-span-5">
-                <h1 className="text-white text-3xl font-bold p-4 ">
-                  Anya
+                <h1 className="text-3xl font-bold p-4 ">
+                  {botName}
                 </h1>
               </div>
               <div className="col-span-1">
@@ -304,7 +646,7 @@ const TablesPage = () => {
             <div className="h-[70px] grid grid-cols-8 items-center"
               style={{ backgroundColor: selectedColor }}>
               <div className="col-span-8">
-                              
+
 
 
 

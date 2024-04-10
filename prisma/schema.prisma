@@ -23,17 +23,44 @@ model Message {
   senderId       Int
   text           String
   senderType     String
-  unanswered      Boolean      @default(false)
+  unanswered     Boolean      @default(false)
   Conversation   Conversation @relation(fields: [conversationId], references: [id])
 
   @@index([conversationId])
 }
 
 model User {
-  id          Int    @id @default(autoincrement())
-  email       String    @unique
-  lastLoginAt DateTime?
-  password    String
+  id             Int                    @id @default(autoincrement())
+  email          String                 @unique
+  lastLoginAt    DateTime?
+  password       String
+  customizations ChatbotCustomization[]
+}
+
+model ChatbotCustomization {
+  id                     Int      @id @default(autoincrement())
+  selectedColor          String   @default("#4F6E5")
+  botName                String
+  greetingMessage        String
+  fontFamily             String
+  fontColor              String
+  widgetPosition         String
+  toneAndStyle           String
+  userGuidance           String
+  positiveReinforcement  String
+  errorHandling          String
+  politeness             String
+  clarityAndSimplicity   String
+  personalization        String
+  responseLength         String
+  clarificationPrompt    String
+  apologyAndRetryAttempt String
+  errorMessageStyle      String
+  logo                   String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  user                   User     @relation(fields: [userEmail], references: [email])
+  userEmail              String
 }
 
 model conversation_dist {

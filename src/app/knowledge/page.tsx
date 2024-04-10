@@ -21,7 +21,7 @@ const Knowledge = () => {
         <div className="flex flex-col gap-5.5 p-6.5">
           <div>
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Default Input
+              Enter URL for FAQs
             </label>
             <input
               type="text"
@@ -31,7 +31,7 @@ const Knowledge = () => {
           </div>
           <div>
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Default Input
+            Enter URL for Terms
             </label>
             <input
               type="text"
@@ -41,7 +41,7 @@ const Knowledge = () => {
           </div>
           <div>
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Default Input
+            Enter URL for Help
             </label>
             <input
               type="text"
@@ -79,14 +79,11 @@ const Knowledge = () => {
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
           <h3 className="font-medium text-black dark:text-white">
-            or add a link to a video
+            add a link to a video
           </h3>
         </div>
         <div className="flex flex-col gap-5.5 p-6.5">
           <div>
-            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Default Input
-            </label>
             <input
               type="text"
               placeholder="Default Input"
