@@ -26,7 +26,6 @@ const color = [
   { label: "Black", value: "Black" },
 ]
 
-const variants = ["flat"];
 const demo_mssgs = [
   "Hi, How may i help you",
   "Can you give me the brief about the latest discounts on the A387 Headset"

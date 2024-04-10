@@ -423,3 +423,13 @@ export const getChatsData = async (email: string, page: number, limit: number) =
 
   return null;
 };
+
+export const getInstallationData = async (email: string) => {
+  const shop = await getShop(email);
+  console.log("shop" + shop)
+  if (shop) {
+    return {
+      shop
+    }
+  }
+}

@@ -4,6 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import ChatCard2 from "@/components/Chat/ChatCard2";
 import { useState } from "react";
 import ConversationDetails from "@/components/Chat/ConversationCard";
+import ConversationDetailsEmpty from "@/components/Chat/ConversationCardempty";
 
 
 interface Message {
@@ -42,7 +43,7 @@ const Chat = () => {
           {selectedConversation ? (
               <ConversationDetails conversation={selectedConversation} />
             ) : (
-              <div>Please select a conversation</div>
+              <ConversationDetailsEmpty />
             )}
           </div>
 
