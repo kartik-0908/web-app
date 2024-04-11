@@ -486,3 +486,12 @@ export const upgradeData = async (email: string) => {
     throw error;
   }
 }
+
+export async function updateUserPassword(email: string, newPassword: string) {
+  const hashedPassword = await hashPassword(newPassword);
+
+  await client.user.update({
+    where: { email },
+    data: { password: hashedPassword },
+  });
+}

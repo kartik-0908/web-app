@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { signIn } from 'next-auth/react';
 import { Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader } from "@nextui-org/react";
+import axios from "axios";
 
 export default function () {
   const [selected, setSelected] = useState<string>('login');
@@ -22,6 +23,28 @@ export default function () {
       // router.push(selected === 'login' ? '/home' : '/install');
     } else {
       setErrorMessage('Failed to authenticate. Please check your credentials and try again.');
+    }
+  };
+
+  const handleForgotPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const email = form.email.value;
+    const password = form.password.value;
+  
+    try {
+      const response = await axios.post('/api/change-password', { email, password });
+  
+      if (response) {
+        // Display success message to the user
+        alert('Password reset successfull');
+      } else {
+        // Display error message to the user
+        alert('Failed to send password reset email. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+      alert('An error occurred. Please try again later.');
     }
   };
 
@@ -49,6 +72,11 @@ export default function () {
                   type="password"
                   name="password"
                 />
+                <p className="text-center text-small">
+                  <Link size="sm" onPress={() => setSelected("forgot-password")}>
+                    Forgot Password?
+                  </Link>
+                </p>
                 <p className="text-center text-small">
                   Need to create an account?{" "}
                   <Link size="sm" onPress={() => setSelected("sign-up")}>
@@ -88,6 +116,29 @@ export default function () {
                     type="submit"
                     fullWidth color="primary">
                     Sign up
+                  </Button>
+                </div>
+              </form>
+            </Tab>
+            <Tab key="forgot-password" title="Change Password">
+              <form onSubmit={handleForgotPassword} className="flex flex-col gap-4">
+                <Input isRequired label="Email" placeholder="Enter your email" type="email" name="email" />
+                <Input
+                  isRequired
+                  label="Change Password"
+                  placeholder="Enter your new password"
+                  type="password"
+                  name="password"
+                />
+                <p className="text-center text-small">
+                  Remember your password?{" "}
+                  <Link size="sm" onPress={() => setSelected("login")}>
+                    Login
+                  </Link>
+                </p>
+                <div className="flex gap-2 justify-end">
+                  <Button type="submit" fullWidth color="primary">
+                    Reset Password
                   </Button>
                 </div>
               </form>

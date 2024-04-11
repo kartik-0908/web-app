@@ -350,7 +350,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     "bg-graydark dark:bg-meta-4"
                     }`}
                 >
-                  <svg
+                  {/* <svg
                     className="fill-current"
                     width="18"
                     height="19"
@@ -378,7 +378,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         />
                       </clipPath>
                     </defs>
-                  </svg>
+                  </svg> */}
                   Upgrade
                 </Link>
               </li>

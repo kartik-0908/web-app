@@ -41,7 +41,7 @@ export const nextAuthOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: '/auth/signin', // Specify your custom sign-in page path
-    error: '/auth/error', // Specify your error page path
+    error: '', // Specify your error page path
   },
   // callbacks: {
   //   jwt: async ({ user, token }: any) => {
