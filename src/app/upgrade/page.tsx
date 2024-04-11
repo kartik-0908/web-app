@@ -8,19 +8,34 @@ import axios from "axios";
 
 
 const Upgrade = () => {
-  const [buttonloading, setbuttonloading] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<number>(0);
+  const [button1loading, setbutton1loading] = useState(false);
+  const [button2loading, setbutton2loading] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState({
+    conversations: 0,
+    price: 0,
+  });
 
   const handleSave = async (e: any) => {
     e.preventDefault(); // Prevent default form submission behavior
-    setbuttonloading(true)
+    if(selectedCard===1){
+      setbutton1loading(true)
+    }
+    else {
+      setbutton2loading(true);
+    }
 
     try {
-      const response = await axios.post('api/v1/data/upgrade');
+      const response = await axios.post('api/v1/data/upgrade', {
+        conversations: selectedPlan.conversations,
+        price: selectedPlan.price
+      });
       const data = response.data;
       console.log('Success:', data);
     } catch (error) {
     }
-    setbuttonloading(false)
+    setbutton1loading(false)
+    setbutton2loading(false)
 
   };
   return (
@@ -30,11 +45,16 @@ const Upgrade = () => {
 
         <div className="grid grid-cols-12 gap-8">
           <div className="col-span-6">
-            <Card className="">
+            <Card
+              isPressable
+              onPress={() => {
+                setSelectedCard(1);
+                setSelectedPlan({ conversations: 1500, price: 10 })
+              }}
+              className={selectedCard === 1 ? "border-2 border-blue-500" : ""}
+            >
               <CardHeader className="flex gap-3">
                 <div className="flex flex-col">
-                  <p className="text-md">NextUI</p>
-                  <p className="text-small text-default-500">nextui.org</p>
                 </div>
               </CardHeader>
               <Divider />
@@ -44,39 +64,78 @@ const Upgrade = () => {
                 <div>
                   1500 Conversations/month
                 </div>
-                <p>
+                <div>
                   GPT-3.5 Turbo Powered Chatbot
-                </p>
-                <p>
+                </div>
+                <div>
                   Widget Customizations
-                </p>
-                <p>
+                </div>
+                <div>
                   Live Bot Analytics
-                </p>
-                <p>
+                </div>
+                <div>
                   2 Page Ingestion
-                </p>
-                <p>
+                </div>
+                <div>
                   Multi-Lingual Bot
-                </p>
-                <p>
+                </div>
+                <div>
                   Support Over email
-                </p>
+                </div>
               </CardBody>
               <Divider />
-              <CardFooter>
-                <Link
-                  isExternal
-                  showAnchorIcon
-                  href="https://github.com/nextui-org/nextui"
+              <CardFooter
+              >
+                <Button
+                  onClick={handleSave}
+                  isLoading={button1loading}
+                  disableAnimation
+                  disabled={selectedCard !== 1}
+                  className={`${selectedCard !== 1
+                    ? "cursor-not-allowed opacity-50 hover:bg-inherit"
+                    : "bg-blue-500 text-white"
+                    }`}
+                  spinner={
+                    <div className="flex flex-row">
+                      <svg
+                        className="animate-spin h-5 w-5 text-current"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      <h1>Redirecting to Shopify</h1>
+                    </div>
+                  }
+                  color={selectedCard === 1 ? "primary" : "default"}
                 >
-                  Visit source code on GitHub.
-                </Link>
+                  {button1loading ? "" : "Buy this Plan"}
+                </Button>
               </CardFooter>
             </Card>
           </div>
           <div className="col-span-6">
-            <Card className="">
+            <Card
+              isPressable
+              onPress={() => {
+                setSelectedCard(2);
+                setSelectedPlan({ conversations: 2500, price: 20 });
+              }}
+              className={selectedCard === 2 ? "border-2 border-blue-500" : ""}
+            >
               <CardHeader className="flex gap-3">
                 <Image
                   alt="nextui logo"
@@ -86,8 +145,6 @@ const Upgrade = () => {
                   width={40}
                 />
                 <div className="flex flex-col">
-                  <p className="text-md">NextUI</p>
-                  <p className="text-small text-default-500">nextui.org</p>
                 </div>
               </CardHeader>
               <Divider />
@@ -97,64 +154,70 @@ const Upgrade = () => {
                 <div>
                   2500 Conversations/month
                 </div>
-                <p>
+                <div>
                   All features of Basic Plan
-                </p>
-                <p>
+                </div>
+                <div>
                   Widget Customizations
-                </p>
-                <p>
+                </div>
+                <div>
                   No Yugaa Branding
-                </p>
-                <p>
+                </div>
+                <div>
                   Unlimited Page Ingestion
-                </p>
-                <p>
+                </div>
+                <div>
                   Highest Priority Access
-                </p>
-                <p>
+                </div>
+                <div>
                   Early access to Updats
-                </p>
-                <p>
+                </div>
+                <div>
                   Dedicated Account Manager
-                </p>
-                <p>
+                </div>
+                <div>
                   Round the clock Chat suppport (Whatsapp, Slack, Teams)
-                </p>
+                </div>
               </CardBody>
               <Divider />
               <CardFooter>
-              <Button
-                onClick={handleSave}
-                isLoading={buttonloading}
-                spinner={
-                  <div className="flex flex-row">
-                    <svg
-                      className="animate-spin h-5 w-5 text-current"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    <h1>Doing authentication</h1>
-                  </div>
-                }
-                fullWidth color="primary">
-                {buttonloading ? "" : "Buy this Plan"}
-              </Button>
+                <Button
+                  onClick={handleSave}
+                  isLoading={button2loading}
+                  disabled={selectedCard !== 2}
+                  className={`${selectedCard !== 2
+                      ? "cursor-not-allowed opacity-50 hover:bg-inherit"
+                      : "bg-blue-500 text-white"
+                    }`}
+                  color={selectedCard === 2 ? "primary" : "default"}
+                  spinner={
+                    <div className="flex flex-row">
+                      <svg
+                        className="animate-spin h-5 w-5 text-current"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      <h1>Redirecting to Shopify</h1>
+                    </div>
+                  }
+                >
+                  {button2loading ? "" : "Buy this Plan"}
+                </Button>
               </CardFooter>
             </Card>
 
