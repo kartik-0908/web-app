@@ -433,3 +433,56 @@ export const getInstallationData = async (email: string) => {
     }
   }
 }
+
+export const saveFeatureRequest = async (email: string, description: string, details: string, category: string) => {
+  try {
+    const shop = await getShop(email);
+    console.log("Shop: " + shop);
+
+    if (shop) {
+      const featureRequest = await client.feature_request.create({
+        data: {
+          shop,
+          description,
+          details,
+          category,
+        },
+      });
+
+      console.log("Feature request saved successfully:", featureRequest);
+      return featureRequest;
+    } else {
+      console.log("Shop not found for email:", email);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error saving feature request:", error);
+    throw error;
+  }
+};
+
+export const upgradeData = async (email: string) => {
+  try {
+    const installedShop = await client.shopify_installed_shop.findUnique({
+      where: {
+        email: email,
+      },
+      select: {
+        shop: true,
+        accessToken: true,
+      },
+    });
+
+    if (installedShop) {
+      return {
+        shop: installedShop.shop,
+        accessToken: installedShop.accessToken,
+      };
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error retrieving shop and access token:', error);
+    throw error;
+  }
+}

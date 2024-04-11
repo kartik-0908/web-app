@@ -1,8 +1,9 @@
 "use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import React from "react";
-import { Select, SelectItem } from "@nextui-org/react";
+import React, { useState } from "react";
+import { Button, Select, SelectItem, Textarea } from "@nextui-org/react";
+import axios from "axios";
 
 const items = [
   {
@@ -25,8 +26,29 @@ const items = [
 
 
 const feature = () => {
+  const [shortdesc, setShortdesc] = useState("")
+  const [message, setMessage] = useState("")
+  const [category, setCategory] = useState("")
+  const [buttonloading, setbuttonloading] = useState(false)
 
+  const handleSave = async (e: any) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    setbuttonloading(true)
 
+    const formData = {
+      shortdesc,
+      message,
+      category
+    };
+    try {
+      const response = await axios.post('api/v1/data/request/', formData);
+      const data = response.data;
+      console.log('Success:', data);
+    } catch (error) {
+    }
+    setbuttonloading(false)
+
+  };
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Feature request" />
@@ -45,24 +67,30 @@ const feature = () => {
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                   What woudl you like to see in the next version of our bot?
                 </label>
-                <input
-                  type="text"
-                  placeholder="Short descriptive text"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                <Textarea
+                  size="sm"
+                  placeholder="Short descriptive text."
+                  onValueChange={(value) => {
+                    setShortdesc(value)
+                  }}
                 />
-                <div className="pt-4">
-                  <textarea
-                    rows={6}
-                    placeholder="Type your message"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  ></textarea>
-                </div>
+                <br></br>
+                <Textarea
+                  size="lg"
+                  placeholder="Type your message."
+                  onValueChange={(value) => {
+                    setMessage(value)
+                  }}
 
+                />
                 <Select
                   label="Category"
                   placeholder="Choose a category"
-                  selectionMode="multiple"
                   className="pt-4"
+                  onSelectionChange={(keys) => {
+                    const selectedKey = Array.from(keys)[0];
+                    setCategory(String(selectedKey));
+                  }}
                 >
                   {items.map((items) => (
                     <SelectItem key={items.label} value={items.label}>
@@ -73,9 +101,37 @@ const feature = () => {
 
 
               </div>
-              <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                Send Message
-              </button>
+              <Button
+                onClick={handleSave}
+                isLoading={buttonloading}
+                spinner={
+                  <div className="flex flex-row">
+                    <svg
+                      className="animate-spin h-5 w-5 text-current"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <h1>   Saving Changes</h1>
+                  </div>
+                }
+                fullWidth color="primary">
+                {buttonloading ? "" : "Save"}
+              </Button>
             </div>
           </form>
         </div>
