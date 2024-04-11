@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from 'next-auth/react';
 const DropdownUser = () => {
+  const session = useSession();
+  const [email, setEmail] = useState("")
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
@@ -26,6 +29,7 @@ const DropdownUser = () => {
 
   // close if the esc key is pressed
   useEffect(() => {
+
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
       if (!dropdownOpen || keyCode !== 27) return;
       setDropdownOpen(false);
@@ -47,9 +51,8 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+          {JSON.stringify(session.data?.user?.email)}
           </span>
-          <span className="block text-xs">UX Designer</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">

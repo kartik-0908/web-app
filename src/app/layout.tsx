@@ -2,8 +2,17 @@ import "jsvectormap/dist/css/jsvectormap.css";
 import "flatpickr/dist/flatpickr.min.css";
 import "@/css/satoshi.css";
 import "@/css/style.css";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Providers } from "./providers";
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: 'Yugaa Dashboard',
+  description: 'Yugaa Dashboard.',
+};
+
+
+
+
 export default function RootLayout({
   children,
 }: Readonly<{

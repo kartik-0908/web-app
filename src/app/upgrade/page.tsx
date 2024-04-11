@@ -18,7 +18,7 @@ const Upgrade = () => {
 
   const handleSave = async (e: any) => {
     e.preventDefault(); // Prevent default form submission behavior
-    if(selectedCard===1){
+    if (selectedCard === 1) {
       setbutton1loading(true)
     }
     else {
@@ -55,6 +55,7 @@ const Upgrade = () => {
             >
               <CardHeader className="flex gap-3">
                 <div className="flex flex-col">
+                  Select this to get Basic Plan for yourself
                 </div>
               </CardHeader>
               <Divider />
@@ -137,13 +138,7 @@ const Upgrade = () => {
               className={selectedCard === 2 ? "border-2 border-blue-500" : ""}
             >
               <CardHeader className="flex gap-3">
-                <Image
-                  alt="nextui logo"
-                  height={40}
-                  radius="sm"
-                  src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-                  width={40}
-                />
+                Select this to get Pro Plan for yourself
                 <div className="flex flex-col">
                 </div>
               </CardHeader>
@@ -186,8 +181,8 @@ const Upgrade = () => {
                   isLoading={button2loading}
                   disabled={selectedCard !== 2}
                   className={`${selectedCard !== 2
-                      ? "cursor-not-allowed opacity-50 hover:bg-inherit"
-                      : "bg-blue-500 text-white"
+                    ? "cursor-not-allowed opacity-50 hover:bg-inherit"
+                    : "bg-blue-500 text-white"
                     }`}
                   color={selectedCard === 2 ? "primary" : "default"}
                   spinner={

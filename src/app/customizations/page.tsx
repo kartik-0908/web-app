@@ -8,6 +8,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import ColorPicker from "./ColorPicker";
 import { Textarea } from "@nextui-org/react";
 import axios from "axios";
+import Image from "next/image";
 
 const fonts = [
   { label: 'Arial', value: 'Arial, sans-serif' },
@@ -577,8 +578,8 @@ const TablesPage = () => {
                 backgroundColor: selectedColor,
                 color: fontColor
               }}>
-              <div className="col-span-2 rounded-full">
-                <svg width="84" height="50" viewBox="0 0 256 256" xmlSpace="preserve">
+              <div className="col-span-2 pl-4 rounded-full">
+                {/* <svg width="84" height="50" viewBox="0 0 256 256" xmlSpace="preserve">
                   <g
                     style={{
                       stroke: 'none',
@@ -608,7 +609,13 @@ const TablesPage = () => {
                       }}
                     />
                   </g>
-                </svg>
+                </svg> */}
+                <Image
+                  src="/images/user/user-01.png"
+                  width={54}
+                  height={50}
+                  alt="User"
+                />
 
 
               </div>
