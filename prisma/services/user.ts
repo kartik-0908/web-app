@@ -24,7 +24,7 @@ export const createUser = async ({ email, password }: { email: string; password:
       greetingMessage: 'Hello, how can I assist you?',
       selectedColor: "#1C2434",
       fontFamily: "Arial, sans-serif",
-      fontColor: "Black",
+      fontColor: "White",
       widgetPosition: "right",
       toneAndStyle: "Conversational and friendly, with a touch of humor when appropriate. Maintain a professional tone for business-related queries.",
       userGuidance: "Provide clear guidance and instructions. Clearly instruct users on how to navigate the chatbot, ask for information, or perform specific actions.",
@@ -67,7 +67,6 @@ export const isShopInstalled = async (email: string) => {
 
   return shop !== null;
 }
-
 export const store_token = async (token: string, email: string, shop: string) => {
   const new_installed_shop = await client.shopify_installed_shop.create({
     data: {
@@ -77,7 +76,6 @@ export const store_token = async (token: string, email: string, shop: string) =>
     }
   });
 }
-
 async function getShop(email: string) {
   console.log(email)
   const existingUser = await client.shopify_installed_shop.findUnique({
