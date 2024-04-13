@@ -84,8 +84,6 @@ const InstallationCard = () => {
               Let's jump in and enhance visitor engagement in a whole new way!
             </p>
             <br></br>
-            <br></br>
-            <br></br>
             <Input
               placeholder="Enter your domain"
               type="text"
@@ -106,7 +104,7 @@ const InstallationCard = () => {
               Submit
             </Button>
             <p>
-              To enable the Yugaa chat widget for your website visitors, simply navigate to the Shopify theme editor and toggle it on.Click on the belwo link to add the widget.
+              To enable the Yugaa chat widget for your website visitors, simply navigate to the Shopify theme editor and toggle it on.Click on the below link to add the widget.
               <Link isBlock
                 isExternal
                 showAnchorIcon href={`https://${domain}.myshopify.com/admin/themes/current/editor?context=apps&activateAppId=ea9e1d5c-9897-48e6-9a2d-08b3db235ed0/chat-widget`} color="foreground">

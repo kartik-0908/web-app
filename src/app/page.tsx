@@ -27,7 +27,7 @@ export default async function Home() {
             <CardHeader className="absolute z-10 top-1 flex-col">
               <h4 className="font-bold text-6xl justify-center align-center">Welcome to YUGAA</h4>
               <div className="text-3xl text-black font-bold justify-center align-center ">
-                <h1>Transfor the way you want to interact with your customers</h1>
+                <h1>Transform the way you want to interact with your customers</h1>
               </div>
             </CardHeader>
             <Image
