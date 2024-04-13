@@ -50,7 +50,7 @@ const InstallationCard = () => {
     setLoading(true)
     const fetchData = async () => {
       const { data } = await axios.get('/api/v1/data/installation')
-      if (data && data.data) {
+      if (data && data.data && data.data.shop) {
         const { shop } = data.data;
         const croppedShop = shop.slice(0, -14);
         setDomain(croppedShop);
