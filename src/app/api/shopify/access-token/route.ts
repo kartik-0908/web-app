@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
       },
     });
     if (session && session.user && session.user.email) {
+      console.log("access_token: "+ response.data.access_token)
       await store_token(response.data.access_token, session?.user?.email, shop)
     }
     return NextResponse.json({ status: true });
