@@ -30,16 +30,17 @@ const ECommerce: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get('/api/v1/data/home')
-      const { currentWeekData } = data.data;
-      const { last7Days } = data.data;
-      const { lastThreeConversations } = data.data;
-      setcurrentWeekData(currentWeekData)
-      setlast7Days(last7Days)
-      setlastThreeConversations(lastThreeConversations)
-      console.log(currentWeekData)
-      console.log(last7Days)
-      console.log(lastThreeConversations)
-      // console.log(latestData)
+      if (data && data.data) {
+        const { currentWeekData } = data.data;
+        const { last7Days } = data.data;
+        const { lastThreeConversations } = data.data;
+        setcurrentWeekData(currentWeekData)
+        setlast7Days(last7Days)
+        setlastThreeConversations(lastThreeConversations)
+        console.log(currentWeekData)
+        console.log(last7Days)
+        console.log(lastThreeConversations)
+      }
       setloading(false)
     }
     fetchData();
@@ -56,11 +57,11 @@ const ECommerce: React.FC = () => {
             currentWeekData={currentWeekData}
           />
           <ChartTwo
-          last7days = {last7Days}
+            last7days={last7Days}
           />
           <div className="col-span-12">
             <ChatCard
-            lastThreeConversations={lastThreeConversations}
+              lastThreeConversations={lastThreeConversations}
             />
           </div>
         </div>

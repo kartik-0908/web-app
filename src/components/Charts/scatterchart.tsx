@@ -91,7 +91,7 @@ interface ScatterChartProps {
 
 
 
-const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData }) => {
+const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData = [] }) => {
   const [state, setState] = useState<ChartTwoState>({
     series: [],
   });

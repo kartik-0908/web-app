@@ -1,7 +1,12 @@
 import client from '../index';
 import { hashPassword, verifyPassword as verifyUserPassword } from '../../lib/auth';
-import { start } from 'repl';
-import { emit } from 'process';
+import axios from 'axios';
+import { Pinecone } from '@pinecone-database/pinecone';
+// import { Configuration, OpenAIApi } from 'openai';
+
+const pc = new Pinecone({
+  apiKey: 'ad1612ee-9b3f-4269-9e18-362ff724713d'
+});
 
 export const findUserByEmail = async (email: string) => {
   return await client.user.findUnique({
@@ -173,6 +178,11 @@ export const getHomeData = async (email: string) => {
       lastThreeConversations,
     }
   }
+  else {
+    return {
+      error: "Shop is not installed yet",
+    };
+  }
 }
 
 async function getConversationStats(startDate: Date, endDate: Date) {
@@ -265,6 +275,11 @@ export const getAnalyticsData = async (email: string, startDate: string, endDate
     return {
       analyticsData: data
     }
+  }
+  else {
+    return {
+      error: "Shop is not installed yet",
+    };
   }
 
 
@@ -418,8 +433,11 @@ export const getChatsData = async (email: string, page: number, limit: number) =
 
     return conversations;
   }
-
-  return null;
+  else {
+    return {
+      error: "Shop is not installed yet",
+    };
+  }
 };
 
 export const getInstallationData = async (email: string) => {
@@ -429,6 +447,11 @@ export const getInstallationData = async (email: string) => {
     return {
       shop
     }
+  }
+  else {
+    return {
+      error: "Shop is not installed yet",
+    };
   }
 }
 
@@ -450,8 +473,9 @@ export const saveFeatureRequest = async (email: string, description: string, det
       console.log("Feature request saved successfully:", featureRequest);
       return featureRequest;
     } else {
-      console.log("Shop not found for email:", email);
-      return null;
+      return {
+        error: "Shop is not installed yet",
+      };
     }
   } catch (error) {
     console.error("Error saving feature request:", error);
@@ -492,4 +516,73 @@ export async function updateUserPassword(email: string, newPassword: string) {
     where: { email },
     data: { password: hashedPassword },
   });
+}
+
+function preprocessProduct(product: any, shop: any) {
+  console.log("inside preprocess product")
+  console.log(product)
+  return {
+    id: `${shop}_${product.id}`,
+    title: product.title,
+    body_html: product.body_html,
+    vendor: product.vendor,
+    tags: product.tags,
+
+    // Add more fields as needed
+  };
+}
+
+
+export const getStoreData = async (email: string) => {
+  try {
+    const installedShop = await client.shopify_installed_shop.findUnique({
+      where: {
+        email: email,
+      },
+      select: {
+        shop: true,
+        accessToken: true,
+      },
+    });
+
+    if (installedShop) {
+      const shop = installedShop.shop
+      const accessToken = installedShop.accessToken
+      const apiVersion = '2024-04';
+
+      const response = await axios.get(
+        `https://${shop}/admin/api/2024-04/products.json`,
+        {
+          headers: {
+            'X-Shopify-Access-Token': accessToken,
+          },
+        }
+      );
+      // console.log(response.data);
+      const {products} = response.data
+      const processedProducts = products.map((product: any) => preprocessProduct(product, shop));
+      // const indexName = shop
+      // await pc.createIndex({
+      //   name: indexName,
+      //   dimension: 1536,
+      //   metric: 'cosine',
+      //   spec: {
+      //     serverless: {
+      //       cloud: 'aws',
+      //       region: 'us-east-1'
+      //     }
+      //   }
+      // });
+
+
+    } else {
+      return null;
+    }
+    return {
+      "hello": "message"
+    }
+  } catch (error) {
+    console.error('Error retrieving shop and access token:', error);
+    throw error;
+  }
 }

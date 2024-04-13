@@ -14,19 +14,42 @@ import axios from 'axios';
 //   ssr: false,
 // });
 
+// const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
+//   const formattedStartDate = startDate.toISOString().split('T')[0];
+//   const formattedEndDate = endDate.toISOString().split('T')[0];
+//   const response = await axios.get('/api/v1/data/analytics', {
+//     params: {
+//       startDate: formattedStartDate,
+//       endDate: formattedEndDate,
+//     },
+//   });
+
+//   return response;
+// };
+
+
 const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
-  const formattedStartDate = startDate.toISOString().split('T')[0];
-  const formattedEndDate = endDate.toISOString().split('T')[0];
-  const response = await axios.get('/api/v1/data/analytics', {
-    params: {
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
-    },
-  });
+  try {
+    const formattedStartDate = startDate.toISOString().split('T')[0];
+    const formattedEndDate = endDate.toISOString().split('T')[0];
 
-  return response;
+    const response = await axios.get('/api/v1/data/analytics', {
+      params: {
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+      },
+    });
+
+    if (response.data.error) {
+      throw new Error(response.data.error);
+    }
+
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching analytics data:', error);
+    return null;
+  }
 };
-
 
 const Analytics = () => {
   const [startDate, setStartDate] = useState<Date>(() => {
@@ -43,16 +66,18 @@ const Analytics = () => {
   useEffect(() => {
     const fetchAndSetData = async () => {
       console.log(startDate)
-      setLoading(true);
+      // setLoading(true);
       const data = await fetchAnalyticsData(startDate, endDate);
-      const { analyticsData } = data.data.data;
-      console.log(analyticsData)
-      settotalmssg(analyticsData.totalMessages)
-      settotalconv(analyticsData.totalConversations)
-      setavgDuration(analyticsData.averageDurationSeconds)
-      setUnanswered(analyticsData.unansweredMessages)
-
-      setLoading(false);
+      
+      if (data && data.data && data.data.data) {
+        const { analyticsData } = data.data.data;
+        console.log(analyticsData)
+        settotalmssg(analyticsData.totalMessages)
+        settotalconv(analyticsData.totalConversations)
+        setavgDuration(analyticsData.averageDurationSeconds)
+        setUnanswered(analyticsData.unansweredMessages)
+      }
+      // setLoading(false);
     };
 
     fetchAndSetData();
@@ -96,7 +121,7 @@ const Analytics = () => {
 
             <CardDataStats title="Answered Questions"
               total={`${totalmssg - Unanswered}`}
-              >
+            >
               <svg
                 className="fill-primary dark:fill-white"
                 width="22"
@@ -117,7 +142,7 @@ const Analytics = () => {
             </CardDataStats>
             <CardDataStats title="Unanswered Questions"
               total={Unanswered.toString()}
-              >
+            >
               <svg
                 className="fill-primary dark:fill-white"
                 width="20"
@@ -142,7 +167,7 @@ const Analytics = () => {
             </CardDataStats>
             <CardDataStats title="Time Saved"
               total={`${(totalconv * 6.3).toFixed(1)} minutes`}
-              >
+            >
               <svg
                 className="fill-primary dark:fill-white"
                 width="22"
@@ -162,8 +187,8 @@ const Analytics = () => {
               </svg>
             </CardDataStats>
             <CardDataStats title="Average Session Duration"
-              total={formatDuration(avgDuration)} 
-              >
+              total={formatDuration(avgDuration)}
+            >
               <svg
                 className="fill-primary dark:fill-white"
                 width="22"

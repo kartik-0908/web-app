@@ -578,7 +578,7 @@ const TablesPage = () => {
             <div
               style={{ fontFamily: fontFamily }}
               className="max-w-full h-[500px] bg-white rounded-2xl">
-              <div className="h-[75px] grid grid-cols-8 bg-black items-center rounded-t-2xl"
+              <div className="h-[75px] grid grid-cols-8 items-center rounded-t-2xl"
                 style={{
                   backgroundColor: selectedColor,
                   color: fontColor
@@ -590,9 +590,6 @@ const TablesPage = () => {
                     height={50}
                     alt="User"
                   />
-                  {/* <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H7l-4 3V6z" />
-                </svg> */}
                 </div>
                 <div className="bg-transaparent col-span-5">
                   <h1 className="text-3xl font-bold p-4 ">
@@ -605,7 +602,8 @@ const TablesPage = () => {
                   </svg>
                 </div>
               </div>
-              <div className="h-[400px] flex flex-col bg-white p-3 overflow-auto scrollbar-custom">
+              <div
+              className="h-[400px] flex flex-col bg-white p-3 overflow-auto scrollbar-custom">
                 {messages.map((message, index) => (
                   <div
                     key={index}

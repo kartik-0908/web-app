@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth"
-import {  NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAnalyticsData, getHomeData } from "../../../../../../prisma/services/user";
 
 export async function GET(request: NextRequest) {
@@ -13,11 +13,17 @@ export async function GET(request: NextRequest) {
     if (session && session.user && session.user.email) {
         try {
             // Adjust getAnalyticsData to your needs. Ensure it returns a type that matches AnalyticsData.
-            const analyticsData = await getAnalyticsData(session.user.email,startDate, endDate);
-            console.log(analyticsData)
-            return new NextResponse(JSON.stringify({
-                data: analyticsData
-            }));
+            const analyticsData = await getAnalyticsData(session.user.email, startDate, endDate);
+            // console.log(analyticsData)
+
+            if ('error' in analyticsData) {
+                // If the response contains an 'error' property, forward it to the frontend
+                return new NextResponse(JSON.stringify({ error: analyticsData.error }), { status: 400 });
+            } else {
+                // If the response is successful, return the analytics data
+                console.log(analyticsData);
+                return new NextResponse(JSON.stringify({ data: analyticsData }));
+            }
         } catch (error) {
             console.error('Error fetching analytics data:', error);
             return new NextResponse(JSON.stringify({ error: 'Failed to fetch analytics data' }), { status: 500 });
@@ -25,5 +31,5 @@ export async function GET(request: NextRequest) {
     } else {
         return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
-  
+
 }

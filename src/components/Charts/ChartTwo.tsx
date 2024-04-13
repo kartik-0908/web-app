@@ -2,16 +2,16 @@ import { ApexOptions } from "apexcharts";
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 
-const getDateLabels = () => {
-  const labels = [];
-  const today = new Date();
-  for (let i = 6; i >= 0; i--) {
-    const day = new Date(today);
-    day.setDate(day.getDate() - i);
-    labels.push(day.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })); // Format: 'Mar 10'
-  }
-  return labels;
-};
+// const getDateLabels = () => {
+//   const labels = [];
+//   const today = new Date();
+//   for (let i = 6; i >= 0; i--) {
+//     const day = new Date(today);
+//     day.setDate(day.getDate() - i);
+//     labels.push(day.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })); // Format: 'Mar 10'
+//   }
+//   return labels;
+// };
 
 const options: ApexOptions = {
   colors: ["#3C50E0", "#80CAEE"],
@@ -98,20 +98,12 @@ interface ChartTwoState {
   }[]
 }
 
-const ChartTwo: React.FC<ChartTwoProps> = ({ last7days }) => {
+const ChartTwo: React.FC<ChartTwoProps> = ({ last7days = [] }) => {
   const [state, setState] = useState({
     series: [{ name: "Interactions", data: last7days }],
   });
   const [chartOptions, setChartOptions] = useState(options);
-  const sumOfLast7Days = last7days.reduce((acc, curr) => acc + curr, 0);
-  // const [state, setState] = useState<ChartTwoState>({
-  //   series: [
-  //     {
-  //       name: "Interactions",
-  //       data: [], 
-  //     },
-  //   ],
-  // });
+  const [sumOfLast7Days, setsum] = useState(0);
 
   const getDateLabels = () => {
     const labels = [];
@@ -147,6 +139,8 @@ const ChartTwo: React.FC<ChartTwoProps> = ({ last7days }) => {
     // Update your state or a new state variable with the updated options
     setChartOptions(updatedOptions);
     setState(data)
+    const sumOfLast7Days = last7days.reduce((acc, curr) => acc + curr, 0);
+    setsum(sumOfLast7Days)
 
 
   }, [last7days]);
