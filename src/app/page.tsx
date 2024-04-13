@@ -22,11 +22,11 @@ export default async function Home() {
   return (
     <>
       <div className="grid grid-cols-2">
-        <div className="p-32 h-screen bg-gradient-to-br from-dark-blue to-light-blue">
+        <div className="p-8 h-screen bg-gradient-to-br from-dark-blue to-light-blue">
           <Card isFooterBlurred className="h-full">
             <CardHeader className="absolute z-10 top-1 flex-col">
               <h4 className="font-bold text-6xl justify-center align-center">Welcome to YUGAA</h4>
-              <div className="text-3xl text-black font-bold justify-center align-center p-32">
+              <div className="text-3xl text-black font-bold justify-center align-center ">
                 <h1>Transfor the way you want to interact with your customers</h1>
               </div>
             </CardHeader>

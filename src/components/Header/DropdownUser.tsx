@@ -140,7 +140,7 @@ const DropdownUser = () => {
               fill=""
             />
           </svg>
-          LOGG OUT 
+          LOG OUT 
         </button>
       </div>
       {/* <!-- Dropdown End --> */}

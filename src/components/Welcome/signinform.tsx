@@ -35,10 +35,10 @@ export default function () {
     const form = event.currentTarget;
     const email = form.email.value;
     const password = form.password.value;
-  
+
     try {
       const response = await axios.post('/api/change-password', { email, password });
-  
+
       if (response) {
         // Display success message to the user
         alert('Password reset successfull');
@@ -57,6 +57,9 @@ export default function () {
     <div className="flex flex-col w-full ">
       <Card className="max-w-full w-[440px] ">
         <CardBody className="overflow-hidden">
+          <div className="text-3xl text-black text-center pb-4 font-bold justify-center align-center ">
+            <h1>Let's Get Started</h1>
+          </div>
           <Tabs
             fullWidth
             size="lg"
@@ -90,35 +93,35 @@ export default function () {
                 </p>
                 <div className="flex gap-2 justify-end">
                   <Button
-                   isLoading={buttonloading}
-                   spinner={
-                     <div className="flex flex-row">
-                       <svg
-                         className="animate-spin h-5 w-5 text-current"
-                         fill="none"
-                         viewBox="0 0 24 24"
-                         xmlns="http://www.w3.org/2000/svg"
-                       >
-                         <circle
-                           className="opacity-25"
-                           cx="12"
-                           cy="12"
-                           r="10"
-                           stroke="currentColor"
-                           strokeWidth="4"
-                         />
-                         <path
-                           className="opacity-75"
-                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                           fill="currentColor"
-                         />
-                       </svg>
-                       <h1>Authenticating</h1>
-                     </div>
-                   }
-                   type="submit"
-                   fullWidth color="primary">
-                   {buttonloading ? "" : "Signin"}
+                    isLoading={buttonloading}
+                    spinner={
+                      <div className="flex flex-row">
+                        <svg
+                          className="animate-spin h-5 w-5 text-current"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        <h1>Authenticating</h1>
+                      </div>
+                    }
+                    type="submit"
+                    fullWidth color="primary">
+                    {buttonloading ? "" : "Signin"}
                   </Button>
                 </div>
               </form>
@@ -143,36 +146,36 @@ export default function () {
                   </Link>
                 </p>
                 <div className="flex gap-2 justify-end">
-                <Button
-                   isLoading={buttonloading}
-                   spinner={
-                     <div className="flex flex-row">
-                       <svg
-                         className="animate-spin h-5 w-5 text-current"
-                         fill="none"
-                         viewBox="0 0 24 24"
-                         xmlns="http://www.w3.org/2000/svg"
-                       >
-                         <circle
-                           className="opacity-25"
-                           cx="12"
-                           cy="12"
-                           r="10"
-                           stroke="currentColor"
-                           strokeWidth="4"
-                         />
-                         <path
-                           className="opacity-75"
-                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                           fill="currentColor"
-                         />
-                       </svg>
-                       <h1>Creating account</h1>
-                     </div>
-                   }
-                   type="submit"
-                   fullWidth color="primary">
-                   {buttonloading ? "" : "SignUp"}
+                  <Button
+                    isLoading={buttonloading}
+                    spinner={
+                      <div className="flex flex-row">
+                        <svg
+                          className="animate-spin h-5 w-5 text-current"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        <h1>Creating account</h1>
+                      </div>
+                    }
+                    type="submit"
+                    fullWidth color="primary">
+                    {buttonloading ? "" : "SignUp"}
                   </Button>
                 </div>
               </form>
@@ -194,36 +197,36 @@ export default function () {
                   </Link>
                 </p>
                 <div className="flex gap-2 justify-end">
-                <Button
-                   isLoading={buttonloading}
-                   spinner={
-                     <div className="flex flex-row">
-                       <svg
-                         className="animate-spin h-5 w-5 text-current"
-                         fill="none"
-                         viewBox="0 0 24 24"
-                         xmlns="http://www.w3.org/2000/svg"
-                       >
-                         <circle
-                           className="opacity-25"
-                           cx="12"
-                           cy="12"
-                           r="10"
-                           stroke="currentColor"
-                           strokeWidth="4"
-                         />
-                         <path
-                           className="opacity-75"
-                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                           fill="currentColor"
-                         />
-                       </svg>
-                       <h1>Resetting your password</h1>
-                     </div>
-                   }
-                   type="submit"
-                   fullWidth color="primary">
-                   {buttonloading ? "" : "Reset Password"}
+                  <Button
+                    isLoading={buttonloading}
+                    spinner={
+                      <div className="flex flex-row">
+                        <svg
+                          className="animate-spin h-5 w-5 text-current"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        <h1>Resetting your password</h1>
+                      </div>
+                    }
+                    type="submit"
+                    fullWidth color="primary">
+                    {buttonloading ? "" : "Reset Password"}
                   </Button>
                 </div>
               </form>
