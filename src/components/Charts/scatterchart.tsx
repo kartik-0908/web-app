@@ -97,6 +97,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData = [] }) => 
   });
 
   useEffect(() => {
+    console.log("inside scatterchart")
     const days = ["Mon", "Tue", "Wed", "Th", "Fri", "Sat", "Sun"];
     const series = currentWeekData.map((dayData, index) => {
       const data = dayData.length > 0
@@ -108,8 +109,10 @@ const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData = [] }) => 
         data,
       };
     });
-    setState({ series })
-  }, [currentWeekData]);
+    if (JSON.stringify(series) !== JSON.stringify(state.series)) {
+      setState({ series });
+    }
+  }, []);
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-6">
       <div className="mb-4 justify-between gap-4 sm:flex">

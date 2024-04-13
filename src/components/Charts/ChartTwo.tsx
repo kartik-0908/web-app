@@ -143,7 +143,7 @@ const ChartTwo: React.FC<ChartTwoProps> = ({ last7days = [] }) => {
     setsum(sumOfLast7Days)
 
 
-  }, [last7days]);
+  }, []);
 
   const handleReset = () => {
     setState((prevState) => ({

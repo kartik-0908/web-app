@@ -9,24 +9,7 @@ import StartDatePicker from '@/components/FormElements/DatePicker/StartDatePicke
 import EndDatePicker from '@/components/FormElements/DatePicker/EndDatePicker';
 import { start } from 'repl';
 import axios from 'axios';
-
-// const ChartOneDynamic = dynamic(() => import('@/components/Charts/ChartOne'), {
-//   ssr: false,
-// });
-
-// const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
-//   const formattedStartDate = startDate.toISOString().split('T')[0];
-//   const formattedEndDate = endDate.toISOString().split('T')[0];
-//   const response = await axios.get('/api/v1/data/analytics', {
-//     params: {
-//       startDate: formattedStartDate,
-//       endDate: formattedEndDate,
-//     },
-//   });
-
-//   return response;
-// };
-
+import Loader from '@/components/common/Loader';
 
 const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
   try {
@@ -41,7 +24,7 @@ const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
     });
 
     if (response.data.error) {
-      throw new Error(response.data.error);
+      return null
     }
 
     return response.data.data;
@@ -66,18 +49,18 @@ const Analytics = () => {
   useEffect(() => {
     const fetchAndSetData = async () => {
       console.log(startDate)
-      // setLoading(true);
+      setLoading(true);
       const data = await fetchAnalyticsData(startDate, endDate);
-      
-      if (data && data.data && data.data.data) {
-        const { analyticsData } = data.data.data;
+      if (data) {
+        const { analyticsData } = data;
         console.log(analyticsData)
         settotalmssg(analyticsData.totalMessages)
         settotalconv(analyticsData.totalConversations)
         setavgDuration(analyticsData.averageDurationSeconds)
         setUnanswered(analyticsData.unansweredMessages)
+
       }
-      // setLoading(false);
+      setLoading(false);
     };
 
     fetchAndSetData();
@@ -88,6 +71,7 @@ const Analytics = () => {
 
     return minutesPart;
   }
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Analytics" />
@@ -114,7 +98,7 @@ const Analytics = () => {
       {
         loading ? (
           <div>
-            Loading Analytics
+            <Loader />
           </div>
         ) : (
           <div className="grid  gap-2 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
@@ -219,6 +203,7 @@ const Analytics = () => {
 
     </DefaultLayout>
   );
+
 };
 
 export default Analytics;

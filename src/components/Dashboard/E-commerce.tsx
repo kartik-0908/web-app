@@ -1,51 +1,44 @@
-import React, { useEffect, useState } from "react";
+"use client"
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import ChartTwo from "../Charts/ChartTwo";
 import ChatCard from "../Chat/ChatCard";
 import Loader from "../common/Loader";
 import ScatterChart from "../Charts/scatterchart";
 
-interface Message {
-  id: string;
-  conversationId: string;
-  timestamp: Date;
-  role: string;
-  text: string;
-}
-
-interface Conversation {
-  id: string;
-  shopDomain: string;
-  startedAt: Date;
-  Message: Message[];
-}
-
-
 const ECommerce: React.FC = () => {
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
   const [currentWeekData, setcurrentWeekData] = useState<number[][][]>([]);
   const [lastThreeConversations, setlastThreeConversations] = useState([]);
   const [last7Days, setlast7Days] = useState([]);
 
   useEffect(() => {
+    console.log("inside ecommerce compoentn")
     const fetchData = async () => {
-      const { data } = await axios.get('/api/v1/data/home')
-      if (data && data.data) {
-        const { currentWeekData } = data.data;
-        const { last7Days } = data.data;
-        const { lastThreeConversations } = data.data;
-        setcurrentWeekData(currentWeekData)
-        setlast7Days(last7Days)
-        setlastThreeConversations(lastThreeConversations)
-        console.log(currentWeekData)
-        console.log(last7Days)
-        console.log(lastThreeConversations)
+      try {
+        const { data } = await axios.get('/api/v1/data/home')
+        if (data && data.data) {
+          const { currentWeekData } = data.data;
+          const { last7Days } = data.data;
+          const { lastThreeConversations } = data.data;
+          setcurrentWeekData(currentWeekData)
+          setlast7Days(last7Days)
+          setlastThreeConversations(lastThreeConversations)
+          console.log(currentWeekData)
+          console.log(last7Days)
+          console.log(lastThreeConversations)
+        }
+      } catch (error) {
+        console.log("error");
+
       }
+
       setloading(false)
     }
     fetchData();
 
   }, [])
+  const memoizedCurrentWeekData = useMemo(() => currentWeekData, [currentWeekData]);
   if (loading) {
     return <Loader />
   }
@@ -54,7 +47,7 @@ const ECommerce: React.FC = () => {
       <>
         <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
           <ScatterChart
-            currentWeekData={currentWeekData}
+            currentWeekData={memoizedCurrentWeekData}
           />
           <ChartTwo
             last7days={last7Days}

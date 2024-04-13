@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import { Button, Input, Link } from '@nextui-org/react';
+import Loader from '../common/Loader';
 
 interface Message {
   id: string;
@@ -46,7 +47,7 @@ const InstallationCard = () => {
   }
 
   useEffect(() => {
-    // setLoading(true)
+    setLoading(true)
     const fetchData = async () => {
       const { data } = await axios.get('/api/v1/data/installation')
       if (data && data.data) {
@@ -55,16 +56,17 @@ const InstallationCard = () => {
         setDomain(croppedShop);
         console.log("domain" + croppedShop)
       }
-      // setLoading(false)
+      setLoading(false)
     }
     fetchData();
   }, [])
 
   if (loading) {
     return (
-      <h1>
-        Loading
-      </h1>
+      <div className='w-full'>
+        <Loader />
+
+      </div>
     )
   }
   else {
