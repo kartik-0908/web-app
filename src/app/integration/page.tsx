@@ -20,6 +20,7 @@ export default function Integration() {
         try {
           console.log("insdie useeffect of integration")
           const response = await axios.post('/api/shopify/access-token', { shop, code });
+          console.log(response);
           router.push('/installation')
         } catch (error) {
           console.error("Failed to retrieve access token:", error);
