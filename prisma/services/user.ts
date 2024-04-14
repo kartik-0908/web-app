@@ -80,6 +80,7 @@ export const store_token = async (token: string, email: string, shop: string) =>
       email: email
     }
   });
+  console.log("store_token: ");
   console.log(new_installed_shop);
 }
 async function getShop(email: string) {
