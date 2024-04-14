@@ -7,6 +7,10 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const session = await getServerSession();
   const { shop, code } = body;
+  console.log("inside accestoken route")
+  console.log("shop: "+ shop)
+  console.log("code: "+ code)
+
 
   try {
     const response = await axios.post(`https://${shop}/admin/oauth/access_token`, {
