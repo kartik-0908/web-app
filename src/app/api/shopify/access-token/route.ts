@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   console.log("inside accestoken route")
   console.log("shop: "+ shop)
   console.log("code: "+ code)
-
+  console.log(process.env.shopify_Secret)
 
   try {
     const response = await axios.post(`https://${shop}/admin/oauth/access_token`, {
