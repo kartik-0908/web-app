@@ -14,8 +14,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const response = await axios.post(`https://${shop}/admin/oauth/access_token`, {
-      client_id: process.env.NEXT_PUBLIC_shopify_Key,
-      client_secret: process.env.NEXT_PUBLIC_shopify_Secret,
+      client_id: process.env.shopify_Key,
+      client_secret: process.env.shopify_Secret,
       code: code,
     }, {
       headers: {
