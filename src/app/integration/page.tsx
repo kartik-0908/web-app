@@ -1,6 +1,6 @@
 "use client"
 import axios from "axios";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 
@@ -28,9 +28,12 @@ export default async function Integration() {
     getShopifyToken();
   }, []);
   return (
-    <div className="mx-auto max-w-270 p-6 h-screen">
-      Loading your details
-      integrating with your store
-    </div>
+    <Suspense>
+      <div className="mx-auto max-w-270 p-6 h-screen">
+        Loading your details
+        integrating with your store
+      </div>
+    </Suspense>
+
   );
 };
