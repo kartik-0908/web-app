@@ -22,6 +22,8 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
+    console.log("inside try")
+    console.log(response)
     if (session && session.user && session.user.email) {
       console.log("access_token: "+ response.data.access_token)
       await store_token(response.data.access_token, session?.user?.email, shop)
