@@ -4,15 +4,18 @@ import { Suspense, useEffect } from "react";
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 
-export default async function Integration() {
-  const searchParams = useSearchParams()
+export default function Integration() {
+  // const searchParams = useSearchParams()
   const router = useRouter();
 
   useEffect(() => {
 
     const getShopifyToken = async () => {
-      const code = searchParams.get('code'); // Extract code
-      const shop = searchParams.get('shop'); // Extract code
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code'); // Extract code
+      const shop = urlParams.get('shop');// Extract code
+      console.log("integration code: " + code)
+      console.log("integration shop: " + shop)
       if (code && shop) {
         try {
           console.log("insdie useeffect of integration")
@@ -28,12 +31,10 @@ export default async function Integration() {
     getShopifyToken();
   }, []);
   return (
-    <Suspense>
-      <div className="mx-auto max-w-270 p-6 h-screen">
-        Loading your details
-        integrating with your store
-      </div>
-    </Suspense>
+    <div className="mx-auto max-w-270 p-6 h-screen">
+      Loading your details
+      integrating with your store
+    </div>
 
   );
 };
