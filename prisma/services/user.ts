@@ -3,6 +3,7 @@ import { hashPassword, verifyPassword as verifyUserPassword } from '../../lib/au
 import axios from 'axios';
 import { Pinecone } from '@pinecone-database/pinecone';
 import OpenAI from "openai";
+import { randomUUID } from 'crypto';
 const pc = new Pinecone({
   apiKey: 'ad1612ee-9b3f-4269-9e18-362ff724713d'
 });
@@ -617,9 +618,9 @@ export const getStoreData = async (email: string) => {
             {
               id: String(id),
               values: embedding,
-              metadata: {data : details}
+              metadata: { data: details }
             },
-        ]);
+          ]);
       }
     } else {
       return null;
@@ -630,5 +631,55 @@ export const getStoreData = async (email: string) => {
   } catch (error) {
     console.error('Error retrieving shop and access token:', error);
     throw error;
+  }
+}
+import { faker } from '@faker-js/faker';
+export async function insertDummy() {
+  const today = new Date();
+  const shopDomain = 'quickstart-ef1bbd31.myshopify.com';
+
+  for (let i = -7; i <= 7; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+
+    for (let j = 0; j < 20; j++) {
+      const randomHour = Math.floor(Math.random() * 24);
+      const randomMinute = Math.floor(Math.random() * 60);
+      const randomSecond = Math.floor(Math.random() * 60);
+      const randomTime = new Date(date);
+      randomTime.setHours(randomHour, randomMinute, randomSecond);
+
+      const conversation = await client.conversation.create({
+        data: {
+          shopDomain,
+          startedAt: randomTime,
+          Message: {
+            create: [
+              {
+                timestamp: randomTime,
+                senderId: Math.random(),
+                text: faker.lorem.lines(),
+                senderType: "user",
+                unanswered: faker.datatype.boolean(),
+              },
+              {
+                timestamp: randomTime,
+                senderId: Math.random(),
+                text: faker.lorem.lines(),
+                senderType: "bot",
+                unanswered: faker.datatype.boolean(),
+              },
+              {
+                senderId: Math.random(),
+                timestamp: randomTime,
+                text: faker.lorem.sentence(),
+                senderType: "user",
+                unanswered: faker.datatype.boolean(),
+              },
+            ],
+          },
+        },
+      });
+    }
   }
 }

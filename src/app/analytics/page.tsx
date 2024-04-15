@@ -172,6 +172,7 @@ const Analytics = () => {
             </CardDataStats>
             <CardDataStats title="Average Session Duration"
               total={formatDuration(avgDuration)}
+              // total={"12 minutes"}
             >
               <svg
                 className="fill-primary dark:fill-white"

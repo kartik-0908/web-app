@@ -51,9 +51,15 @@ const options: ApexOptions = {
   dataLabels: {
     enabled: false,
   },
-
+  grid:{
+    xaxis:{
+      lines:{
+        show: true
+      }
+    }
+  },
   xaxis: {
-    categories: ["Mon", "Tue", "Wed", "Th", "Fri", "Sat", "Sun"]
+    type: 'datetime', // This ensures that each x-value is treated as a discrete category
   },
   yaxis: {
     min: 0,
@@ -88,27 +94,58 @@ interface ScatterChartProps {
   currentWeekData: number[][][];
 }
 
+function getWeekTimestamps() {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0 (Sunday) to 6 (Saturday)
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
+  monday.setHours(0, 0, 0, 0);
+
+  const timestamps = [];
+  for (let i = 0; i < 7; i++) {
+    const date = new Date("14 Apr 2024");
+    date.setDate(monday.getDate() + i);
+    const timestamp = date.getTime();
+    timestamps.push(timestamp);
+  }
+
+  return timestamps;
+}
 
 
 
-const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData = [] }) => {
+
+const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData }) => {
   const [state, setState] = useState<ChartTwoState>({
     series: [],
   });
+  const unixTimestamp = getWeekTimestamps();
+  function convert_data(currentWeekData: any){
+    let series = [];
+    for(let i=0;i<7;i++){
+      let len = currentWeekData[i].length;
+      if(len>0){
+        for(let j=0;j<len;j++){
+          let hour = currentWeekData[i][j][0]
+          let minute = currentWeekData[i][j][1]
+          let timestamp = unixTimestamp[i] + (6 * 60 ) * 60 * 1000;
+          series.push([timestamp,hour + minute/60]);
+        }
+      }
+      else {
+        series.push([unixTimestamp[i],null])
+      }
+    }
+    return series
+  }
 
   useEffect(() => {
-    console.log("inside scatterchart")
-    const days = ["Mon", "Tue", "Wed", "Th", "Fri", "Sat", "Sun"];
-    const series = currentWeekData.map((dayData, index) => {
-      const data = dayData.length > 0
-        ? dayData.map(([hour, minute]) => [index+1, hour + minute / 60]) :
-        [[index+1, null]];
-
-      return {
-        name: days[index],
-        data,
-      };
-    });
+   
+    const series = [{
+      name: 'Time',
+      data: convert_data(currentWeekData)
+    }];
+console.log(series)
     if (JSON.stringify(series) !== JSON.stringify(state.series)) {
       setState({ series });
     }

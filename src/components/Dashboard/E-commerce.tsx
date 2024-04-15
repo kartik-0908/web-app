@@ -38,7 +38,6 @@ const ECommerce: React.FC = () => {
     fetchData();
 
   }, [])
-  const memoizedCurrentWeekData = useMemo(() => currentWeekData, [currentWeekData]);
   if (loading) {
     return <Loader />
   }
@@ -47,7 +46,7 @@ const ECommerce: React.FC = () => {
       <>
         <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
           <ScatterChart
-            currentWeekData={memoizedCurrentWeekData}
+            currentWeekData={currentWeekData}
           />
           <ChartTwo
             last7days={last7Days}
