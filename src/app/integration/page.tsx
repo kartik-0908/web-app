@@ -3,6 +3,7 @@ import axios from "axios";
 import { Suspense, useEffect } from "react";
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
+import Loader from "@/components/common/Loader";
 
 export default function Integration() {
   // const searchParams = useSearchParams()
@@ -33,8 +34,7 @@ export default function Integration() {
   }, []);
   return (
     <div className="mx-auto max-w-270 p-6 h-screen">
-      Loading your details
-      integrating with your store
+      <Loader/>
     </div>
 
   );
