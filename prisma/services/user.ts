@@ -2,10 +2,12 @@ import client from '../index';
 import { hashPassword, verifyPassword as verifyUserPassword } from '../../lib/auth';
 import axios from 'axios';
 import { Pinecone } from '@pinecone-database/pinecone';
-// import { Configuration, OpenAIApi } from 'openai';
-
+import OpenAI from "openai";
 const pc = new Pinecone({
   apiKey: 'ad1612ee-9b3f-4269-9e18-362ff724713d'
+});
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 export const findUserByEmail = async (email: string) => {
@@ -520,20 +522,42 @@ export async function updateUserPassword(email: string, newPassword: string) {
   });
 }
 
-function preprocessProduct(product: any, shop: any) {
-  console.log("inside preprocess product")
-  console.log(product)
-  return {
-    id: `${shop}_${product.id}`,
-    title: product.title,
-    body_html: product.body_html,
-    vendor: product.vendor,
-    tags: product.tags,
+function extractProductData(products: any) {
+  const productsData = products.map((product: any) => {
+    const {
+      id,
+      title,
+      body_html,
+      product_type,
+      tags,
+      variants,
+      options,
+      image,
+    } = product;
 
-    // Add more fields as needed
-  };
+    const productString = `Title: ${title}
+        Body HTML: ${body_html || ''}
+        Product Type: ${product_type}
+        Tags: ${tags}
+        Variants: ${variants
+        .map(
+          (variant: any) =>
+            `ID: ${variant.id}, Title: ${variant.title}, Price: ${variant.price}, SKU: ${variant.sku}, Inventory Quantity: ${variant.inventory_quantity}`
+        )
+        .join('; ')}
+        Options: ${options
+        .map((option: any) => `ID: ${option.id}, Name: ${option.name}, Values: ${option.values.join(', ')}`)
+        .join('; ')}
+        Image: ${image
+        ? `ID: ${image.id}, Source: ${image.src}, Alt Text: ${image.alt}, Width: ${image.width}, Height: ${image.height}`
+        : 'No Image'
+      }`;
+
+    return [id, productString];
+  });
+
+  return productsData;
 }
-
 
 export const getStoreData = async (email: string) => {
   try {
@@ -550,7 +574,6 @@ export const getStoreData = async (email: string) => {
     if (installedShop) {
       const shop = installedShop.shop
       const accessToken = installedShop.accessToken
-      const apiVersion = '2024-04';
 
       const response = await axios.get(
         `https://${shop}/admin/api/2024-04/products.json`,
@@ -561,22 +584,43 @@ export const getStoreData = async (email: string) => {
         }
       );
       // console.log(response.data);
-      const {products} = response.data
-      const processedProducts = products.map((product: any) => preprocessProduct(product, shop));
-      // const indexName = shop
-      // await pc.createIndex({
-      //   name: indexName,
-      //   dimension: 1536,
-      //   metric: 'cosine',
-      //   spec: {
-      //     serverless: {
-      //       cloud: 'aws',
-      //       region: 'us-east-1'
-      //     }
-      //   }
-      // });
+      const { products } = response.data
+      const extractedData = extractProductData(products);
+      const indexName = shop.replace(/\./g, '-');
+      console.log(indexName)
+      await pc.createIndex({
+        name: indexName,
+        dimension: 1536,
+        spec: {
+          serverless: {
+            cloud: 'aws',
+            region: 'us-east-1'
+          }
+        },
+        metric: 'cosine',
+        suppressConflicts: true
+      });
+      // console.log((extractedData[0][1]));
+      // console.log((extractedData.length));
+      for (const [id, details] of extractedData) {
+        const embeddingResponse = await openai.embeddings.create({
+          model: "text-embedding-ada-002",
+          input: details,
+        });
 
+        const embedding = embeddingResponse.data[0].embedding;
 
+        // Insert embedding into Pinecone
+        const index = pc.index(indexName);
+        await index.upsert(
+          [
+            {
+              id: String(id),
+              values: embedding,
+              metadata: {data : details}
+            },
+        ]);
+      }
     } else {
       return null;
     }

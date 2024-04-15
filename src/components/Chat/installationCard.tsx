@@ -107,7 +107,7 @@ const InstallationCard = () => {
             </div>
 
             <p className='pt-4'>
-              To enable the Yugaa chat widget for your website visitors, simply navigate to the Shopify theme editor and toggle it on.Click on the below link to add the widget.
+              To enable the Yugaa chat widget for your website visitors, simply navigate to the Shopify theme editor and toggle it on. Click on the below link to add the widget.
               <div className='text-center'>
                 <Link isBlock
                   isExternal
@@ -123,11 +123,14 @@ const InstallationCard = () => {
             <p className='pt-4'>
               Make sure to visit your website where the chat widget code is installed to complete this step.
             </p>
+            <br></br>
+            <p>
             Congrats! You’ll replace a dumb bot with an intelligent one 😎
+            </p>
             <br></br>
             <br></br>
 
-            {/* <Button
+            <Button
               isLoading={buttonloading}
               onClick={handlefetchData}
               spinner={
@@ -157,7 +160,7 @@ const InstallationCard = () => {
               }
             >
               {buttonloading ? "" : "Fetch Data"}
-            </Button> */}
+            </Button>
           </div>
         </div>
       </div>
