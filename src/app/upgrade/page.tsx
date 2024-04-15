@@ -53,10 +53,19 @@ const Upgrade = () => {
               }}
               className={selectedCard === 1 ? "border-2 border-blue-500" : ""}
             >
-              <CardHeader className="flex gap-3">
-                <div className="flex flex-col">
-                  Select this to get Basic Plan for yourself
+              <CardHeader className=" gap-3">
+                <div className="w-full ">
+                  <div className="text-2xl font-bold">
+                    $69/ 1500 conversations
+
+                  </div>
+                  <div className="">
+                    Select this to get Basic Plan for yourself
+                  </div>
                 </div>
+
+
+
               </CardHeader>
               <Divider />
               <CardBody
@@ -87,44 +96,47 @@ const Upgrade = () => {
               <Divider />
               <CardFooter
               >
-                <Button
-                  onClick={handleSave}
-                  isLoading={button1loading}
-                  disableAnimation
-                  disabled={selectedCard !== 1}
-                  className={`${selectedCard !== 1
-                    ? "cursor-not-allowed opacity-50 hover:bg-inherit"
-                    : "bg-blue-500 text-white"
-                    }`}
-                  spinner={
-                    <div className="flex flex-row">
-                      <svg
-                        className="animate-spin h-5 w-5 text-current"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                      <h1>Redirecting to Shopify</h1>
-                    </div>
-                  }
-                  color={selectedCard === 1 ? "primary" : "default"}
-                >
-                  {button1loading ? "" : "Buy this Plan"}
-                </Button>
+                <div className="w-full">
+                  <Button
+                    onClick={handleSave}
+                    isLoading={button1loading}
+                    disableAnimation
+                    disabled={selectedCard !== 1}
+                    className={`${selectedCard !== 1
+                      ? "cursor-not-allowed opacity-50 hover:bg-inherit"
+                      : "bg-blue-500 text-white"
+                      }`}
+                    spinner={
+                      <div className="flex flex-row">
+                        <svg
+                          className="animate-spin h-5 w-5 text-current"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        <h1>Redirecting to Shopify</h1>
+                      </div>
+                    }
+                    color={selectedCard === 1 ? "primary" : "default"}
+                  >
+                    {button1loading ? "" : "Buy this Plan"}
+                  </Button>
+                </div>
+
               </CardFooter>
             </Card>
           </div>
@@ -138,8 +150,14 @@ const Upgrade = () => {
               className={selectedCard === 2 ? "border-2 border-blue-500" : ""}
             >
               <CardHeader className="flex gap-3">
-                Select this to get Pro Plan for yourself
-                <div className="flex flex-col">
+                <div className="w-full ">
+                  <div className="text-2xl font-bold">
+                    $99/ 2500 conversations
+
+                  </div>
+                  <div className="">
+                    Select this to get Pro Plan for yourself
+                  </div>
                 </div>
               </CardHeader>
               <Divider />
@@ -175,7 +193,9 @@ const Upgrade = () => {
                 </div>
               </CardBody>
               <Divider />
-              <CardFooter>
+              <CardFooter
+              >
+                <div className="w-full">
                 <Button
                   onClick={handleSave}
                   isLoading={button2loading}
@@ -213,6 +233,8 @@ const Upgrade = () => {
                 >
                   {button2loading ? "" : "Buy this Plan"}
                 </Button>
+                </div>
+                
               </CardFooter>
             </Card>
 

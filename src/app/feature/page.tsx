@@ -65,7 +65,7 @@ const feature = () => {
             <div className="p-6.5 ">
               <div className="mb-4.5 grid-cols-5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  What woudl you like to see in the next version of our bot?
+                  What would you like to see in the next version of our bot?
                 </label>
                 <Textarea
                   size="sm"
