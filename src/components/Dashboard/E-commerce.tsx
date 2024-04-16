@@ -13,7 +13,6 @@ const ECommerce: React.FC = () => {
   const [last7Days, setlast7Days] = useState([]);
 
   useEffect(() => {
-    console.log("inside ecommerce compoentn")
     const fetchData = async () => {
       try {
         const { data } = await axios.get('/api/v1/data/home')
@@ -30,6 +29,7 @@ const ECommerce: React.FC = () => {
         }
       } catch (error) {
         console.log("error");
+        console.log(error);
 
       }
 

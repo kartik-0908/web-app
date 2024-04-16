@@ -15,6 +15,7 @@ interface Conversation {
   id: string;
   shopDomain: string;
   startedAt: Date;
+  customerEmail?: string
   Message: Message[];
 }
 
@@ -32,9 +33,10 @@ const ChatCard: React.FC<ChatCardProps> = ({ lastThreeConversations = [] }) => {
         {lastThreeConversations.map((conversation, index) => {
           const userMessage = conversation.Message.find((m) => m.senderType === 'user');
           const botMessage = conversation.Message.find((m) => m.senderType === 'bot');
+          const customerEmail = conversation.customerEmail || "Anonymour user"
 
           return (
-            <Link href="/" className="flex items-center gap-5 px-7.5 py-3 hover:bg-gray-3 dark:hover:bg-meta-4" key={index}>
+            <Link href="/chat" className="flex items-center gap-5 px-7.5 py-3 " key={index}>
               <div className="relative h-14 w-14 rounded-full">
                 <Image src='/images/user/user-01.png' alt="User" layout="fill" />
               </div>
@@ -42,7 +44,7 @@ const ChatCard: React.FC<ChatCardProps> = ({ lastThreeConversations = [] }) => {
               <div className="flex flex-1 items-center justify-between">
                 <div>
                   <h5 className="font-medium text-black dark:text-white">
-                    User Name
+                    {customerEmail}
                   </h5>
                   <p className="text-sm text-black dark:text-white">
                     <div>

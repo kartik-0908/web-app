@@ -106,8 +106,9 @@ async function getlastThreeConversations(shopDomain: string) {
     include: {
       Message: {
         orderBy: { timestamp: 'asc' },
-        take: 2, // Get first bot and user messages
+        take: 2, 
       },
+      
     },
   });
   return (result);
@@ -633,7 +634,7 @@ export const getStoreData = async (email: string) => {
     throw error;
   }
 }
-import { faker } from '@faker-js/faker';
+import { faker, tr } from '@faker-js/faker';
 export async function insertDummy() {
   const today = new Date();
   const shopDomain = 'quickstart-ef1bbd31.myshopify.com';

@@ -12,8 +12,7 @@ model Conversation {
   shopDomain    String
   startedAt     DateTime  @default(now())
   customerEmail String?
-  Message       Message[]
-
+  Message Message[]
   @@index([shopDomain])
 }
 
@@ -106,10 +105,12 @@ model userDetails {
 }
 
 model Customer {
-  id         Int     @id @default(autoincrement())
-  shopDomain String
-  firstName  String
-  lastName   String
-  email      String
-  deleted    Boolean @default(false)
+  id           Int            @id @default(autoincrement())
+  shopDomain   String
+  firstName    String
+  lastName     String
+  email        String
+  deleted      Boolean        @default(false)
+
+  @@unique([shopDomain, email])
 }
