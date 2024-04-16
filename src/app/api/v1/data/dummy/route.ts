@@ -5,7 +5,7 @@ import { randomUUID } from "crypto";
 
 
 export async function GET() {
-    await insertDummy()
+    // await insertDummy()
     return NextResponse.json({
         "hello": "hello"
     })

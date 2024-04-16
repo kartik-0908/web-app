@@ -66,11 +66,24 @@ const Analytics = () => {
     fetchAndSetData();
   }, [startDate, endDate]);
   function formatDuration(durationInSeconds: number): string {
-    const minutes = Math.floor(durationInSeconds / 60);
-    const minutesPart = minutes > 0 ? `${minutes} minute${minutes > 1 ? 's' : ''}` : '';
+    console.log("durationInSeconds", durationInSeconds);
+    const hours = Math.floor(durationInSeconds / 3600);
+    const minutes = Math.floor((durationInSeconds % 3600) / 60);
+    const seconds = durationInSeconds % 60;
 
-    return minutesPart;
+    const hoursPart = hours > 0 ? `${hours} hour${hours > 1 ? 's' : ''} ` : '';
+    const minutesPart = minutes > 0 ? `${minutes} minute${minutes > 1 ? 's' : ''}` : '';
+    const secondsPart = seconds > 0 ? `${seconds} second${seconds > 1 ? 's' : ''}` : '';
+
+    if (hours > 0) {
+      return `${hoursPart}and ${minutesPart}`;
+    } else if (minutes > 0) {
+      return minutesPart;
+    } else {
+      return secondsPart || "0 seconds"; // Handle the case where duration is 0 seconds
+    }
   }
+
 
   return (
     <DefaultLayout>
@@ -172,7 +185,7 @@ const Analytics = () => {
             </CardDataStats>
             <CardDataStats title="Average Session Duration"
               total={formatDuration(avgDuration)}
-              // total={"12 minutes"}
+            // total={"12 minutes"}
             >
               <svg
                 className="fill-primary dark:fill-white"

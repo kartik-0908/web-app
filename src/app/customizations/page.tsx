@@ -9,6 +9,7 @@ import ColorPicker from "./ColorPicker";
 import { Textarea } from "@nextui-org/react";
 import axios from "axios";
 import Image from "next/image";
+import styles from '../../css/ChatInput.module.css';
 
 const fonts = [
   { label: 'Arial', value: 'Arial, sans-serif' },
@@ -577,8 +578,8 @@ const TablesPage = () => {
           {isOpen ? (
             <div
               style={{ fontFamily: fontFamily }}
-              className="max-w-full h-[500px] bg-white rounded-2xl">
-              <div className="h-[75px] grid grid-cols-8 items-center rounded-t-2xl"
+              className="max-w-full h-[500px] shadow-xl bg-white rounded-2xl">
+              <div className="h-[75px]  grid grid-cols-8 items-center rounded-t-2xl"
                 style={{
                   backgroundColor: selectedColor,
                   color: fontColor
@@ -603,7 +604,7 @@ const TablesPage = () => {
                 </div>
               </div>
               <div
-              className="h-[400px] flex flex-col bg-white p-3 overflow-auto scrollbar-custom">
+                className="h-[400px]  flex flex-col bg-white p-3 overflow-auto scrollbar-custom">
                 {messages.map((message, index) => (
                   <div
                     key={index}
@@ -618,26 +619,48 @@ const TablesPage = () => {
                   </div>
                 ))}
               </div>
-              <div className="h-[70px] grid grid-cols-8 items-center"
+              <div className="bg-white rounded-r-3xl rounded-l-3xl "
                 style={{
-                  backgroundColor: selectedColor,
+                 
                   color: fontColor
                 }}>
-                <div className="col-span-8">
-                  <Textarea
-                    // isDisabled={true}
-                    isReadOnly={true}
-                    defaultValue="Also tell me if there is any new product listed on store?"
-                    variant="bordered"
-                    labelPlacement="outside"
-                    placeholder="Enter your Message"
-                    className={`border-red max-w-full h-[60px] pl-2 pr-2 text-${fontColor} disabled:text-white`}
-                    endContent={
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                      </svg>
-                    }
-                  />
+                <div className="col-span-8 ">
+                  <div className={styles.chatInput}
+                  style={{
+                    borderColor: selectedColor,
+                    borderWidth: 2,
+                  }}
+                  >
+                    <div className="rounded-3xl w-full"
+                      style={{
+                        
+                      }}>
+                      <input
+                      disabled={true}
+                      type="text" placeholder="Type here..." />
+                    </div>
+                    <div className="pl-2">
+                      <button className={styles.sendButton}
+                        style={{
+                          backgroundColor: selectedColor
+                        }}
+                      ></button>
+                    </div>
+
+
+
+                  </div>
+
+                  <div
+                    className={styles.branding}
+                    style={{
+                    }}
+                  >
+                    <p>
+                      Powered by Yugaa
+                    </p>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -703,6 +726,7 @@ const TablesPage = () => {
           background-size: contain; /* This ensures the image covers the content box */
           border-radius: 50%; /* This can make it round if you want */
         }
+        
       `}</style>
     </DefaultLayout>
 
