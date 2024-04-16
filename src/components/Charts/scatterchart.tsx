@@ -123,7 +123,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData }) => {
   function convert_data(currentWeekData: any) {
     let series = [];
     for (let i = 0; i < 7; i++) {
-      if (currentWeekData[i]) {
+      if (currentWeekData) {
         let len = currentWeekData[i].length;
         if (len > 0) {
           for (let j = 0; j < len; j++) {

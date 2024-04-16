@@ -12,7 +12,8 @@ model Conversation {
   shopDomain    String
   startedAt     DateTime  @default(now())
   customerEmail String?
-  Message Message[]
+  Message       Message[]
+
   @@index([shopDomain])
 }
 
@@ -30,15 +31,14 @@ model Message {
 }
 
 model User {
-  id             Int                    @id @default(autoincrement())
-  email          String                 @unique
+  id             Int                   @id @default(autoincrement())
+  email          String                @unique
   lastLoginAt    DateTime?
   password       String
-  customizations ChatbotCustomization[]
+  customizations ChatbotCustomization?
 }
 
 model ChatbotCustomization {
-  id                     Int      @id @default(autoincrement())
   selectedColor          String
   botName                String
   greetingMessage        String
@@ -59,7 +59,7 @@ model ChatbotCustomization {
   logo                   String?
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
-  userEmail              String
+  userEmail              String   @id
   user                   User     @relation(fields: [userEmail], references: [email])
 }
 
@@ -105,12 +105,12 @@ model userDetails {
 }
 
 model Customer {
-  id           Int            @id @default(autoincrement())
-  shopDomain   String
-  firstName    String
-  lastName     String
-  email        String
-  deleted      Boolean        @default(false)
+  id         Int     @id @default(autoincrement())
+  shopDomain String
+  firstName  String
+  lastName   String
+  email      String
+  deleted    Boolean @default(false)
 
   @@unique([shopDomain, email])
 }

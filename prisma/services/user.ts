@@ -17,6 +17,49 @@ export const findUserByEmail = async (email: string) => {
   });
 };
 
+export async function initializeDefaultCustomization(email: string) {
+  try {
+    // Check if a customization already exists for the given email
+    const existingCustomization = await client.chatbotCustomization.findUnique({
+      where: {
+        userEmail: email,
+      },
+    });
+
+    if (!existingCustomization) {
+      // If no customization exists, initialize default values
+      const defaultCustomization = await client.chatbotCustomization.create({
+        data: {
+          userEmail: email,
+          botName: 'Yugaa',
+          greetingMessage: 'Hello, how can I assist you?',
+          selectedColor: "#1C2434",
+          fontFamily: "Arial, sans-serif",
+          fontColor: "White",
+          widgetPosition: "right",
+          toneAndStyle: "Conversational and friendly, with a touch of humor when appropriate. Maintain a professional tone for business-related queries.",
+          userGuidance: "Provide clear guidance and instructions. Clearly instruct users on how to navigate the chatbot, ask for information, or perform specific actions.",
+          positiveReinforcement: "Include positive phrases to acknowledge user inputs. Express gratitude and provide positive feedback where applicable to enhance user experience.",
+          errorHandling: "Clearly communicate errors with user-friendly messages. Provide suggestions for correction and avoid technical jargon. Apologize when necessary",
+          politeness: "Always use polite phrases and courteous language. Avoid language that may be perceived as rude or insensitive. Thank users for their inputs.",
+          clarityAndSimplicity: "Prioritize straightforward language. Avoid complex jargon and use concise sentences. Break down information into easily digestible chunks.",
+          personalization: "Address users by name whenever possible. Reference past interactions to create a personalized experience. Use personalized greetings based on user history.",
+          responseLength: "Medium",
+          clarificationPrompt: "I need more information top assist you. Could you provide additional details",
+          apologyAndRetryAttempt: "I apologize for any confusion. Could you please provide your query again?",
+          errorMessageStyle: "Standard",
+        },
+      });
+
+      console.log('Default customization initialized for email:', email);
+    } else {
+      console.log('Customization already exists for email:', email);
+    }
+  } catch (error) {
+    console.error('Error initializing default customization:', error);
+  }
+}
+
 export const createUser = async ({ email, password }: { email: string; password: string; }) => {
   const hashedPassword = await hashPassword(password);
   // console.log(hashedPassword)
@@ -24,30 +67,6 @@ export const createUser = async ({ email, password }: { email: string; password:
     data: {
       email,
       password: hashedPassword,
-    },
-  });
-  const defaultCustomization = await client.chatbotCustomization.create({
-    data: {
-      botName: 'Yugaa',
-      greetingMessage: 'Hello, how can I assist you?',
-      selectedColor: "#1C2434",
-      fontFamily: "Arial, sans-serif",
-      fontColor: "White",
-      widgetPosition: "right",
-      toneAndStyle: "Conversational and friendly, with a touch of humor when appropriate. Maintain a professional tone for business-related queries.",
-      userGuidance: "Provide clear guidance and instructions. Clearly instruct users on how to navigate the chatbot, ask for information, or perform specific actions.",
-      positiveReinforcement: "Include positive phrases to acknowledge user inputs. Express gratitude and provide positive feedback where applicable to enhance user experience.",
-      errorHandling: "Clearly communicate errors with user-friendly messages. Provide suggestions for correction and avoid technical jargon. Apologize when necessary",
-      politeness: "Always use polite phrases and courteous language. Avoid language that may be perceived as rude or insensitive. Thank users for their inputs.",
-      clarityAndSimplicity: "Prioritize straightforward language. Avoid complex jargon and use concise sentences. Break down information into easily digestible chunks.",
-      personalization: "Address users by name whenever possible. Reference past interactions to create a personalized experience. Use personalized greetings based on user history.",
-      responseLength: "Medium",
-      clarificationPrompt: "I need more information top assist you. Could you provide additional details",
-      apologyAndRetryAttempt: "I apologize for any confusion. Could you please provide your query again?",
-      errorMessageStyle: "Standard",
-      user: {
-        connect: { email: email },
-      },
     },
   });
   console.log(resp);
@@ -106,9 +125,9 @@ async function getlastThreeConversations(shopDomain: string) {
     include: {
       Message: {
         orderBy: { timestamp: 'asc' },
-        take: 2, 
+        take: 2,
       },
-      
+
     },
   });
   return (result);
