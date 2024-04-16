@@ -83,9 +83,9 @@ const Upgrade = () => {
                 <div>
                   Live Bot Analytics
                 </div>
-                <div>
+                {/* <div>
                   2 Page Ingestion
-                </div>
+                </div> */}
                 <div>
                   Multi-Lingual Bot
                 </div>
@@ -176,9 +176,9 @@ const Upgrade = () => {
                 <div>
                   No Yugaa Branding
                 </div>
-                <div>
+                {/* <div>
                   Unlimited Page Ingestion
-                </div>
+                </div> */}
                 <div>
                   Highest Priority Access
                 </div>

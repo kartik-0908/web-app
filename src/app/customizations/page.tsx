@@ -70,23 +70,11 @@ const TablesPage = () => {
     setSelected(String(key));
   };
 
-  // const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setNewMessage(e.target.value);
-  // };
-
-  // const handleSendMessage = () => {
-  //   console.log("inseide sendmesage")
-  //   if (newMessage.trim() !== '') {
-  //     setMessages([...messages, newMessage]);
-  //     setNewMessage('');
-  //   }
-  // };
 
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get('/api/v1/data/customization')
       const customizationData = data.data[0];
-      // console.log(customizationData)
 
       setBotName(customizationData.botName);
       setFontFamily(customizationData.fontFamily);
