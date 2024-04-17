@@ -10,6 +10,7 @@ import { Textarea } from "@nextui-org/react";
 import axios from "axios";
 import Image from "next/image";
 import styles from '../../css/ChatInput.module.css';
+import Loader from "@/components/common/Loader";
 
 const fonts = [
   { label: 'Arial', value: 'Arial, sans-serif' },
@@ -36,7 +37,7 @@ const demo_mssgs = [
 
 
 const TablesPage = () => {
-  const src = "https://storage.googleapis.com/yugaa-logo-storage/logoblue%20(1).png"
+  const [pageLoading, setpageLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<string[]>(demo_mssgs);
   const [selected, setSelected] = React.useState("appearance");
@@ -61,7 +62,7 @@ const TablesPage = () => {
   const [buttonloading, setbuttonloading] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState('/images/user/user-01.png');
+  const [previewUrl, setPreviewUrl] = useState('');
   const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
 
 
@@ -99,6 +100,8 @@ const TablesPage = () => {
       setErrorMessageStyle(customizationData.errorMessageStyle);
       setSelectedColor(customizationData.selectedColor);
       setPreviewUrl(customizationData.logo)
+      setpageLoading(false)
+
       console.log(previewUrl)
 
     }
@@ -211,9 +214,24 @@ const TablesPage = () => {
   };
 
 
+  if (pageLoading) {
+    return (
+      <DefaultLayout>
+        <Breadcrumb pageName="Customizations" />
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-12">
+          <Loader />
+
+          </div>
+        </div>
+      </DefaultLayout>
+    )
+  }
+
+
   return (
     <DefaultLayout>
-    
+
       <Breadcrumb pageName="Customizations" />
       <div className="grid grid-cols-12 gap-4">
         <div className="flex flex-col w-full col-span-7">
@@ -290,7 +308,7 @@ const TablesPage = () => {
                             onChange={handleLogoChange}
                             accept="image/*"
                           />
-                          
+
                           <div className="p-2">
                             {/* <p>Logo Dimension : 200</p> */}
                             <p>Supported Format: JPG,PNG,SVG</p>
