@@ -5,6 +5,7 @@ import ChatCard2 from "@/components/Chat/ChatCard2";
 import { useState } from "react";
 import ConversationDetails from "@/components/Chat/ConversationCard";
 import ConversationDetailsEmpty from "@/components/Chat/ConversationCardempty";
+import AuthWrapper from "../AuthWrapper.tsx";
 
 
 interface Message {
@@ -30,26 +31,28 @@ const Chat = () => {
   const handleConversationClick = (conversation: any) => {
     setSelectedConversation(conversation);
   };
+
   return (
-    <DefaultLayout>
-      <div className="mx-auto max-w-270">
-        <Breadcrumb pageName="Chat History" />
+    <AuthWrapper>
+      <DefaultLayout>
+        <div className="mx-auto max-w-270">
+          <Breadcrumb pageName="Chat History" />
 
-        <div className="grid grid-cols-5">
-          <div className="col-span-5 xl:col-span-2">
-          <ChatCard2 onConversationClick={handleConversationClick}/>
+          <div className="grid grid-cols-5">
+            <div className="col-span-5 xl:col-span-2">
+              <ChatCard2 onConversationClick={handleConversationClick} />
+            </div>
+            <div className="col-span-5 xl:col-span-3">
+              {selectedConversation ? (
+                <ConversationDetails conversation={selectedConversation} />
+              ) : (
+                <ConversationDetailsEmpty />
+              )}
+            </div>
           </div>
-          <div className="col-span-5 xl:col-span-3">
-          {selectedConversation ? (
-              <ConversationDetails conversation={selectedConversation} />
-            ) : (
-              <ConversationDetailsEmpty />
-            )}
-          </div>
-
         </div>
-      </div>
-    </DefaultLayout>
+      </DefaultLayout>
+    </AuthWrapper>
   );
 };
 

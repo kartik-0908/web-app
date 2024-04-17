@@ -35,6 +35,7 @@ model User {
   email          String                @unique
   lastLoginAt    DateTime?
   password       String
+  plan           Int                   @default(0)
   customizations ChatbotCustomization?
 }
 

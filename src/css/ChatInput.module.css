@@ -52,7 +52,6 @@
   }
   
   .sendButton::before {
-    content: '\279C';
     display: block;
     font-size: 24px;
   }
