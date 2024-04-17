@@ -672,3 +672,16 @@ export const updateLogo = async (email: string, logoUrl: string) => {
 
   return updatedCustomization;
 };
+
+export const getProfileData = async (email: string) => {
+  const shop = await getShop(email);
+  console.log("shop" + shop)
+  if (shop) {
+    return shop;
+  }
+  else {
+    return {
+      error: "Shop is not installed yet",
+    };
+  }
+}

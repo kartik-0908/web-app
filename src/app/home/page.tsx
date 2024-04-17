@@ -3,7 +3,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Loader from "@/components/common/Loader";
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic';
-import AuthWrapper from "../AuthWrapper.tsx";
+import AuthWrapper from "../AuthWrapper";
 const ECommerce = dynamic(() => import('@/components/Dashboard/E-commerce'), { ssr: false });
 
 

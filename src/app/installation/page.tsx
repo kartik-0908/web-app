@@ -2,7 +2,7 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import InstallationCard from "@/components/Chat/installationCard";
-import AuthWrapper from "../AuthWrapper.tsx";
+import AuthWrapper from "../AuthWrapper";
 const Settings = () => {
   return (
     <AuthWrapper>

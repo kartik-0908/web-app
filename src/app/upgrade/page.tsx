@@ -4,7 +4,7 @@ import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, Button } 
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { useState } from "react";
 import axios from "axios";
-import AuthWrapper from "../AuthWrapper.tsx";
+import AuthWrapper from "../AuthWrapper";
 
 
 

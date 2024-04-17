@@ -11,7 +11,7 @@ import axios from "axios";
 import Image from "next/image";
 import styles from '../../css/ChatInput.module.css';
 import Loader from "@/components/common/Loader";
-import AuthWrapper from "../AuthWrapper.tsx";
+import AuthWrapper from "../AuthWrapper";
 
 const fonts = [
   { label: 'Arial', value: 'Arial, sans-serif' },

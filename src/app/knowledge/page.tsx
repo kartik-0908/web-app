@@ -1,7 +1,7 @@
 "use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import AuthWrapper from "../AuthWrapper.tsx";
+import AuthWrapper from "../AuthWrapper";
 
 const Knowledge = () => {
   return (

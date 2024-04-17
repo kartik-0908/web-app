@@ -7,7 +7,7 @@ import StartDatePicker from '@/components/FormElements/DatePicker/StartDatePicke
 import EndDatePicker from '@/components/FormElements/DatePicker/EndDatePicker';
 import axios from 'axios';
 import Loader from '@/components/common/Loader';
-import AuthWrapper from "../AuthWrapper";
+import AuthWrapper from "../AuthWrapper.jsx";
 
 
 const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {

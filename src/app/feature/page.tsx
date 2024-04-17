@@ -4,7 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import React, { useState } from "react";
 import { Button, Select, SelectItem, Textarea } from "@nextui-org/react";
 import axios from "axios";
-import AuthWrapper from "../AuthWrapper.tsx";
+import AuthWrapper from "../AuthWrapper";
 
 const items = [
   {

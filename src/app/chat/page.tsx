@@ -5,7 +5,7 @@ import ChatCard2 from "@/components/Chat/ChatCard2";
 import { useState } from "react";
 import ConversationDetails from "@/components/Chat/ConversationCard";
 import ConversationDetailsEmpty from "@/components/Chat/ConversationCardempty";
-import AuthWrapper from "../AuthWrapper.tsx";
+import AuthWrapper from "../AuthWrapper";
 
 
 interface Message {
