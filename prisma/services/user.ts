@@ -653,3 +653,21 @@ export const getStoreData = async (email: string) => {
     throw error;
   }
 }
+
+
+export const updateLogo = async (email: string, logoUrl: string) => {
+  if (!email) {
+    throw new Error("Email is required");
+  }
+
+  const updatedCustomization = await client.chatbotCustomization.updateMany({
+    where: {
+      userEmail: email,
+    },
+    data: {
+      logo: logoUrl,
+    },
+  });
+
+  return updatedCustomization;
+};

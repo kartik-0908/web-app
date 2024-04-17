@@ -36,11 +36,12 @@ const demo_mssgs = [
 
 
 const TablesPage = () => {
+  const src = "https://storage.googleapis.com/yugaa-logo-storage/logoblue%20(1).png"
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<string[]>(demo_mssgs);
   const [selected, setSelected] = React.useState("appearance");
   const colors = ['#4F46E5', '#EC4899', '#22C55E', '#F59E0B', '#EF4444', '#6366F1'];
-  const [selectedColor, setSelectedColor] = useState<string>('')
+  const [selectedColor, setSelectedColor] = useState('')
   const [botName, setBotName] = useState('');
   const [fontFamily, setFontFamily] = useState('');
   const [fontColor, setFontColor] = useState('');
@@ -59,6 +60,10 @@ const TablesPage = () => {
   const [errorMessageStyle, setErrorMessageStyle] = useState('');
   const [buttonloading, setbuttonloading] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
+  const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState('/images/user/user-01.png');
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
+
 
   const toggleChatWindow = () => {
     setIsOpen(!isOpen);
@@ -75,7 +80,7 @@ const TablesPage = () => {
     const fetchData = async () => {
       const { data } = await axios.get('/api/v1/data/customization')
       const customizationData = data.data[0];
-
+      console.log(customizationData)
       setBotName(customizationData.botName);
       setFontFamily(customizationData.fontFamily);
       setFontColor(customizationData.fontColor);
@@ -93,7 +98,9 @@ const TablesPage = () => {
       setApologyAndRetryAttempt(customizationData.apologyAndRetryAttempt);
       setErrorMessageStyle(customizationData.errorMessageStyle);
       setSelectedColor(customizationData.selectedColor);
-      console.log(customizationData.fontColor)
+      setPreviewUrl(customizationData.logo)
+      console.log(previewUrl)
+
     }
     fetchData();
 
@@ -102,14 +109,16 @@ const TablesPage = () => {
   const handleAppearanceSave = async (e: any) => {
     e.preventDefault(); // Prevent default form submission behavior
     setbuttonloading(true)
-    const formData = {
-      selectedColor,
-      fontFamily,
-      fontColor,
-      widgetPosition,
-    };
+    const formData = new FormData();
+    formData.append('selectedColor', selectedColor);
+    formData.append('fontFamily', fontFamily);
+    formData.append('fontColor', fontColor);
+    formData.append('widgetPosition', widgetPosition);
 
-    // Replace with your backend endpoint and use your preferred method (fetch, axios, etc.)
+    if (selectedLogo) {
+      formData.append('logo', selectedLogo, selectedLogo.name);
+    }
+
     try {
       const response = await axios.post('api/v1/data/customization/appearance', formData);
       const data = response.data;
@@ -192,8 +201,19 @@ const TablesPage = () => {
 
   };
 
+  const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      setSelectedLogo(file);
+      setPreviewUrl(URL.createObjectURL(file));
+      setUploadSuccess(false); // Reset upload success state
+    }
+  };
+
+
   return (
     <DefaultLayout>
+    
       <Breadcrumb pageName="Customizations" />
       <div className="grid grid-cols-12 gap-4">
         <div className="flex flex-col w-full col-span-7">
@@ -267,7 +287,10 @@ const TablesPage = () => {
                           <input
                             type="file"
                             className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
+                            onChange={handleLogoChange}
+                            accept="image/*"
                           />
+                          
                           <div className="p-2">
                             {/* <p>Logo Dimension : 200</p> */}
                             <p>Supported Format: JPG,PNG,SVG</p>
@@ -574,7 +597,8 @@ const TablesPage = () => {
                 }}>
                 <div className="col-span-2 pl-4 rounded-full">
                   <Image
-                    src="/images/user/user-01.png"
+                    loader={() => previewUrl}
+                    src={previewUrl}
                     width={54}
                     height={50}
                     alt="User"
@@ -609,23 +633,23 @@ const TablesPage = () => {
               </div>
               <div className="bg-white rounded-r-3xl rounded-l-3xl "
                 style={{
-                 
+
                   color: fontColor
                 }}>
                 <div className="col-span-8 ">
                   <div className={styles.chatInput}
-                  style={{
-                    borderColor: selectedColor,
-                    borderWidth: 2,
-                  }}
+                    style={{
+                      borderColor: selectedColor,
+                      borderWidth: 2,
+                    }}
                   >
                     <div className="rounded-3xl w-full"
                       style={{
-                        
+
                       }}>
                       <input
-                      disabled={true}
-                      type="text" placeholder="Type here..." />
+                        disabled={true}
+                        type="text" placeholder="Type here..." />
                     </div>
                     <div className="pl-2">
                       <button className={styles.sendButton}
