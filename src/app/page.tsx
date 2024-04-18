@@ -4,6 +4,8 @@ import Signinform from "@/components/Welcome/signinform";
 import { getServerSession } from "next-auth";
 import nextAuthOptions from "../../lib/nextauth-config";
 import { redirect } from "next/navigation";
+import { createHmac } from 'crypto';
+import axios from "axios";
 
 
 
@@ -13,8 +15,25 @@ export const metadata: Metadata = {
   description: "Modern way to interact with your customers",
 };
 
-export default async function Home() {
+export default async function Home(props: { searchParams: { [key: string]: string | string[] | undefined } }) {
   const session = await getServerSession(nextAuthOptions);
+  const {shop,timestamp, hmac, code,state} = props.searchParams;
+  if (shop && timestamp && hmac && code && state) {
+    // Verify the authenticity of the request using the provided hmac parameter
+    const queryString = `code=${code}&shop=${shop}&state=${state}&timestamp=${timestamp}`;
+    const secret = process.env.shopify_Secret || "'your-default-secret-here'";
+    const digest = createHmac("sha256", secret).update(queryString).digest("hex");
+
+    if (digest === hmac) {
+      // Redirect the user to a different route if the request is authentic
+      const clientId = process.env.NEXT_PUBLIC_clientId;
+      const scopes = process.env.NEXT_PUBLIC_scopes;
+      const redirectUri = process.env.NEXT_PUBLIC_redirectUri; // Update with your frontend callback route
+      const shopifyAuthUrl = `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${redirectUri}`;
+      console.log(shopifyAuthUrl)
+      redirect(shopifyAuthUrl);
+    }
+  }
   if (session) {
       redirect("/home");
   }

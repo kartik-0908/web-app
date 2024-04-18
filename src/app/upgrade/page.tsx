@@ -1,21 +1,19 @@
 "use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, Button } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, CardFooter, Divider,  Button } from "@nextui-org/react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { useState } from "react";
 import axios from "axios";
 import AuthWrapper from "../AuthWrapper";
+import { useRouter } from "next/navigation";
 
 
 
 const Upgrade = () => {
+  const router = useRouter();
   const [selectedCard, setSelectedCard] = useState<number>(0);
   const [button1loading, setbutton1loading] = useState(false);
   const [button2loading, setbutton2loading] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState({
-    conversations: 0,
-    price: 0,
-  });
 
   const handleSave = async (e: any) => {
     e.preventDefault(); // Prevent default form submission behavior
@@ -27,12 +25,24 @@ const Upgrade = () => {
     }
 
     try {
+      let dollar, plan_name;
+      if (selectedCard === 1) {
+        dollar = 69;
+        plan_name = "Basic Plan for Yugaa"
+      }
+      else if (selectedCard === 2) {
+        dollar = 99;
+        plan_name = "Pro Plan for Yugaa"
+      }
+
       const response = await axios.post('api/v1/data/upgrade', {
-        conversations: selectedPlan.conversations,
-        price: selectedPlan.price
+        dollar: dollar,
+        plan_name: plan_name
       });
       const data = response.data;
-      console.log('Success:', data);
+      const {url} = data;
+      router.push(url)
+      // console.log('Success:', data);
     } catch (error) {
     }
     setbutton1loading(false)
@@ -51,7 +61,6 @@ const Upgrade = () => {
                 isPressable
                 onPress={() => {
                   setSelectedCard(1);
-                  setSelectedPlan({ conversations: 1500, price: 10 })
                 }}
                 className={selectedCard === 1 ? "border-2 border-blue-500" : ""}
               >
@@ -147,7 +156,6 @@ const Upgrade = () => {
                 isPressable
                 onPress={() => {
                   setSelectedCard(2);
-                  setSelectedPlan({ conversations: 2500, price: 20 });
                 }}
                 className={selectedCard === 2 ? "border-2 border-blue-500" : ""}
               >
