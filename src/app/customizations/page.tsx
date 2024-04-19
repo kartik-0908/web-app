@@ -71,7 +71,7 @@ const TablesPage = () => {
     setIsOpen(!isOpen);
   };
   const handleColorSelect = (color: string) => {
-    console.log('Selected color:', color);
+    // console.log('Selected color:', color);
   };
   const handleSelectionChange = (key: React.Key) => {
     setSelected(String(key));
@@ -82,7 +82,7 @@ const TablesPage = () => {
     const fetchData = async () => {
       const { data } = await axios.get('/api/v1/data/customization')
       const customizationData = data.data[0];
-      console.log(customizationData)
+      // console.log(customizationData)
       setBotName(customizationData.botName);
       setFontFamily(customizationData.fontFamily);
       setFontColor(customizationData.fontColor);
@@ -127,7 +127,7 @@ const TablesPage = () => {
       const response = await axios.post('api/v1/data/customization/appearance', formData);
       const data = response.data;
       // Handle success (e.g., show success message)
-      console.log('Success:', data);
+      // console.log('Success:', data);
     } catch (error) {
       // Handle error (e.g., show error message)
     }
@@ -148,7 +148,7 @@ const TablesPage = () => {
       const response = await axios.post('api/v1/data/customization/greeting', formData);
       const data = response.data;
       // Handle success (e.g., show success message)
-      console.log('Success:', data);
+      // console.log('Success:', data);
     } catch (error) {
       // Handle error (e.g., show error message)
     }
@@ -174,7 +174,7 @@ const TablesPage = () => {
       const response = await axios.post('api/v1/data/customization/language', formData);
       const data = response.data;
       // Handle success (e.g., show success message)
-      console.log('Success:', data);
+      // console.log('Success:', data);
     } catch (error) {
       // Handle error (e.g., show error message)
     }
@@ -197,7 +197,7 @@ const TablesPage = () => {
       const response = await axios.post('api/v1/data/customization/behaviour', formData);
       const data = response.data;
       // Handle success (e.g., show success message)
-      console.log('Success:', data);
+      // console.log('Success:', data);
     } catch (error) {
       // Handle error (e.g., show error message)
     }

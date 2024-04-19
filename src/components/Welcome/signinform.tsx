@@ -44,7 +44,7 @@ export default function () {
     const email = form.email.value;
     const password = form.password.value;
     const shopifyDomain = form.shopifyDomain.value;
-    console.log(shopifyDomain)
+    // console.log(shopifyDomain)s
     try {
       const resp = await axios.post('/api/auth/signup', { email, password, shopifyDomain })
       if (resp) {

@@ -23,13 +23,13 @@ const ECommerce: React.FC = () => {
           setcurrentWeekData(currentWeekData)
           setlast7Days(last7Days)
           setlastThreeConversations(lastThreeConversations)
-          console.log(currentWeekData)
-          console.log(last7Days)
-          console.log(lastThreeConversations)
+          // console.log(currentWeekData)
+          // console.log(last7Days)
+          // console.log(lastThreeConversations)
         }
       } catch (error) {
-        console.log("error");
-        console.log(error);
+        // console.log("error");
+        // console.log(error);
 
       }
 

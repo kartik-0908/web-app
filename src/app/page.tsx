@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home(props: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  console.log("search paarms :", props.searchParams)
+  // console.log("search paarms :", props.searchParams)
   const session = await getServerSession(nextAuthOptions);
   const { shop, timestamp, hmac } = props.searchParams;
   if (shop) {
@@ -22,7 +22,7 @@ export default async function Home(props: { searchParams: { [key: string]: strin
     const scopes = process.env.NEXT_PUBLIC_scopes;
     const redirectUri = process.env.NEXT_PUBLIC_redirectUri;
     const shopifyAuthUrl = `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${redirectUri}`;
-    console.log(shopifyAuthUrl)
+    // console.log(shopifyAuthUrl)
     redirect(shopifyAuthUrl);
   }
 

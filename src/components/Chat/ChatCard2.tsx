@@ -42,7 +42,7 @@ const ChatCard2:React.FC<ChatCard2Props> = ({onConversationClick}) => {
 
       if (data.data && data.data.length > 0) {
         setChatData((prevData) => [...prevData, ...data.data]);
-        console.log(data.data)
+        // console.log(data.data)
         setPage((prevPage) => prevPage + 1);
       } else {
         setHasMore(false);

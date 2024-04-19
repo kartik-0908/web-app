@@ -47,12 +47,12 @@ const Analytics = () => {
   const [avgDuration, setavgDuration] = useState(0);
   useEffect(() => {
     const fetchAndSetData = async () => {
-      console.log(startDate)
+      // console.log(startDate)
       setLoading(true);
       const data = await fetchAnalyticsData(startDate, endDate);
       if (data) {
         const { analyticsData } = data;
-        console.log(analyticsData)
+        // console.log(analyticsData)
         settotalmssg(analyticsData.totalMessages)
         settotalconv(analyticsData.totalConversations)
         setavgDuration(analyticsData.averageDurationSeconds)
@@ -65,7 +65,7 @@ const Analytics = () => {
     fetchAndSetData();
   }, [startDate, endDate]);
   function formatDuration(durationInSeconds: number): string {
-    console.log("durationInSeconds", durationInSeconds);
+    // console.log("durationInSeconds", durationInSeconds);
     const hours = Math.floor(durationInSeconds / 3600);
     const minutes = Math.floor((durationInSeconds % 3600) / 60);
     const seconds = durationInSeconds % 60;

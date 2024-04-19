@@ -1,8 +1,7 @@
 "use client"
 import axios from "axios";
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
 import Loader from "@/components/common/Loader";
 
 export default function Integration() {

@@ -85,7 +85,7 @@ const InstallationCard = () => {
               defaultValue={domain}
               onValueChange={(value) => {
                 setInputValue(value)
-                console.log(inputValue)
+                // console.log(inputValue)
               }}
               isDisabled={domain !== ""}
               endContent={

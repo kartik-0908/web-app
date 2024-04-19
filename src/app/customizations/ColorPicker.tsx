@@ -18,8 +18,8 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, onSelect, defaultColo
     setCurrentColor(defaultColor || colors[0])
     setSelectedColor(defaultColor || colors[0])
     onSelect(defaultColor || colors[0])
-    console.log("inside useefect currentc olor "+ currentColor )
-    console.log("inside useefect elected olor "+ selectedColor )
+    // console.log("inside useefect currentc olor "+ currentColor )
+    // console.log("inside useefect elected olor "+ selectedColor )
   },[])
   const handleColorSelect = (event: React.MouseEvent<HTMLButtonElement>, color: string) => {
     event.preventDefault();

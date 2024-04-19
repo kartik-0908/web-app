@@ -13,7 +13,7 @@ const Profile = () => {
   useEffect(() => {
     async function fetchData() {
       const resp = await axios.get('/api/v1/data/profile');
-      console.log(resp.data);
+      // console.log(resp.data);
       setuserEmail(resp.data.email)
       if (typeof (resp.data.shop) === "string") {
         setshopDomain(resp.data.shop)
