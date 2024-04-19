@@ -102,7 +102,7 @@ export const store_token = async (token: string, shop: string) => {
       accessToken: token,
     }
   });
-  console.log("store_token: ");
+  console.log("stored_token: ");
   console.log(new_installed_shop);
 }
 async function getShop(email: string) {

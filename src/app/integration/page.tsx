@@ -15,11 +15,11 @@ export default function Integration() {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code'); // Extract code
       const shop = urlParams.get('shop');// Extract code
-      console.log("integration code: " + code)
-      console.log("integration shop: " + shop)
+      // console.log("integration code: " + code)
+      // console.log("integration shop: " + shop)
       if (code && shop) {
         try {
-          console.log("insdie useeffect of integration")
+          // console.log("insdie useeffect of integration")
           const response = await axios.post('/api/shopify/access-token', { shop, code });
           console.log(response);
           router.push('/installation')

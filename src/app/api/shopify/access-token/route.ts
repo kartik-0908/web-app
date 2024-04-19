@@ -23,9 +23,10 @@ export async function POST(req: NextRequest) {
       },
     });
     console.log("inside try")
-    console.log(response)
+    // console.log(response)
       console.log("access_token: "+ response.data.access_token)
       const accessToken = response.data.access_token
+      console.log("starting storing token")
       await store_token(accessToken, shop)
       await subscribeToWebhooks(shop, accessToken);
     return NextResponse.json({ status: true });
@@ -37,18 +38,13 @@ export async function POST(req: NextRequest) {
 async function subscribeToWebhooks(shop: string, accessToken: string) {
   const webhooks = [
       {
-          address: `${webhookurl}app/uninstalled/infwrhbowrbwwrhwrerbh`,
+          address: `${webhookurl}app/uninstalled`,
           topic: 'app/uninstalled',
           format: 'json',
       },
       {
           address: `${webhookurl}app_subscriptions/update`,
           topic: 'app_subscriptions/update',
-          format: 'json',
-      },
-      {
-          address: `${webhookurl}products/update`,
-          topic: 'products/update',
           format: 'json',
       },
   ];
