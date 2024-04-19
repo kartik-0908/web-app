@@ -171,7 +171,7 @@ export default function () {
                   type="password"
                   name="password"
                 />
-                <Input isRequired label="Shopify Domain" placeholder="Enter your Shopify Domain" type="string" name="shopifyDomain" />
+                <Input isRequired label="Shopify Domain" placeholder="domain.myshopify.com" type="string" name="shopifyDomain" />
 
                 <p className="text-center text-small">
                   Already have an account?{" "}
