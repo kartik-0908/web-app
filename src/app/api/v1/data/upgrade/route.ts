@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server";
-import { upgradeData } from "../../../../../../prisma/services/user";
+import { getCurrentPlan, upgradeData } from "../../../../../../prisma/services/user";
 import axios from "axios";
 
 async function createAppSubscription(access_token: string, shop: string, dollar: number, plan_name: string) {
@@ -34,8 +34,8 @@ async function createAppSubscription(access_token: string, shop: string, dollar:
               plan: {
                 appRecurringPricingDetails: {
                   price: {
-                    // amount: `${dollar}`,
-                    amount: 1,
+                    amount: `${dollar}`,
+                    // amount: 1,
                     currencyCode: 'USD',
                   },
                   interval: 'EVERY_30_DAYS',
@@ -82,6 +82,23 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json({
       "data": "hello"
+    })
+  }
+}
+export async function GET() {
+  const session = await getServerSession();
+  if (session && session.user && session.user.email) {
+    const email = session.user.email;
+    const data = await getCurrentPlan(email);
+    console.log(data)
+    if(data){
+     return NextResponse.json(data)
+      
+    }
+   
+   
+    return NextResponse.json({
+      "hello": "hello"
     })
   }
 }

@@ -35,8 +35,15 @@ model User {
   email          String                @unique
   lastLoginAt    DateTime?
   password       String
-  plan           Int                   @default(0)
+  shopifyDomain  String                @unique
   customizations ChatbotCustomization?
+}
+
+model PlanDetails {
+  shopifyDomain String   @id
+  planId        Int
+  planStartDate DateTime
+  convleft      Int
 }
 
 model ChatbotCustomization {
@@ -64,17 +71,6 @@ model ChatbotCustomization {
   user                   User     @relation(fields: [userEmail], references: [email])
 }
 
-model conversation_dist {
-  shopDomain String @id
-  Monday     Int    @default(0)
-  Tuesday    Int    @default(0)
-  Wednesday  Int    @default(0)
-  Thursday   Int    @default(0)
-  Friday     Int    @default(0)
-  Saturday   Int    @default(0)
-  Sunday     Int    @default(0)
-}
-
 model feature_request {
   id          Int    @id @default(autoincrement())
   shop        String
@@ -87,22 +83,6 @@ model shopify_installed_shop {
   id          Int    @id @default(autoincrement())
   shop        String @unique
   accessToken String
-  email       String @unique
-}
-
-model userDetails {
-  id              Int      @id @default(autoincrement())
-  shopify_website String
-  name            String
-  jobRole         String
-  interaction     String[]
-  industry        String
-  companySize     String
-  inquiries       String
-  Setup           String
-  currentTool     String
-  learnAbout      String
-  email           String
 }
 
 model Customer {
@@ -114,4 +94,13 @@ model Customer {
   deleted    Boolean @default(false)
 
   @@unique([shopDomain, email])
+}
+
+model RegisteredWebhooks {
+  id         String @id
+  address    String
+  topic      String
+  created_at String
+  updated_at String
+  shopDomain String
 }

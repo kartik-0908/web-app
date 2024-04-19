@@ -1,22 +1,8 @@
 // ConversationDetails.tsx
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 import axios from 'axios';
 import { Button, Input, Link } from '@nextui-org/react';
 import Loader from '../common/Loader';
-
-interface Message {
-  id: string;
-  timestamp: string;
-  senderId: number;
-  text: string;
-  senderType: string;
-}
-
-interface Conversation {
-  id: string;
-  Message: Message[];
-}
 
 const InstallationCard = () => {
   const [loading, setLoading] = useState(false);
@@ -28,21 +14,31 @@ const InstallationCard = () => {
     setInputValue(e.target.value);
   };
 
-  const handleSubmit = () => {
-    if (inputValue) {
-      const clientId = process.env.NEXT_PUBLIC_clientId;
-      const scopes = process.env.NEXT_PUBLIC_scopes;
-      const redirectUri = process.env.NEXT_PUBLIC_redirectUri; // Update with your frontend callback route
-      const shopifyAuthUrl = `https://${inputValue}.myshopify.com/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${redirectUri}`;
-      console.log(shopifyAuthUrl)
-      window.location.href = shopifyAuthUrl;
-    }
+  const handleSubmit = async () => {
+    // if (domain) {
+    //   const { data } = await axios.post('/api/v1/data/check', { inputValue })
+    //   console.log(data);
+    //   if (data.status === "present") {
+    //     console.log("all good");
+    //   }
+    //   else {
+        const clientId = process.env.NEXT_PUBLIC_clientId;
+        const scopes = process.env.NEXT_PUBLIC_scopes;
+        const redirectUri = process.env.NEXT_PUBLIC_redirectUri; // Update with your frontend callback route
+        const shopifyAuthUrl = `https://${domain}.myshopify.com/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${redirectUri}`;
+        console.log(shopifyAuthUrl)
+        window.location.href = shopifyAuthUrl;
+      // }
+
+    // }
   };
 
   const handlefetchData = async () => {
     setbuttonloading(true)
     const resp = await axios.post('/api/v1/data/fetch-data');
-    console.log(resp);
+    // const webhook = await axios.post('/api/v1/webhook/subscribe');
+
+    // console.log(resp);
     setbuttonloading(false)
   }
 
@@ -52,9 +48,9 @@ const InstallationCard = () => {
       const { data } = await axios.get('/api/v1/data/installation')
       if (data && data.data && data.data.shop) {
         const { shop } = data.data;
+        setInputValue(shop)
         const croppedShop = shop.slice(0, -14);
         setDomain(croppedShop);
-        console.log("domain" + croppedShop)
       }
       setLoading(false)
     }
@@ -65,7 +61,6 @@ const InstallationCard = () => {
     return (
       <div className='w-full'>
         <Loader />
-
       </div>
     )
   }
@@ -79,10 +74,10 @@ const InstallationCard = () => {
             </h3>
           </div>
           <div className="pl-32 pr-32 p-2">
-            <p>
+            <div>
               Welcome to our installation guide! We're thrilled to assist you in getting our bot set up and running smoothly on your website. Below, you'll discover step-by-step instructions to effortlessly integrate our bot into your site.
               Let's jump in and enhance visitor engagement in a whole new way!
-            </p>
+            </div>
             <Input
               className='pl-32 pr-32 pt-4'
               placeholder="Enter your domain"
@@ -99,14 +94,42 @@ const InstallationCard = () => {
                 </div>
               }
             />
-            <br></br>
-            <div className='text-center'>
-              <Button size="lg" onClick={handleSubmit}>
+            <div className='text-center pt-4'>
+              {/* <Button size="lg"
+                // isDisabled={domain !== ""}
+                onClick={handleSubmit}
+                color={domain !== "" ? "default" : "primary"}
+                spinner={
+                  <div className="flex flex-row">
+                    <svg
+                      className="animate-spin h-5 w-5 text-current"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <h1>Redirecting to Shopify</h1>
+                  </div>
+                }
+              >
                 Submit
-              </Button>
+              </Button> */}
             </div>
 
-            <p className='pt-4'>
+            <div className='pt-4'>
               To enable the Yugaa chat widget for your website visitors, simply navigate to the Shopify theme editor and toggle it on. Click on the below link to add the widget.
               <div className='text-center'>
                 <Link isBlock
@@ -116,51 +139,56 @@ const InstallationCard = () => {
                 </Link>
               </div>
 
-            </p>
-            <p className='pt-4'>
+            </div>
+            <div className='pt-4'>
               After saving the changes, the widget will become visible on your website. This activation process is quick and requires only two clicks.
-            </p>
-            <p className='pt-4'>
+            </div>
+            <div className='pt-4'>
               Make sure to visit your website where the chat widget code is installed to complete this step.
-            </p>
-            <br></br>
-            <p>
-            Congrats! You’ll replace a dumb bot with an intelligent one 😎
-            </p>
-            <br></br>
-            <br></br>
+            </div>
+            <div>
+              Congrats! You’ll replace a dumb bot with an intelligent one 😎
+            </div>
 
-            <Button
-              isLoading={buttonloading}
-              onClick={handlefetchData}
-              spinner={
-                <div className="flex flex-row">
-                  <svg
-                    className="animate-spin h-5 w-5 text-current"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  <h1>Saving Changes</h1>
-                </div>
-              }
-            >
-              {buttonloading ? "" : "Fetch Data"}
-            </Button>
+            <div className='pt-4 pb-4'>
+              Now , Clicking on the below button, your new AI chatbot will fetch the product details from your shopify store
+            </div>
+
+            <div className='text-center'>
+              <Button
+                isLoading={buttonloading}
+                onClick={handlefetchData}
+                spinner={
+                  <div className="flex flex-row">
+                    <svg
+                      className="animate-spin h-5 w-5 text-current"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <h1>Getting your product Data</h1>
+                  </div>
+                }
+              >
+                {buttonloading ? "" : "Click here to start fetching the Store Product Data"}
+              </Button>
+            </div>
+
+
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { verifyPassword } from '../lib/auth';
-import { createUser, findUserByEmail, initializeDefaultCustomization, updateLastLoginAt } from '../prisma/services/user';
+import { createUser, findUserByEmail, updateLastLoginAt } from '../prisma/services/user';
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -17,18 +17,12 @@ export const nextAuthOptions: NextAuthOptions = {
         console.log(credentials)
         let user = await findUserByEmail(email);
         if (!user) {
-          user = await createUser({
-            email,
-            password
-          });
-          await initializeDefaultCustomization(email)
-          console.log(user)
+          throw new Error("User not found. Please do signUp first");
         }
         else {
-          await initializeDefaultCustomization(email)
           const passwordIsValid = await verifyPassword(password, user.password);
           if (!passwordIsValid) {
-            throw new Error("Credentials are incorrect");
+            throw new Error("Credentials are incorrect. Please try again with the correct credentials");
           }
           else {
             await updateLastLoginAt(email);

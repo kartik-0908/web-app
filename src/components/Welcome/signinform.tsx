@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { signIn } from 'next-auth/react';
 import { Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function () {
+  const router = useRouter()
   const [selected, setSelected] = useState<string>('login');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [buttonloading, setbuttonloading] = useState(false);
@@ -19,15 +21,45 @@ export default function () {
     const result = await signIn<'credentials'>('credentials', {
       email,
       password,
+      redirect: false
     });
-    // setbuttonloading(false)
+    setbuttonloading(false)
 
-    // if (result?.ok) {
-    //   // router.push(selected === 'login' ? '/home' : '/install');
-    // } else {
-    //   setErrorMessage('Failed to authenticate. Please check your credentials and try again.');
-    // }
+    if (result?.error) {
+      // router.push(selected === 'login' ? '/home' : '/install');
+      setErrorMessage(result.error)
+    }
+    else if(result?.ok){
+      router.push('/home')
+    }
+    else {
+      setErrorMessage('Failed to authenticate. Please check your credentials and try again.');
+    }
   };
+
+  const habdleSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setbuttonloading(true);
+    const form = e.currentTarget;
+    const email = form.email.value;
+    const password = form.password.value;
+    const shopifyDomain = form.shopifyDomain.value;
+    console.log(shopifyDomain)
+    try {
+      const resp = await axios.post('/api/auth/signup', { email, password, shopifyDomain })
+      if (resp) {
+        alert('Account created successfully');
+        setSelected('login');
+      }
+      else {
+        alert('Failed to create account. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error creating account:', error);
+      alert('An error occurred. Please try again later.');
+    }
+    setbuttonloading(false);
+  }
 
   const handleForgotPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -128,7 +160,7 @@ export default function () {
             </Tab>
             <Tab key="sign-up" title="Sign up">
               <form
-                onSubmit={handleSubmit}
+                onSubmit={habdleSignUpSubmit}
                 className="flex flex-col gap-4">
                 {errorMessage && <div className="text-center text-small text-red-500">{errorMessage}</div>}
                 <Input isRequired label="Email" placeholder="Enter your email" type="email" name="email" />
@@ -139,6 +171,8 @@ export default function () {
                   type="password"
                   name="password"
                 />
+                <Input isRequired label="Shopify Domain" placeholder="Enter your Shopify Domain" type="string" name="shopifyDomain" />
+
                 <p className="text-center text-small">
                   Already have an account?{" "}
                   <Link size="sm" onPress={() => setSelected("login")}>

@@ -3,7 +3,6 @@ import { hashPassword, verifyPassword as verifyUserPassword } from '../../lib/au
 import axios from 'axios';
 import { Pinecone } from '@pinecone-database/pinecone';
 import OpenAI from "openai";
-import { randomUUID } from 'crypto';
 const pc = new Pinecone({
   apiKey: 'ad1612ee-9b3f-4269-9e18-362ff724713d'
 });
@@ -48,7 +47,7 @@ export async function initializeDefaultCustomization(email: string) {
           clarificationPrompt: "I need more information top assist you. Could you provide additional details",
           apologyAndRetryAttempt: "I apologize for any confusion. Could you please provide your query again?",
           errorMessageStyle: "Standard",
-          logo:"https://storage.googleapis.com/yugaa-logo-storage/user.png"
+          logo: "https://storage.googleapis.com/yugaa-logo-storage/user.png"
         },
       });
 
@@ -61,13 +60,13 @@ export async function initializeDefaultCustomization(email: string) {
   }
 }
 
-export const createUser = async ({ email, password }: { email: string; password: string; }) => {
+export const createUser = async ( email: string, password: string, shopDomain: string) => {
   const hashedPassword = await hashPassword(password);
-  // console.log(hashedPassword)
   const resp = await client.user.create({
     data: {
       email,
       password: hashedPassword,
+      shopifyDomain: shopDomain
     },
   });
   console.log(resp);
@@ -87,20 +86,20 @@ export const updateLastLoginAt = async (email: string) => {
 };
 
 export const isShopInstalled = async (email: string) => {
+  const shopify = await getShop(email)
   const shop = await client.shopify_installed_shop.findUnique({
     where: {
-      email: email,
+      shop: shopify,
     },
   });
 
   return shop !== null;
 }
-export const store_token = async (token: string, email: string, shop: string) => {
+export const store_token = async (token: string, shop: string) => {
   const new_installed_shop = await client.shopify_installed_shop.create({
     data: {
       shop: shop,
       accessToken: token,
-      email: email
     }
   });
   console.log("store_token: ");
@@ -108,14 +107,14 @@ export const store_token = async (token: string, email: string, shop: string) =>
 }
 async function getShop(email: string) {
   console.log(email)
-  const existingUser = await client.shopify_installed_shop.findUnique({
+  const existingUser = await client.user.findUnique({
     where: {
       email: email
     }
   });
   console.log(existingUser)
   if (existingUser) {
-    return (existingUser.shop);
+    return (existingUser.shopifyDomain);
   }
 }
 async function getlastThreeConversations(shopDomain: string) {
@@ -480,6 +479,32 @@ export const getInstallationData = async (email: string) => {
     };
   }
 }
+export const getTokenwithShop = async (email: string) => {
+  const shop = await getShop(email)
+  try {
+    const shopify = await client.shopify_installed_shop.findUnique({
+      where: {
+        shop: shop,
+      },
+      select: {
+        shop: true,
+        accessToken: true,
+      },
+    });
+
+    if (shopify) {
+      return {
+        shop: shopify.shop,
+        accessToken: shopify.accessToken,
+      };
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error retrieving shop and token:', error);
+    throw error;
+  }
+}
 
 export const saveFeatureRequest = async (email: string, description: string, details: string, category: string) => {
   try {
@@ -510,10 +535,11 @@ export const saveFeatureRequest = async (email: string, description: string, det
 };
 
 export const upgradeData = async (email: string) => {
+  const shop = await getShop(email)
   try {
     const installedShop = await client.shopify_installed_shop.findUnique({
       where: {
-        email: email,
+        shop: shop,
       },
       select: {
         shop: true,
@@ -582,10 +608,11 @@ function extractProductData(products: any) {
 }
 
 export const getStoreData = async (email: string) => {
+  const shop = await getShop(email)
   try {
     const installedShop = await client.shopify_installed_shop.findUnique({
       where: {
-        email: email,
+        shop: shop,
       },
       select: {
         shop: true,
@@ -684,4 +711,83 @@ export const getProfileData = async (email: string) => {
       error: "Shop is not installed yet",
     };
   }
+}
+
+export async function check_token(shop: string) {
+  try {
+    const shopDomain = await client.shopify_installed_shop.findUnique({
+      where: {
+        shop: shop,
+      },
+      select: {
+        accessToken: true,
+      },
+    });
+
+    if (shopDomain && shopDomain.accessToken) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('Error checking access token:', error);
+    throw error;
+  }
+}
+
+export async function saveWebhookDetails(webhookResponse: any, shopDomain: any) {
+  try {
+    const webhook = webhookResponse.webhook;
+    console.log(webhook)
+
+    const createdWebhook = await client.registeredWebhooks.create({
+      data: {
+        id: String(webhook.id),
+        address: webhook.address,
+        topic: webhook.topic,
+        created_at: webhook.created_at,
+        updated_at: webhook.updated_at,
+        shopDomain: shopDomain,
+      },
+    });
+    console.log('Webhook details saved:', createdWebhook);
+  } catch (error) {
+    console.error('Error saving webhook details:', error);
+    // throw error;
+  }
+}
+
+
+export async function getCurrentPlan(email: string) {
+  if (email) {
+    const shop = await getShop(email)
+    const user = await client.planDetails.findUnique({
+      where: {
+        shopifyDomain: shop,
+      },
+      select: {
+        convleft: true,
+        planId: true,
+      },
+    });
+
+    if (user) {
+      return {plan: user.planId,convleft: user.convleft};
+    } else {
+      return null;
+    }
+
+
+  }
+}
+
+export async function initializePlan(shop: string){
+  const planDetails = await client.planDetails.create({
+    data: {
+      shopifyDomain: shop,
+      planId: 0,
+      planStartDate: new Date(),
+      convleft: 50
+    },
+  });
 }
