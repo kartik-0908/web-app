@@ -23,7 +23,6 @@ export default function () {
       password,
       redirect: false
     });
-    setbuttonloading(false)
 
     if (result?.error) {
       // router.push(selected === 'login' ? '/home' : '/install');
@@ -35,6 +34,8 @@ export default function () {
     else {
       setErrorMessage('Failed to authenticate. Please check your credentials and try again.');
     }
+    setbuttonloading(false)
+
   };
 
   const habdleSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
