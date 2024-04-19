@@ -86,11 +86,11 @@ export default function () {
   };
 
   return (
-    <div className="flex flex-col w-full ">
-      <Card className="max-w-full w-[440px] ">
+    <div className="flex flex-col w-full  items-center justify-center w-full  ">
+      <Card className="max-w-full w-full sm:w-[25rem] mx-4 sm:mx-0 ">
         <CardBody className="overflow-hidden">
-          <div className="text-3xl text-black text-center pb-4 font-bold justify-center align-center ">
-            <h1>Let's Get Started</h1>
+          <div className="text-2xl sm:text-3xl text-black text-center pb-4 font-bold justify-center align-center ">
+            <h1>Let's Get Started with YUGAA</h1>
           </div>
           <Tabs
             fullWidth
