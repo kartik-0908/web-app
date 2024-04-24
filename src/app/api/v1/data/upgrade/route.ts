@@ -13,7 +13,7 @@ async function createAppSubscription(access_token: string, shop: string, dollar:
       {
         query: `
             mutation AppSubscriptionCreate($name: String!, $lineItems: [AppSubscriptionLineItemInput!]!, $returnUrl: URL!) {
-              appSubscriptionCreate(name: $name, returnUrl: $returnUrl,lineItems: $lineItems) {
+              appSubscriptionCreate(name: $name, returnUrl: $returnUrl,test: true,lineItems: $lineItems) {
                 userErrors {
                   field
                   message

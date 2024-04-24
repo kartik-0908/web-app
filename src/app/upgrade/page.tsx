@@ -15,6 +15,7 @@ const Upgrade = () => {
   const [selectedCard, setSelectedCard] = useState<number>(0);
   const [convleft, setconvleft] = useState<number>(0);
   const [pageloading, setpageloading] = useState(true);
+  const [button0loading, setbutton0loading] = useState(false);
   const [button1loading, setbutton1loading] = useState(false);
   const [button2loading, setbutton2loading] = useState(false);
   const [currentPlan, setcurrentPlan] = useState(0)
@@ -52,8 +53,21 @@ const Upgrade = () => {
       // console.log('Success:', data);
     } catch (error) {
     }
-    setbutton1loading(false)
-    setbutton2loading(false)
+    // setbutton1loading(false)
+    // setbutton2loading(false)
+
+  };
+
+  const handleCancel = async (e: any) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    setbutton0loading(true)
+    try {
+      const response = await axios.post('api/v1/data/cancel');
+      const data = response.data;
+      // console.log('Success:', data);
+    } catch (error) {
+    }
+    setbutton0loading(false)
 
   };
 
@@ -62,6 +76,7 @@ const Upgrade = () => {
       const res = await axios.get('/api/v1/data/upgrade')
       console.log(res.data);
       setcurrentPlan(res.data.plan)
+      setSelectedCard(res.data.plan)
       setconvleft(res.data.convleft)
       setpageloading(false)
     }
@@ -138,43 +153,47 @@ const Upgrade = () => {
                     <div className="w-full">
                       {(currentPlan) === 0 ? (
                         <Button disabled>Active Plan</Button>
-                      ) : (
-                        <Button
-                          onClick={handleSave}
-                          isLoading={selectedCard === 1 ? button1loading : button2loading}
-                          disableAnimation
-                          isDisabled={currentPlan === 0}
-                          className="bg-blue-500 text-white"
-                          spinner={
-                            <div className="flex flex-row">
-                              <svg
-                                className="animate-spin h-5 w-5 text-current"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <circle
-                                  className="opacity-25"
-                                  cx="12"
-                                  cy="12"
-                                  r="10"
-                                  stroke="currentColor"
-                                  strokeWidth="4"
-                                />
-                                <path
-                                  className="opacity-75"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                  fill="currentColor"
-                                />
-                              </svg>
-                              <h1>Redirecting to Shopify</h1>
-                            </div>
-                          }
-                          color={selectedCard === 1 ? "primary" : "default"}
-                        >
-                          Buy this Plan
-                        </Button>
-                      )}
+                      ) :
+                        (selectedCard) !== 0 ? (
+                          <Button disabled>Cancel Your Paid Subscription</Button>
+                        ) :
+                          (
+                            <Button
+                              onClick={handleCancel}
+                              isLoading={button0loading}
+                              disableAnimation
+                              className="bg-blue-500 text-white"
+                              isDisabled={selectedCard !== 0}
+                              spinner={
+                                <div className="flex flex-row">
+                                  <svg
+                                    className="animate-spin h-5 w-5 text-current"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <circle
+                                      className="opacity-25"
+                                      cx="12"
+                                      cy="12"
+                                      r="10"
+                                      stroke="currentColor"
+                                      strokeWidth="4"
+                                    />
+                                    <path
+                                      className="opacity-75"
+                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                      fill="currentColor"
+                                    />
+                                  </svg>
+                                  <h1>Cancelling</h1>
+                                </div>
+                              }
+                              color={"primary"}
+                            >
+                              Cancel Your Paid Subscription
+                            </Button>
+                          )}
                     </div>
                   </CardFooter>
                 </Card>
@@ -337,7 +356,7 @@ const Upgrade = () => {
                           (
                             <Button
                               onClick={handleSave}
-                              isLoading={button1loading}
+                              isLoading={button2loading}
                               disableAnimation
                               className="bg-blue-500 text-white"
                               isDisabled={selectedCard !== 2}

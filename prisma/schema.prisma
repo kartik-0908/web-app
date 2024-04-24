@@ -44,6 +44,7 @@ model PlanDetails {
   planId        Int
   planStartDate DateTime
   convleft      Int
+  shopifyid     String @default("nothing")
 }
 
 model ChatbotCustomization {
@@ -103,4 +104,13 @@ model RegisteredWebhooks {
   created_at String
   updated_at String
   shopDomain String
+}
+
+model KnowledgeBase {
+  shopDomain            String   @id
+  faqUrl                String?
+  termsAndConditionsUrl String?
+  helpUrl               String?
+  documentFileNames     String[]
+  videoLinkUrls         String[]
 }

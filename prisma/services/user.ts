@@ -60,7 +60,7 @@ export async function initializeDefaultCustomization(email: string) {
   }
 }
 
-export const createUser = async ( email: string, password: string, shopDomain: string) => {
+export const createUser = async (email: string, password: string, shopDomain: string) => {
   const hashedPassword = await hashPassword(password);
   const resp = await client.user.create({
     data: {
@@ -560,6 +560,40 @@ export const upgradeData = async (email: string) => {
     throw error;
   }
 }
+export const cancelData = async (email: string) => {
+  const shop = await getShop(email)
+  try {
+    const installedShop = await client.shopify_installed_shop.findUnique({
+      where: {
+        shop: shop,
+      },
+      select: {
+        shop: true,
+        accessToken: true,
+      },
+    });
+    const planDetails = await client.planDetails.findUnique({
+      where: {
+        shopifyDomain: shop,
+      },
+      select: {
+        shopifyid: true,
+      },
+    });
+    if (installedShop && planDetails) {
+      return {
+        shop: installedShop.shop,
+        accessToken: installedShop.accessToken,
+        id: planDetails.shopifyid
+      };
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error retrieving shop and access token:', error);
+    throw error;
+  }
+}
 
 export async function updateUserPassword(email: string, newPassword: string) {
   const hashedPassword = await hashPassword(newPassword);
@@ -772,7 +806,7 @@ export async function getCurrentPlan(email: string) {
     });
 
     if (user) {
-      return {plan: user.planId,convleft: user.convleft};
+      return { plan: user.planId, convleft: user.convleft };
     } else {
       return null;
     }
@@ -781,7 +815,7 @@ export async function getCurrentPlan(email: string) {
   }
 }
 
-export async function initializePlan(shop: string){
+export async function initializePlan(shop: string) {
   const planDetails = await client.planDetails.create({
     data: {
       shopifyDomain: shop,
@@ -790,4 +824,52 @@ export async function initializePlan(shop: string){
       convleft: 50
     },
   });
+}
+
+export async function getKnowledgeData(email: string) {
+  if (email) {
+    try {
+      const shopDomain = await getShop(email);
+      const shopResources = await client.knowledgeBase.findUnique({
+        where: {
+          shopDomain: shopDomain,
+        },
+      });
+
+      if (!shopResources) {
+        console.log(`No resources found for shop domain: ${shopDomain}`);
+        return null;
+      }
+
+      return {
+        shopDomain: shopResources.shopDomain,
+        faqUrl: shopResources.faqUrl,
+        termsAndConditionsUrl: shopResources.termsAndConditionsUrl,
+        helpUrl: shopResources.helpUrl,
+        documentFileNames: shopResources.documentFileNames,
+        videoLinkUrls: shopResources.videoLinkUrls,
+      };
+    } catch (error) {
+      console.error('Error fetching shop resources:', error);
+      throw error;
+    }
+  }
+}
+
+export async function updatePlanDetails(shopifyDomain: string): Promise<void> {
+  try {
+    await client.planDetails.update({
+      where: {
+        shopifyDomain: shopifyDomain,
+      },
+      data: {
+        planId: 0,
+        convleft: 50,
+      },
+    });
+    console.log('Plan details updated successfully');
+  } catch (error) {
+    console.error('Error updating plan details:', error);
+    throw error;
+  }
 }
