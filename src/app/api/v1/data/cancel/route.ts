@@ -34,9 +34,9 @@ async function cancelAppSubscription(access_token: string, subscriptionId: strin
         },
       }
     );
-    if(response.data.appSubscriptionCancel.appSubscription.status === "CANCELLED"){
-      await updatePlanDetails(shop);
-    }
+    // if(response.data.appSubscriptionCancel.appSubscription.status === "CANCELLED"){
+    //   await updatePlanDetails(shop);
+    // }
 
     console.log('Response:', response.data);
   } catch (error) {
