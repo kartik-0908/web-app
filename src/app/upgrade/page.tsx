@@ -149,53 +149,7 @@ const Upgrade = () => {
                     </div>
                   </CardBody>
                   <Divider />
-                  <CardFooter>
-                    <div className="w-full">
-                      {(currentPlan) === 0 ? (
-                        <Button disabled>Active Plan</Button>
-                      ) :
-                        (selectedCard) !== 0 ? (
-                          <Button disabled>Cancel Your Paid Subscription</Button>
-                        ) :
-                          (
-                            <Button
-                              onClick={handleCancel}
-                              isLoading={button0loading}
-                              disableAnimation
-                              className="bg-blue-500 text-white"
-                              isDisabled={selectedCard !== 0}
-                              spinner={
-                                <div className="flex flex-row">
-                                  <svg
-                                    className="animate-spin h-5 w-5 text-current"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <circle
-                                      className="opacity-25"
-                                      cx="12"
-                                      cy="12"
-                                      r="10"
-                                      stroke="currentColor"
-                                      strokeWidth="4"
-                                    />
-                                    <path
-                                      className="opacity-75"
-                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                      fill="currentColor"
-                                    />
-                                  </svg>
-                                  <h1>Cancelling</h1>
-                                </div>
-                              }
-                              color={"primary"}
-                            >
-                              Cancel Your Paid Subscription
-                            </Button>
-                          )}
-                    </div>
-                  </CardFooter>
+
                 </Card>
               </div>
               <div className="col-span-4">
@@ -247,7 +201,10 @@ const Upgrade = () => {
                   <CardFooter>
                     <div className="w-full">
                       {(currentPlan) === 1 ? (
-                        <Button disabled>Active Plan</Button>
+                        <Button
+                          color="primary"
+                          onClick={handleCancel}
+                        >Cancel Subscription</Button>
                       ) :
                         (selectedCard) !== 1 ? (
                           <Button disabled>Buy Plan</Button>
@@ -348,7 +305,10 @@ const Upgrade = () => {
                   <CardFooter>
                     <div className="w-full">
                       {(currentPlan) === 2 ? (
-                        <Button disabled>Active Plan</Button>
+                        <Button
+                          color="primary"
+                          onClick={handleCancel}
+                        >Cancel Subscription</Button>
                       ) :
                         (selectedCard) !== 2 ? (
                           <Button disabled>Buy Plan</Button>

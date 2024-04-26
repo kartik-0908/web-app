@@ -6,14 +6,17 @@ import axios from "axios";
 async function createAppSubscription(access_token: string, shop: string, dollar: number, plan_name: string) {
   const accessToken = access_token;
   const shopDomain = shop;
+  console.log("returbn: " + process.env.NEXT_shopify_upgrade_return)
+  console.log("returbn: " + (process.env.NEXT_shopify_upgrade_type))
+  const test: string = process.env.NEXT_shopify_upgrade_type || "false";
 
   try {
     const response = await axios.post(
       `https://${shopDomain}/admin/api/2024-04/graphql.json`,
       {
         query: `
-            mutation AppSubscriptionCreate($name: String!, $lineItems: [AppSubscriptionLineItemInput!]!, $returnUrl: URL!) {
-              appSubscriptionCreate(name: $name, returnUrl: $returnUrl,lineItems: $lineItems) {
+            mutation AppSubscriptionCreate($name: String!, $test: Boolean! $lineItems: [AppSubscriptionLineItemInput!]!, $returnUrl: URL!) {
+              appSubscriptionCreate(name: $name,test: $test, returnUrl: $returnUrl,lineItems: $lineItems) {
                 userErrors {
                   field
                   message
@@ -27,15 +30,14 @@ async function createAppSubscription(access_token: string, shop: string, dollar:
           `,
         variables: {
           name: `${plan_name}`,
-          test: true,
-          returnUrl: 'https://app.yugaa.tech/upgrade',
+          test: Boolean(test),
+          returnUrl: `${process.env.NEXT_shopify_upgrade_return}`,
           lineItems: [
             {
               plan: {
                 appRecurringPricingDetails: {
                   price: {
                     amount: `${dollar}`,
-                    // amount: 1,
                     currencyCode: 'USD',
                   },
                   interval: 'EVERY_30_DAYS',
