@@ -166,7 +166,7 @@ const Upgrade = () => {
                   <CardHeader className=" gap-3">
                     <div className="w-full ">
                       <div className="text-2xl font-bold">
-                        $69/ 1500 conversations
+                        $69/ month
 
                       </div>
                       <div className="">
@@ -265,7 +265,7 @@ const Upgrade = () => {
                   <CardHeader className="flex gap-3">
                     <div className="w-full ">
                       <div className="text-2xl font-bold">
-                        $99/ 2500 conversations
+                        $99/ month
 
                       </div>
                       <div className="">
