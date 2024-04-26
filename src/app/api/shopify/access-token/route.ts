@@ -8,8 +8,8 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { shop, code } = body;
   console.log("inside accestoken route")
-  console.log("shop: "+ shop)
-  console.log("code: "+ code)
+  console.log("shop: " + shop)
+  console.log("code: " + code)
   console.log(process.env.shopify_Secret)
 
   try {
@@ -24,11 +24,11 @@ export async function POST(req: NextRequest) {
     });
     console.log("inside try")
     // console.log(response)
-      console.log("access_token: "+ response.data.access_token)
-      const accessToken = response.data.access_token
-      console.log("starting storing token")
-      await store_token(accessToken, shop)
-      await subscribeToWebhooks(shop, accessToken);
+    console.log("access_token: " + response.data.access_token)
+    const accessToken = response.data.access_token
+    console.log("starting storing token")
+    await store_token(accessToken, shop)
+    await subscribeToWebhooks(shop, accessToken);
     return NextResponse.json({ status: true });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to retrieve access token' });
@@ -37,25 +37,41 @@ export async function POST(req: NextRequest) {
 
 async function subscribeToWebhooks(shop: string, accessToken: string) {
   const webhooks = [
-      {
-          address: `${webhookurl}app/uninstalled`,
-          topic: 'app/uninstalled',
-          format: 'json',
-      },
-      {
-          address: `${webhookurl}app_subscriptions/update`,
-          topic: 'app_subscriptions/update',
-          format: 'json',
-      },
+    {
+      address: `${webhookurl}app/uninstalled`,
+      topic: 'app/uninstalled',
+      format: 'json',
+    },
+    {
+      address: `${webhookurl}app_subscriptions/update`,
+      topic: 'app_subscriptions/update',
+      format: 'json',
+    },
+    {
+      address: `${webhookurl}products/create`,
+      topic: 'products/create',
+      format: 'json',
+    },
+    {
+      address: `${webhookurl}products/delete`,
+      topic: 'products/delete',
+      format: 'json',
+    },
+    {
+      address: `${webhookurl}products/update`,
+      topic: 'products/update',
+      format: 'json',
+    },
+
   ];
 
   for (const webhookData of webhooks) {
-      try {
-          await createWebhook(shop, accessToken, webhookData);
-          await delay(1000); // Delay for 1 second (1000 milliseconds)
-      } catch (error) {
-          console.error('Error creating webhook:', error);
-      }
+    try {
+      await createWebhook(shop, accessToken, webhookData);
+      await delay(1000); // Delay for 1 second (1000 milliseconds)
+    } catch (error) {
+      console.error('Error creating webhook:', error);
+    }
   }
 
   console.log('All webhooks subscribed successfully');
@@ -63,23 +79,23 @@ async function subscribeToWebhooks(shop: string, accessToken: string) {
 
 async function createWebhook(shop: any, accessToken: any, webhookData: any) {
   try {
-      const response = await axios.post(
-          `https://${shop}/admin/api/2024-01/webhooks.json`,
-          { webhook: webhookData },
-          {
-              headers: {
-                  'X-Shopify-Access-Token': accessToken,
-                  'Content-Type': 'application/json',
-              },
-          }
-      );
+    const response = await axios.post(
+      `https://${shop}/admin/api/2024-01/webhooks.json`,
+      { webhook: webhookData },
+      {
+        headers: {
+          'X-Shopify-Access-Token': accessToken,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-      console.log('Webhook created:', response.data);
-      await saveWebhookDetails(response.data, shop)
-      // Handle the successful webhook creation
+    console.log('Webhook created:', response.data);
+    await saveWebhookDetails(response.data, shop)
+    // Handle the successful webhook creation
   } catch (error) {
-      console.error('Error creating webhook:');
-      // Handle the error
+    console.error('Error creating webhook:');
+    // Handle the error
   }
 }
 
