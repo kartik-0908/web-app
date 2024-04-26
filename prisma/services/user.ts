@@ -643,26 +643,23 @@ function extractProductData(products: any) {
 
 export const getStoreData = async (email: string) => {
   const shop = await getShop(email)
+  if(!shop)return null;
   try {
-    const installedShop = await client.shopify_installed_shop.findUnique({
+    const shopData = await client.shopify_installed_shop.findUnique({
       where: {
         shop: shop,
       },
       select: {
-        shop: true,
         accessToken: true,
       },
     });
 
-    if (installedShop) {
-      const shop = installedShop.shop
-      const accessToken = installedShop.accessToken
-
+    if (shopData) {
       const response = await axios.get(
         `https://${shop}/admin/api/2024-04/products.json`,
         {
           headers: {
-            'X-Shopify-Access-Token': accessToken,
+            'X-Shopify-Access-Token': shopData.accessToken,
           },
         }
       );
@@ -704,9 +701,10 @@ export const getStoreData = async (email: string) => {
             },
           ]);
       }
-    } else {
-      return null;
     }
+
+
+
     return {
       "hello": "message"
     }
