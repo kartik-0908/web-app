@@ -15,9 +15,9 @@ const Upgrade = () => {
   const [selectedCard, setSelectedCard] = useState<number>(0);
   const [convleft, setconvleft] = useState<number>(0);
   const [pageloading, setpageloading] = useState(true);
-  const [button0loading, setbutton0loading] = useState(false);
   const [button1loading, setbutton1loading] = useState(false);
   const [button2loading, setbutton2loading] = useState(false);
+  const [cancelbuttonloading, setcanelbuttonloading] = useState(false)
   const [currentPlan, setcurrentPlan] = useState(0)
 
   const handleSave = async (e: any) => {
@@ -53,21 +53,24 @@ const Upgrade = () => {
       // console.log('Success:', data);
     } catch (error) {
     }
-    // setbutton1loading(false)
-    // setbutton2loading(false)
 
   };
 
   const handleCancel = async (e: any) => {
     e.preventDefault(); // Prevent default form submission behavior
-    setbutton0loading(true)
+    setcanelbuttonloading(true)
     try {
       const response = await axios.post('api/v1/data/cancel');
-      const data = response.data;
+      // const data = response.data;
+      setTimeout(() => {
+        window.location.reload();
+        setcanelbuttonloading(false)
+
+      }, 2000);
       // console.log('Success:', data);
     } catch (error) {
+      setcanelbuttonloading(false)
     }
-    setbutton0loading(false)
 
   };
 
@@ -204,6 +207,7 @@ const Upgrade = () => {
                         <Button
                           color="primary"
                           onClick={handleCancel}
+                          isLoading={cancelbuttonloading}
                         >Cancel Subscription</Button>
                       ) :
                         (selectedCard) !== 1 ? (
@@ -308,6 +312,8 @@ const Upgrade = () => {
                         <Button
                           color="primary"
                           onClick={handleCancel}
+                          isLoading={cancelbuttonloading}
+
                         >Cancel Subscription</Button>
                       ) :
                         (selectedCard) !== 2 ? (
