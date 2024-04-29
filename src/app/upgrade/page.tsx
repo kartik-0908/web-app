@@ -5,13 +5,26 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AuthWrapper from "../AuthWrapper";
-import { useRouter } from "next/navigation";
 import Loader from "@/components/common/Loader";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 
 
 const Upgrade = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const chargeId = searchParams.get("charge_id");
+  useEffect(() => {
+    if (chargeId) {
+      const timer = setTimeout(() => {
+        router.replace("/upgrade");
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [chargeId, router]);
+
   const [selectedCard, setSelectedCard] = useState<number>(0);
   const [convleft, setconvleft] = useState<number>(0);
   const [pageloading, setpageloading] = useState(true);
@@ -85,6 +98,10 @@ const Upgrade = () => {
     }
     fetchData();
   }, [])
+
+  if (chargeId) {
+    return <Loader />;
+  }
   return (
     <AuthWrapper>
       {pageloading ?

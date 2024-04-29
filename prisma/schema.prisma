@@ -40,11 +40,12 @@ model User {
 }
 
 model PlanDetails {
-  shopifyDomain String   @id
-  planId        Int
-  planStartDate DateTime
-  convleft      Int
-  shopifyid     String @default("nothing")
+  shopifyDomain  String   @id
+  planId         Int
+  planStartDate  DateTime
+  convleft       Int
+  shopifyid      String   @default("nothing")
+  eventTimestamp String   @default("dfualt")
 }
 
 model ChatbotCustomization {
