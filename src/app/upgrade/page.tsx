@@ -115,7 +115,7 @@ const Upgrade = () => {
               <div className="col-span-5 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div className="border-b border-stroke px-7 py-4 dark:border-strokedark">
                   <div className="text-3xl font-bold text-center text-black dark:text-white">
-                    Current Subscription Plan: {currentPlan === 0 ? "Free" : currentPlan === 1 ? "Basic" : "Pro"}
+                    Current Subscription Plan: {currentPlan === 0 ? "None" : currentPlan === 1 ? "Basic" : "Pro"}
                   </div>
                   <div className="text-xl text-center text-black dark:text-white">
                     Number of conversations left for this billing cycle: {convleft}
