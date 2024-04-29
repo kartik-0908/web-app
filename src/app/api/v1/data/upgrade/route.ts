@@ -15,8 +15,8 @@ async function createAppSubscription(access_token: string, shop: string, dollar:
       `https://${shopDomain}/admin/api/2024-04/graphql.json`,
       {
         query: `
-            mutation AppSubscriptionCreate($name: String!, $test: Boolean! $lineItems: [AppSubscriptionLineItemInput!]!, $returnUrl: URL!) {
-              appSubscriptionCreate(name: $name,test: $test, returnUrl: $returnUrl,lineItems: $lineItems) {
+            mutation AppSubscriptionCreate($name: String!,  $lineItems: [AppSubscriptionLineItemInput!]!, $returnUrl: URL!) {
+              appSubscriptionCreate(name: $name, returnUrl: $returnUrl,lineItems: $lineItems) {
                 userErrors {
                   field
                   message
@@ -30,7 +30,7 @@ async function createAppSubscription(access_token: string, shop: string, dollar:
           `,
         variables: {
           name: `${plan_name}`,
-          test: Boolean(test),
+          // test: Boolean(test),
           returnUrl: `${process.env.NEXT_shopify_upgrade_return}`,
           lineItems: [
             {

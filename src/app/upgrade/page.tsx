@@ -108,7 +108,7 @@ const Upgrade = () => {
             </div>
 
             <div className="grid grid-cols-12 gap-8 pt-8">
-              <div className="col-span-4">
+              {/* <div className="col-span-4">
                 <Card
                   isPressable
                   onPress={() => {
@@ -141,21 +141,15 @@ const Upgrade = () => {
                     <div>
                       Live Bot Analytics
                     </div>
-                    {/* <div>
-                 2 Page Ingestion
-               </div> */}
                     <div>
                       Multi-Lingual Bot
-                    </div>
-                    <div>
-                      {/* Support Over email */}
                     </div>
                   </CardBody>
                   <Divider />
 
                 </Card>
-              </div>
-              <div className="col-span-4">
+              </div> */}
+              <div className="col-span-6">
                 <Card
                   isPressable
                   onPress={() => {
@@ -254,7 +248,7 @@ const Upgrade = () => {
                   </CardFooter>
                 </Card>
               </div>
-              <div className="col-span-4">
+              <div className="col-span-6">
                 <Card
                   isPressable
                   onPress={() => {
