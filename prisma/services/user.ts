@@ -680,8 +680,6 @@ export const getStoreData = async (email: string) => {
         metric: 'cosine',
         suppressConflicts: true
       });
-      // console.log((extractedData[0][1]));
-      // console.log((extractedData.length));
       for (const [id, details] of extractedData) {
         const embeddingResponse = await openai.embeddings.create({
           model: "text-embedding-ada-002",
