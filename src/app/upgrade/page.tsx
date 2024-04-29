@@ -14,17 +14,7 @@ import { Suspense } from 'react'
 
 const Upgrade = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const chargeId = searchParams.get("charge_id");
-  useEffect(() => {
-    if (chargeId) {
-      const timer = setTimeout(() => {
-        router.replace("/upgrade");
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [chargeId, router]);
+ 
 
   const [selectedCard, setSelectedCard] = useState<number>(0);
   const [convleft, setconvleft] = useState<number>(0);
@@ -100,9 +90,6 @@ const Upgrade = () => {
     fetchData();
   }, [])
 
-  if (chargeId) {
-    return <Loader />;
-  }
   return (
     <Suspense>
       <AuthWrapper>
