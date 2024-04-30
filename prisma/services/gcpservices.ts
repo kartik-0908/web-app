@@ -1,12 +1,16 @@
 import { Storage } from "@google-cloud/storage";
+import { getShop } from "./user";
 
-function generateUniqueFilename(email: string, originalFilename: string): string {
-    const uniqueFilename = `${email}_logo`;
+function generateUniqueFilename(shop: string){
+    const uniqueFilename = `${shop}_logo`;
     return uniqueFilename;
 }
 
 export async function uploadLogo(file: File, email: string): Promise<string> {
-    const uniqueFilename = generateUniqueFilename(email, file.name);
+    const shop = await getShop(email) || ""
+    const uniqueFilename = generateUniqueFilename(shop);
+
+
     const storage = new Storage({
         projectId: process.env.PROJECT_ID,
         credentials: {
@@ -42,6 +46,7 @@ export async function uploadLogo(file: File, email: string): Promise<string> {
 
 export async function checkFileExists(email: string): Promise<boolean> {
     const bucketName = process.env.BUCKET_NAME || "";
+    const shop = await getShop(email)
 
     const storage = new Storage({
         projectId: process.env.PROJECT_ID,
@@ -53,7 +58,7 @@ export async function checkFileExists(email: string): Promise<boolean> {
 
     const bucket = storage.bucket(bucketName);
 
-    const fileName = `${email}_logo`;
+    const fileName = `${shop}_logo`;
     const file = bucket.file(fileName);
 
     try {
@@ -72,6 +77,7 @@ export async function checkFileExists(email: string): Promise<boolean> {
 
 export async function deleteFileByEmail(email: string): Promise<boolean> {
     const bucketName = process.env.BUCKET_NAME || "";
+    const shop = await getShop(email)
 
     const storage = new Storage({
         projectId: process.env.PROJECT_ID,
@@ -83,7 +89,7 @@ export async function deleteFileByEmail(email: string): Promise<boolean> {
 
     const bucket = storage.bucket(bucketName);
 
-    const fileName = `${email}_logo`;
+    const fileName = `${shop}_logo`;
     const file = bucket.file(fileName);
 
     try {

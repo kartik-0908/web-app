@@ -105,7 +105,7 @@ export const store_token = async (token: string, shop: string) => {
   console.log("stored_token: ");
   console.log(new_installed_shop);
 }
-async function getShop(email: string) {
+export async function getShop(email: string) {
   console.log(email)
   const existingUser = await client.user.findUnique({
     where: {

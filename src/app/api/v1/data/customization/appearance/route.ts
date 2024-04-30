@@ -2,9 +2,6 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server";
 import { updateAppearance, updateLogo } from "../../../../../../../prisma/services/user";
 import { checkFileExists, deleteFileByEmail, uploadLogo } from "../../../../../../../prisma/services/gcpservices";
-import { error } from "console";
-
-
 
 
 export async function POST(req: Request) {
@@ -27,6 +24,7 @@ export async function POST(req: Request) {
             if (!logofile) {
                 throw new Error("image not found")
             }
+
             if (logofile) {
                 const if_already_exists = await checkFileExists(email)
                 if(if_already_exists){
