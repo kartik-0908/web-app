@@ -9,6 +9,7 @@ function generateUniqueFilename(shop: string){
 export async function uploadLogo(file: File, email: string): Promise<string> {
     const shop = await getShop(email) || ""
     const uniqueFilename = generateUniqueFilename(shop);
+    console.log(file.name)
 
 
     const storage = new Storage({
@@ -38,7 +39,6 @@ export async function uploadLogo(file: File, email: string): Promise<string> {
         blobStream.end(buffer);
     });
 
-    // return "hellllecnl"
     return `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
 }
 
