@@ -67,6 +67,7 @@ model ChatbotCustomization {
   apologyAndRetryAttempt String
   errorMessageStyle      String
   logo                   String?
+  logoFilename           String   @default("defalut")
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
   userEmail              String   @id

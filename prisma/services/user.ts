@@ -3,6 +3,7 @@ import { hashPassword, verifyPassword as verifyUserPassword } from '../../lib/au
 import axios from 'axios';
 import { Pinecone } from '@pinecone-database/pinecone';
 import OpenAI from "openai";
+import { getHash } from 'next/dist/server/image-optimizer';
 const pc = new Pinecone({
   apiKey: 'ad1612ee-9b3f-4269-9e18-362ff724713d'
 });
@@ -115,6 +116,24 @@ export async function getShop(email: string) {
   console.log(existingUser)
   if (existingUser) {
     return (existingUser.shopifyDomain);
+  }
+}
+export async function getLogoFileName(email: string) {
+  console.log(email)
+  const existingUser = await client.chatbotCustomization.findUnique({
+    where: {
+      userEmail: email
+    },
+    select:{
+      logoFilename: true
+    }
+  });
+  console.log(existingUser)
+  if (existingUser) {
+    return existingUser.logoFilename;
+  }
+  else{
+    return "hell"
   }
 }
 async function getlastThreeConversations(shopDomain: string) {
