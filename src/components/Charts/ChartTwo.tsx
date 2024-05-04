@@ -68,7 +68,11 @@ const options: ApexOptions = {
   yaxis: {
     labels: {
       formatter: function (val) {
-        return Math.floor(val).toString();
+        if (isFinite(val)) {
+          return Math.floor(val).toString();
+        } else {
+          return "100"; // or any other default value you prefer
+        }
       },
     },
   },

@@ -115,9 +115,11 @@ const TablesPage = () => {
     setbuttonloading(true)
     const formData = new FormData();
     formData.append('selectedColor', selectedColor);
+    formData.append('botName', botName);
     formData.append('fontFamily', fontFamily);
     formData.append('fontColor', fontColor);
     formData.append('widgetPosition', widgetPosition);
+
 
     if (selectedLogo) {
       formData.append('logo', selectedLogo, selectedLogo.name);
@@ -134,28 +136,7 @@ const TablesPage = () => {
     setbuttonloading(false)
 
   };
-  const handlegreetingSave = async (e: any) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    setbuttonloading(true)
-
-    const formData = {
-      botName,
-      greetingmessage,
-    };
-
-    // Replace with your backend endpoint and use your preferred method (fetch, axios, etc.)
-    try {
-      const response = await axios.post('api/v1/data/customization/greeting', formData);
-      const data = response.data;
-      // Handle success (e.g., show success message)
-      // console.log('Success:', data);
-    } catch (error) {
-      // Handle error (e.g., show error message)
-    }
-    setbuttonloading(false)
-
-  };
-  const handlelanguageSave = async (e: any) => {
+   const handlelanguageSave = async (e: any) => {
     e.preventDefault(); // Prevent default form submission behavior
     setbuttonloading(true)
 
@@ -189,7 +170,8 @@ const TablesPage = () => {
       responseLength,
       clarificationPrompt,
       apologyAndRetryAttempt,
-      errorMessageStyle
+      errorMessageStyle,
+      greetingmessage
     };
 
     // Replace with your backend endpoint and use your preferred method (fetch, axios, etc.)
@@ -241,13 +223,23 @@ const TablesPage = () => {
               <CardBody className="overflow-hidden">
                 <Tabs
                   fullWidth
-                  size="md"
+                  size="lg"
                   aria-label="Tabs form"
                   selectedKey={selected}
                   onSelectionChange={handleSelectionChange}
+                  className="justify-center"
                 >
                   <Tab key="appearance" title="Appearance">
                     <form className="flex flex-col gap-4">
+                    <Input
+                        label="Bot Name"
+                        placeholder="Name of your Bot"
+                        type="text"
+                        defaultValue={botName}
+                        onValueChange={(value) => {
+                          setBotName(value)
+                        }}
+                      />
                       <div className="pb-4">
                         Choose Color
                       </div>
@@ -312,7 +304,6 @@ const TablesPage = () => {
                             />
 
                             <div className="p-2">
-                              {/* <p>Logo Dimension : 200</p> */}
                               <p>Supported Format: JPG,PNG,SVG</p>
                             </div>
 
@@ -363,62 +354,6 @@ const TablesPage = () => {
                           fullWidth color="primary">
                           {buttonloading ? "" : "Save"}
 
-                        </Button>
-                      </div>
-                    </form>
-                  </Tab>
-                  <Tab key="greetings" title="Custom Greetings">
-                    <form className="flex flex-col gap-4 h-[300px]">
-                      <Input
-                        label="Bot Name"
-                        placeholder="Name of your Bot"
-                        type="text"
-                        defaultValue={botName}
-                        onValueChange={(value) => {
-                          setBotName(value)
-                        }}
-                      />
-                      <Textarea
-                        label="Greeting Message"
-                        placeholder="Hi There, How May I help you?"
-                        defaultValue={greetingmessage}
-                        onValueChange={(value) => {
-                          setgreetingmessage(value)
-                        }}
-                      />
-                      <div className="flex justify-end">
-                        <Button
-                          onClick={handlegreetingSave}
-                          isLoading={buttonloading}
-                          spinner={
-                            <div className="flex flex-row">
-                              <svg
-                                className="animate-spin h-5 w-5 text-current"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <circle
-                                  className="opacity-25"
-                                  cx="12"
-                                  cy="12"
-                                  r="10"
-                                  stroke="currentColor"
-                                  strokeWidth="4"
-                                />
-                                <path
-                                  className="opacity-75"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                  fill="currentColor"
-                                />
-                              </svg>
-
-                              <h1>   Saving Changes</h1>
-                            </div>
-                          }
-
-                          fullWidth color="primary">
-                          {buttonloading ? "" : "Save"}
                         </Button>
                       </div>
                     </form>
@@ -534,6 +469,14 @@ const TablesPage = () => {
                         <Tab key="Medium" title="Medium" />
                         <Tab key="Long" title="Long" />
                       </Tabs>
+                      <Textarea
+                        label="Greeting Message"
+                        placeholder="Hi There, How May I help you?"
+                        defaultValue={greetingmessage}
+                        onValueChange={(value) => {
+                          setgreetingmessage(value)
+                        }}
+                      />
                       <Textarea
                         label="Clarification Prompt"
                         defaultValue={clarificationPrompt}

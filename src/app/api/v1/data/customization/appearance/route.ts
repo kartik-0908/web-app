@@ -13,16 +13,17 @@ export async function POST(req: Request) {
         try {
             const logofile = formData.get('logo') as File;
             const fontFamily = formData.get('fontFamily') as string | null;
+            const botName = formData.get('botName') as string | null;
             const fontColor = formData.get('fontColor') as string | null;
             const selectedColor = formData.get('selectedColor') as string | null;
             const widgetPosition = formData.get('widgetPosition') as string | null;
             const email = session.user.email;
 
-            if (fontFamily && fontColor && selectedColor && widgetPosition) {
-                const updateResult = await updateAppearance(email, selectedColor, fontFamily, fontColor, widgetPosition);
+            if (fontFamily && fontColor && selectedColor && widgetPosition && botName) {
+                const updateResult = await updateAppearance(email, selectedColor, fontFamily, fontColor, widgetPosition, botName);
             }
             if (!logofile) {
-                throw new Error("image not found")
+                // throw new Error("image not found")
             }
 
             if (logofile) {

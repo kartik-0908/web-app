@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
         const email = session.user.email;
         console.log(formData)
         const updateResult = await updateBehavioralCustomization(
-            email, formData.responseLength, formData.clarificationPrompt, formData.apologyAndRetryAttempt, formData.errorMessageStyle);
+            email, formData.responseLength, formData.clarificationPrompt, formData.apologyAndRetryAttempt, formData.errorMessageStyle, formData.greetingmessage);
         console.log(updateResult)
         return NextResponse.json({
             "data": "hello"

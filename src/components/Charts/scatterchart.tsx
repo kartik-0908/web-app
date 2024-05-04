@@ -82,18 +82,15 @@ const options: ApexOptions = {
     opacity: 1,
   },
 };
-
 interface ChartTwoState {
   series: {
     name: string;
     data: any
   }[];
 }
-
 interface ScatterChartProps {
   currentWeekData: number[][][];
 }
-
 function getWeekTimestamps() {
   const now = new Date();
   const dayOfWeek = now.getDay(); // 0 (Sunday) to 6 (Saturday)
@@ -108,13 +105,8 @@ function getWeekTimestamps() {
     const timestamp = date.getTime();
     timestamps.push(timestamp);
   }
-
   return timestamps;
 }
-
-
-
-
 const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData }) => {
   const [state, setState] = useState<ChartTwoState>({
     series: [],
@@ -134,6 +126,7 @@ const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData }) => {
           }
         }
         else {
+          console.log(unixTimestamp[i]);
           series.push([unixTimestamp[i], null])
         }
       }
@@ -142,7 +135,6 @@ const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData }) => {
   }
 
   useEffect(() => {
-
     const series = [{
       name: 'Time',
       data: convert_data(currentWeekData)
@@ -160,7 +152,6 @@ const ScatterChart: React.FC<ScatterChartProps> = ({ currentWeekData }) => {
           </h4>
         </div>
       </div>
-
       <div>
         <div id="chartTwo" className="-mb-9 -ml-5">
           <ReactApexChart

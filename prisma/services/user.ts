@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Pinecone } from '@pinecone-database/pinecone';
 import OpenAI from "openai";
 import { getHash } from 'next/dist/server/image-optimizer';
+import { error } from 'console';
 const pc = new Pinecone({
   apiKey: 'ad1612ee-9b3f-4269-9e18-362ff724713d'
 });
@@ -124,7 +125,7 @@ export async function getLogoFileName(email: string) {
     where: {
       userEmail: email
     },
-    select:{
+    select: {
       logoFilename: true
     }
   });
@@ -132,7 +133,7 @@ export async function getLogoFileName(email: string) {
   if (existingUser) {
     return existingUser.logoFilename;
   }
-  else{
+  else {
     return "hell"
   }
 }
@@ -349,6 +350,7 @@ export const updateAppearance = async (
   fontFamily: string,
   fontColor: string,
   widgetPosition: string,
+  botName: string
 ) => {
   if (!email) {
     throw new Error("Email is required");
@@ -363,6 +365,7 @@ export const updateAppearance = async (
       fontFamily,
       fontColor,
       widgetPosition,
+      botName
     },
   });
   return updatedCustomization;
@@ -429,6 +432,7 @@ export const updateBehavioralCustomization = async (
   clarificationPrompt: string,
   apologyAndRetryAttempt: string,
   errorMessageStyle: string,
+  greetingMessage: string
 ) => {
   if (!email) {
     throw new Error("Email is required");
@@ -443,6 +447,7 @@ export const updateBehavioralCustomization = async (
       clarificationPrompt,
       apologyAndRetryAttempt,
       errorMessageStyle,
+      greetingMessage
     },
   });
 
@@ -662,7 +667,7 @@ function extractProductData(products: any) {
 
 export const getStoreData = async (email: string) => {
   const shop = await getShop(email)
-  if(!shop)return null;
+  if (!shop) return null;
   try {
     const shopData = await client.shopify_installed_shop.findUnique({
       where: {
@@ -886,5 +891,151 @@ export async function updatePlanDetails(shopifyDomain: string): Promise<void> {
   } catch (error) {
     console.error('Error updating plan details:', error);
     throw error;
+  }
+}
+
+export async function addFaqUrl(email: string, faqUrl: string) {
+  const shopDomain = await getShop(email);
+  if (shopDomain) {
+    try {
+      // Check if the record exists
+      const knowledgeBase = await client.knowledgeBase.findUnique({
+        where: { shopDomain },
+      });
+
+      if (knowledgeBase) {
+        // Update the existing record
+        await client.knowledgeBase.update({
+          where: { shopDomain },
+          data: { faqUrl },
+        });
+      } else {
+        // Create a new record if it doesn't exist
+        await client.knowledgeBase.create({
+          data: {
+            shopDomain,
+            faqUrl,
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+export async function deleteFaqUrl(email: string): Promise<void> {
+  const shopDomain = await getShop(email);
+  try {
+    // Check if the record exists
+    const knowledgeBase = await client.knowledgeBase.findUnique({
+      where: { shopDomain },
+    });
+
+    if (knowledgeBase) {
+      // Update the existing record by setting faqUrl to null
+      await client.knowledgeBase.update({
+        where: { shopDomain },
+        data: { faqUrl: null },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function addTermsAndConditionsUrl(email: string, termsAndConditionsUrl: string): Promise<void> {
+  const shopDomain = await getShop(email) || "";
+  try {
+    // Check if the record exists
+    const knowledgeBase = await client.knowledgeBase.findUnique({
+      where: { shopDomain },
+    });
+
+    if (knowledgeBase) {
+      // Update the existing record
+      await client.knowledgeBase.update({
+        where: { shopDomain },
+        data: { termsAndConditionsUrl },
+      });
+    } else {
+      // Create a new record if it doesn't exist
+      await client.knowledgeBase.create({
+        data: {
+          shopDomain,
+          termsAndConditionsUrl,
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteTermsAndConditionsUrl(email: string): Promise<void> {
+  const shopDomain = await getShop(email);
+  try {
+    // Check if the record exists
+    const knowledgeBase = await client.knowledgeBase.findUnique({
+      where: { shopDomain },
+    });
+
+    if (knowledgeBase) {
+      // Update the existing record by setting termsAndConditionsUrl to null
+      await client.knowledgeBase.update({
+        where: { shopDomain },
+        data: { termsAndConditionsUrl: null },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function addHelpUrl(email: string, helpUrl: string): Promise<void> {
+  const shopDomain = await getShop(email) || "";
+  try {
+    // Check if the record exists
+    const knowledgeBase = await client.knowledgeBase.findUnique({
+      where: { shopDomain },
+    });
+
+    if (knowledgeBase) {
+      // Update the existing record
+      await client.knowledgeBase.update({
+        where: { shopDomain },
+        data: { helpUrl },
+      });
+    } else {
+      // Create a new record if it doesn't exist
+      await client.knowledgeBase.create({
+        data: {
+          shopDomain,
+          helpUrl,
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteHelpUrl(email: string): Promise<void> {
+  const shopDomain = await getShop(email);
+  try {
+    // Check if the record exists
+    const knowledgeBase = await client.knowledgeBase.findUnique({
+      where: { shopDomain },
+    });
+
+    if (knowledgeBase) {
+      // Update the existing record by setting helpUrl to null
+      await client.knowledgeBase.update({
+        where: { shopDomain },
+        data: { helpUrl: null },
+      });
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
