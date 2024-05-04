@@ -28,6 +28,7 @@ interface Conversation {
 
 const Chat = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [hasConversations, setHasConversations] = useState(false);
   const handleConversationClick = (conversation: any) => {
     setSelectedConversation(conversation);
   };
@@ -40,13 +41,13 @@ const Chat = () => {
 
           <div className="grid grid-cols-5">
             <div className="col-span-5 xl:col-span-2">
-              <ChatCard2 onConversationClick={handleConversationClick} />
+              <ChatCard2 onConversationClick={handleConversationClick} setHasConversations={setHasConversations}/>
             </div>
             <div className="col-span-5 xl:col-span-3">
               {selectedConversation ? (
                 <ConversationDetails conversation={selectedConversation} />
               ) : (
-                <ConversationDetailsEmpty />
+                <ConversationDetailsEmpty hasConversations={hasConversations} />
               )}
             </div>
           </div>
