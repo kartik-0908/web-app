@@ -866,7 +866,7 @@ export async function getKnowledgeData(email: string) {
         faqUrl: shopResources.faqUrl,
         termsAndConditionsUrl: shopResources.termsAndConditionsUrl,
         helpUrl: shopResources.helpUrl,
-        documentFileNames: shopResources.documentFileNames,
+        documentFileNames: shopResources.documents,
         videoLinkUrls: shopResources.videoLinkUrls,
       };
     } catch (error) {
@@ -1037,5 +1037,151 @@ export async function deleteHelpUrl(email: string): Promise<void> {
     }
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function updateKbDoc(email: string, fileName: string, file_url: string) {
+  const shop = await getShop(email)
+  try {
+
+    await client.knowledgeBase.update({
+      where: { shopDomain: shop },
+      data: {
+        documents: {
+          push: {
+            fileName: fileName,
+            fileUrl: file_url,
+          },
+        },
+      },
+    });
+    return true;
+
+  } catch (error) {
+    console.error('Database update failed:', error);
+    return false
+  }
+}
+interface Document {
+  fileUrl: string;
+  fileName: string;
+}
+
+function getDocuments(document: any, fileName: string){
+  let newDoc = [];
+  for(let i=0;i<document.length;i++){
+    const body = document[i];
+    console.log(body.fileName)
+    console.log(fileName)
+    if(body.fileName === fileName){
+      continue;
+    }
+    else {
+      newDoc.push(body)
+    }
+  }
+  return newDoc
+}
+
+
+export async function deleteKbDoc(email: string, fileName: string) {
+  const shop = await getShop(email);
+
+  try {
+    const knowledgeBase = await client.knowledgeBase.findUnique({
+      where: { shopDomain: shop },
+      select: { documents: true }
+    });
+    if (knowledgeBase && Array.isArray(knowledgeBase.documents)) {
+      // Assert that documents are of type Document[]
+      const documents = knowledgeBase.documents as unknown as Document[];
+
+      // Filter out the document with the given fileName
+      const filteredDocuments = getDocuments(documents, fileName)
+
+      // Update the documents in the knowledge base
+      await client.knowledgeBase.update({
+        where: { shopDomain: shop },
+        data: { documents: filteredDocuments }
+      });
+
+      console.log(`Document '${fileName}' has been removed successfully.`);
+    } else {
+      console.log(`No documents found or shopDomain '${shop}' does not exist.`);
+    }
+    return true;
+  } catch (error) {
+    console.error('Database deletion failed:', error);
+    return false;
+  }
+}
+export async function addVideoLink(email: string, videoUrl: string): Promise<void> {
+  const shop = await getShop(email)
+  try {
+    // Optionally, check if the videoUrl already exists to avoid duplicates
+    const knowledgeBase = await client.knowledgeBase.findUnique({
+      where: { shopDomain: shop }
+    });
+
+    if (knowledgeBase && !knowledgeBase.videoLinkUrls.includes(videoUrl)) {
+      await client.knowledgeBase.update({
+        where: { shopDomain: shop },
+        data: {
+          videoLinkUrls: {
+            push: videoUrl
+          }
+        }
+      });
+      console.log('Video link added successfully.');
+    } else {
+      console.log('Video link already exists or shopDomain not found.');
+    }
+  } catch (error) {
+    console.error('Failed to add video link:', error);
+    throw new Error('Failed to add video link');
+  }
+}
+
+export async function removeVideoLink(email: string, videoUrl: string): Promise<void> {
+  const shopDomain = await getShop(email)
+
+  try {
+    const knowledgeBase = await client.knowledgeBase.findUnique({
+      where: { shopDomain }
+    });
+
+    if (knowledgeBase && knowledgeBase.videoLinkUrls.includes(videoUrl)) {
+      const updatedUrls = knowledgeBase.videoLinkUrls.filter(url => url !== videoUrl);
+      await client.knowledgeBase.update({
+        where: { shopDomain },
+        data: {
+          videoLinkUrls: updatedUrls
+        }
+      });
+      console.log('Video link removed successfully.');
+    } else {
+      console.log('Video link not found or shopDomain not found.');
+    }
+  } catch (error) {
+    console.error('Failed to remove video link:', error);
+    throw new Error('Failed to remove video link');
+  }
+}
+export async function getKbDetails(email: string) {
+  const shopDomain = await getShop(email)
+
+  try {
+    if (shopDomain) {
+      const knowledgeBase = await client.knowledgeBase.findUnique({
+        where: {
+          shopDomain: shopDomain,
+        },
+      });
+      return knowledgeBase;
+    }
+
+  } catch (error) {
+    console.error('Error fetching KnowledgeBase details:', error);
+    throw new Error('Failed to fetch KnowledgeBase details');
   }
 }

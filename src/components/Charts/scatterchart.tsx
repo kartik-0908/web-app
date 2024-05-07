@@ -100,7 +100,7 @@ function getWeekTimestamps() {
 
   const timestamps = [];
   for (let i = 0; i < 7; i++) {
-    const date = new Date("14 Apr 2024");
+    const date = new Date();
     date.setDate(monday.getDate() + i);
     const timestamp = date.getTime();
     timestamps.push(timestamp);

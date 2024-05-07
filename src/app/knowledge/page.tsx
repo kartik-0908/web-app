@@ -2,14 +2,24 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AuthWrapper from "../AuthWrapper";
-import { Button, Input } from "@nextui-org/react";
-import React, { useState } from "react";
+import { Button, Input, button } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
 import { z } from 'zod';
 import axios from "axios";
+import Loader from "@/components/common/Loader";
+interface Document {
+  fileName: string;
+  fileUrl: string;
+}
+
+const getFilenames = (documents: Document[]): string[] => {
+  return documents.map((doc: Document) => doc.fileName);
+};
 
 
 const Knowledge = () => {
   const [faqurl, setFaqUrl] = useState("");
+  const [pageloading, setpageloading] = useState(true);
   const [currentfaqurl, setcurrentfaqurl] = useState("");
   const [termsurl, settermsUrl] = useState("");
   const [currenttermsurl, setcurrenttermsurl] = useState("");
@@ -22,45 +32,160 @@ const Knowledge = () => {
   const [showHelpConfirmation, setShowHelpConfirmation] = useState(false);
   const [showHelpDel, setShowHelpDel] = useState(false);
   const [buttonloading, setbuttonloading] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [uploadbuttonloading, setuploadbuttonloading] = useState(false);
+  const [newFiles, setNewFiles] = useState<File[]>([]);
+  const [savedFiles, setSavedFiles] = useState<string[]>([]);
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: boolean }>({});
+  const [videoUrls, setVideoUrls] = useState<string[]>([]);
+  const [videoLoading, setVideoLoading] = useState<{ [url: string]: boolean }>({});
+  const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean, url: string | null }>({ show: false, url: null });
+  const [newVideoUrl, setNewVideoUrl] = useState(""); // Temporary state to hold the new URL input
+  const [savedFileNames, setSavedFileNames] = useState<string[]>([]);
+  const [newFileNames, setNewFileNames] = useState<string[]>([]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []).filter(
-      (file) => file.type === 'text/plain' || file.type === 'application/pdf'
-    );
-    if (files.length <= 10) {
-      setSelectedFiles([...selectedFiles, ...files]);
+  const [removeConfirmation, setRemoveConfirmation] = useState<{ show: boolean; fileName: string | null }>({
+    show: false,
+    fileName: null,
+  });
+
+  const handleRemoveConfirmation = (fileName: string) => {
+    setRemoveConfirmation({ show: true, fileName });
+  };
+
+  const handleRemoveCancel = () => {
+    setRemoveConfirmation({ show: false, fileName: null });
+  };
+
+  const handleRemoveConfirm = async () => {
+    setbuttonloading(true)
+    if (removeConfirmation.fileName) {
+      console.log()
+      try {
+        await axios.delete(`/api/v1/data/knowledge-base/doc/`, {
+          data: {
+            fileName: removeConfirmation.fileName
+          }
+        });
+        setSavedFileNames(prevNames => prevNames.filter(name => name !== removeConfirmation.fileName));
+        setRemoveConfirmation({ show: false, fileName: null });
+      } catch (error) {
+        console.error('Error deleting file:', error);
+      }
+    }
+    setbuttonloading(false)
+  };
+  useEffect(() => {
+
+    const fetchSavedFiles = async () => {
+      setpageloading(true)
+      try {
+        const response = await axios.get('/api/v1/data/knowledge-base');
+        const data = response.data;
+        console.log(data)
+        if (data.faqUrl) setFaqUrl(data.faqUrl)
+        if (data.helpUrl) sethelpUrl(data.helpUrl)
+        if (data.termsAndConditionsUrl) settermsUrl(data.termsAndConditionsUrl)
+        const fileNames = getFilenames(data.documents);
+        setSavedFileNames(fileNames)
+        setVideoUrls(data.videoLinkUrls)
+      } catch (error) {
+        console.error('Failed to fetch files', error);
+      }
+      setpageloading(false)
+    };
+
+    fetchSavedFiles();
+  }, []);
+
+  const handleVideoUrlChange = (value: string) => {
+    setNewVideoUrl(value);
+  };
+
+  const handleAddVideoUrl = async () => {
+    if (!isVideoUrlInvalid && newVideoUrl && !videoUrls.includes(newVideoUrl)) {
+      setVideoLoading(prev => ({ ...prev, [newVideoUrl]: true }));
+      try {
+        await axios.post('/api/v1/data/knowledge-base/video', { url: newVideoUrl });
+        setVideoUrls(prevUrls => [...prevUrls, newVideoUrl]);
+        setNewVideoUrl(""); // Clear the input field after adding the URL
+      } catch (error) {
+        alert("Failed to add URL: " + error);
+      }
+      setVideoLoading(prev => ({ ...prev, [newVideoUrl]: false }));
     } else {
-      alert('Maximum 10 files can be selected.');
+      alert("Please enter a valid and unique URL.");
     }
   };
-  const handleFileUpload = async (file: File) => {
+
+  const handleRemoveVideoUrl = async () => {
+    if (deleteConfirm.url) {
+      const urlKey = String(deleteConfirm.url);
+      setVideoLoading(prev => ({ ...prev, [urlKey]: true }));
+      try {
+        await axios.delete('/api/v1/data/knowledge-base/video', { data: { url: deleteConfirm.url } });
+        setVideoUrls(prevUrls => prevUrls.filter(url => url !== deleteConfirm.url));
+        setDeleteConfirm({ show: false, url: null });
+      } catch (error) {
+        alert("Failed to delete URL: " + error);
+      }
+      setVideoLoading(prev => ({ ...prev, [urlKey]: false }));
+    }
+  };
+
+  const confirmDelete = (url: string) => {
+    setDeleteConfirm({ show: true, url: url });
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirm({ show: false, url: null });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(e.target.files || []);
+    const filteredNewFiles = selected.filter(
+      file => !savedFileNames.includes(file.name) && !newFiles.some(f => f.name === file.name)
+    );
+  
+    if (filteredNewFiles.length > 0) {
+      if (newFiles.length + filteredNewFiles.length <= 10) {
+        setNewFileNames(prevNames => [...prevNames, ...filteredNewFiles.map(file => file.name)]);
+        setNewFiles(prevFiles => [...prevFiles, ...filteredNewFiles]);
+      } else {
+        alert('Maximum 10 files can be selected.');
+      }
+    } else {
+      alert('Duplicate files detected or file limit exceeded.');
+    }
+  };
+  const handleFileUpload = async (fileName: string) => {
+    // console.log("insdie fileuplaod")
+    setUploadProgress(prevProgress => ({ ...prevProgress, [fileName]: true }));
     try {
-      const formData = new FormData();
-      formData.append('file', file);
+      // Find the corresponding file object based on the file name
+      // console.log(newFiles)
+      const file = newFiles.find(file => file.name === fileName);
+      console.log(file)
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
 
-      setUploadProgress((prevProgress) => ({
-        ...prevProgress,
-        [file.name]: true,
-      }));
+        await axios.post('/api/v1/data/knowledge-base/doc', formData);
+        setSavedFileNames(prevNames => [...prevNames, fileName]);
+        setNewFileNames(prevNames => prevNames.filter(name => name !== fileName));
+      }
 
-      await axios.post('/api/upload', formData);
-
-      setUploadProgress((prevProgress) => ({
-        ...prevProgress,
-        [file.name]: false,
-      }));
+      setUploadProgress(prevProgress => ({ ...prevProgress, [fileName]: false }));
     } catch (error) {
       console.error('Error uploading file:', error);
+      setUploadProgress(prevProgress => ({ ...prevProgress, [fileName]: false }));
     }
+  };
+  const handleFileDelete = (fileName: string) => {
+    setNewFileNames(prevNames => prevNames.filter(name => name !== fileName));
   };
   const getBackgroundColor = (index: number) => {
     const colors = ['bg-blue-100', 'bg-green-100', 'bg-yellow-100', 'bg-red-100', 'bg-purple-100'];
     return colors[index % colors.length];
-  };
-  const handleFileDelete = (file: File) => {
-    setSelectedFiles(selectedFiles.filter((f) => f !== file));
   };
   const handleFaqUrlChange = (value: any) => {
     setFaqUrl(value);
@@ -193,7 +318,20 @@ const Knowledge = () => {
     return validateUrl(helpurl) ? false : true;
   }, [helpurl]);
 
+  const isVideoUrlInvalid = React.useMemo(() => {
+    if (newVideoUrl === "") return false;
+    return !urlSchema.safeParse(newVideoUrl).success;
+  }, [newVideoUrl]);
 
+  if (pageloading) {
+    return (
+      <AuthWrapper>
+        <DefaultLayout>
+          <Loader></Loader>
+        </DefaultLayout>
+      </AuthWrapper>
+    )
+  }
   return (
     <AuthWrapper>
       <DefaultLayout>
@@ -508,17 +646,57 @@ const Knowledge = () => {
             </h3>
           </div>
           <div className="flex flex-col gap-2 p-6.5">
-            {selectedFiles.map((file, index) => (
+            {savedFileNames.map((fileName, index) => (
               <div
-                key={file.name}
+                key={fileName}
                 className={`flex items-center justify-between p-2 pl-4 pr-4 rounded-xl ${getBackgroundColor(index)}`}
               >
-                <span>{file.name}</span>
-                {uploadProgress[file.name] ? (
+                <span>{fileName}</span>
+                <button
+                  onClick={() => handleRemoveConfirmation(fileName)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            ))}
+            {removeConfirmation.show && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+                <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto">
+                  <p>Are you sure you want to delete this document?</p>
+                  <div className="flex justify-end mt-4">
+                    <Button
+                      isLoading={buttonloading}
+                      onClick={handleRemoveConfirm} color="danger">
+                      Confirm
+                    </Button>
+                    <Button onClick={handleRemoveCancel}>Cancel</Button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {newFileNames.map((fileName, index) => (
+              <div
+                key={fileName}
+                className={`flex items-center justify-between p-2 pl-4 pr-4 rounded-xl ${getBackgroundColor(index)}`}
+              >
+                <span>{fileName}</span>
+                {uploadProgress[fileName] ? (
                   <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"></div>
                 ) : (
                   <button
-                    onClick={() => handleFileDelete(file)}
+                    onClick={() => handleFileDelete(fileName)}
                     className="text-red-500 hover:text-red-700"
                   >
                     <svg
@@ -543,18 +721,18 @@ const Knowledge = () => {
               </label>
               <input
                 multiple
-                accept=".txt,.pdf"
+                accept=".txt,.pdf,.doc,.docx"
                 onChange={handleFileChange}
                 type="file"
                 className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
               />
             </div>
-            <button
-              onClick={() => selectedFiles.forEach(handleFileUpload)}
+            <Button
+              onClick={() => newFileNames.forEach(handleFileUpload)}
               className="mt-4 rounded-lg bg-primary px-5 py-3 text-white hover:bg-opacity-90"
             >
               Upload Files
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -562,19 +740,85 @@ const Knowledge = () => {
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
-              add a link to a video
+              Add Video Links
             </h3>
           </div>
-          <div className="flex flex-col gap-5.5 p-6.5">
+
+          <div className="flex flex-col gap-1.5 p-6.5">
+            {videoUrls.map((url, index) => (
+              <div key={index} className={`flex items-center justify-between p-2 pl-4 pr-4 rounded-xl ${getBackgroundColor(index)}`}>
+                <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700">
+                  {url}
+                </a>
+                {videoLoading[url] ? (
+                  <div className="loader"></div>
+                ) : (
+                  <Button onClick={() => confirmDelete(url)}
+                    color="danger">Remove</Button>
+                )}
+              </div>
+            ))}
+
+            {deleteConfirm.show && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+                <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto">
+                  <p>Are you sure you want to delete this URL?</p>
+                  <div className="flex justify-end mt-4">
+                    <Button onClick={handleRemoveVideoUrl} color="danger">Confirm</Button>
+                    <Button onClick={cancelDelete} >Cancel</Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div>
-              <input
-                type="text"
-                placeholder="Default Input"
-                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+              <Input
+                type="url"
+                placeholder="Enter video URL here"
+                variant="bordered"
+                isInvalid={isVideoUrlInvalid}
+                color={isVideoUrlInvalid ? "danger" : "success"}
+                errorMessage={isVideoUrlInvalid && "Please enter a valid URL"}
+                classNames={{
+                  label: "text-black/50 dark:text-white/90",
+                  input: [
+                    "bg-transparent",
+                    "text-black dark:text-white",
+                    "placeholder:text-black/50 dark:placeholder:text-white/50",
+                    "focus:border-red",
+                    "active:border-red",
+                    "disabled:cursor-default",
+                    "disabled:bg-whiter",
+                    "dark:border-form-strokedark",
+                    "dark:bg-transparent",
+                    "dark:focus:border-primary",
+                  ],
+                  innerWrapper: "bg-transparent",
+                  inputWrapper: [
+                    "border-[1.5px]",
+                    "focus:border-red",
+                    "px-5",
+                    "py-3",
+                    "outline-none",
+                    "transition",
+                    "bg-transparent",
+                  ],
+                }}
+                value={newVideoUrl}
+                onValueChange={handleVideoUrlChange}
+                endContent={
+                  <button disabled={isVideoUrlInvalid} onClick={handleAddVideoUrl} className="cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                  </button>
+                }
               />
             </div>
+
           </div>
         </div>
+
       </DefaultLayout>
     </AuthWrapper>
   );

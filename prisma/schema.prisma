@@ -113,6 +113,6 @@ model KnowledgeBase {
   faqUrl                String?
   termsAndConditionsUrl String?
   helpUrl               String?
-  documentFileNames     String[]
+  documents             Json[] // Array of objects, each containing fileName and fileUrl
   videoLinkUrls         String[]
 }
