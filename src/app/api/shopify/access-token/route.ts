@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
     const accessToken = response.data.access_token
     console.log("starting storing token")
     await store_token(accessToken, shop)
+    await getStoreData(shop, accessToken)
     await subscribeToWebhooks(shop, accessToken);
     return NextResponse.json({ status: true });
   } catch (error) {

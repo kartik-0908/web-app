@@ -5,6 +5,7 @@ import { Pinecone } from '@pinecone-database/pinecone';
 import OpenAI from "openai";
 import { getHash } from 'next/dist/server/image-optimizer';
 import { error } from 'console';
+import redis from '../../lib/redis';
 const pc = new Pinecone({
   apiKey: 'ad1612ee-9b3f-4269-9e18-362ff724713d'
 });
@@ -628,105 +629,13 @@ export async function updateUserPassword(email: string, newPassword: string) {
   });
 }
 
-function extractProductData(products: any) {
-  const productsData = products.map((product: any) => {
-    const {
-      id,
-      title,
-      body_html,
-      product_type,
-      tags,
-      variants,
-      options,
-      image,
-    } = product;
 
-    const productString = `Title: ${title}
-        Body HTML: ${body_html || ''}
-        Product Type: ${product_type}
-        Tags: ${tags}
-        Variants: ${variants
-        .map(
-          (variant: any) =>
-            `ID: ${variant.id}, Title: ${variant.title}, Price: ${variant.price}, SKU: ${variant.sku}, Inventory Quantity: ${variant.inventory_quantity}`
-        )
-        .join('; ')}
-        Options: ${options
-        .map((option: any) => `ID: ${option.id}, Name: ${option.name}, Values: ${option.values.join(', ')}`)
-        .join('; ')}
-        Image: ${image
-        ? `ID: ${image.id}, Source: ${image.src}, Alt Text: ${image.alt}, Width: ${image.width}, Height: ${image.height}`
-        : 'No Image'
-      }`;
 
-    return [id, productString];
-  });
-
-  return productsData;
-}
-
-export const getStoreData = async (email: string) => {
-  const shop = await getShop(email)
-  if (!shop) return null;
+export const getStoreData = async (shop: string, accessToken: string) => {
   try {
-    const shopData = await client.shopify_installed_shop.findUnique({
-      where: {
-        shop: shop,
-      },
-      select: {
-        accessToken: true,
-      },
-    });
-
-    if (shopData) {
-      const response = await axios.get(
-        `https://${shop}/admin/api/2024-04/products.json`,
-        {
-          headers: {
-            'X-Shopify-Access-Token': shopData.accessToken,
-          },
-        }
-      );
-      // console.log(response.data);
-      const { products } = response.data
-      const extractedData = extractProductData(products);
-      const indexName = shop.replace(/\./g, '-');
-      console.log(indexName)
-      await pc.createIndex({
-        name: indexName,
-        dimension: 1536,
-        spec: {
-          serverless: {
-            cloud: 'aws',
-            region: 'us-east-1'
-          }
-        },
-        metric: 'cosine',
-        suppressConflicts: true
-      });
-      for (const [id, details] of extractedData) {
-        const embeddingResponse = await openai.embeddings.create({
-          model: "text-embedding-ada-002",
-          input: details,
-        });
-
-        const embedding = embeddingResponse.data[0].embedding;
-
-        // Insert embedding into Pinecone
-        const index = pc.index(indexName);
-        await index.upsert(
-          [
-            {
-              id: String(id),
-              values: embedding,
-              metadata: { data: details }
-            },
-          ]);
-      }
-    }
-
-
-
+      const res = await redis.lpush('fetch-shopify', JSON.stringify({id:0,shop: shop,accessToken: accessToken}));
+      console.log("pushed in reddis")
+      console.log(res)
     return {
       "hello": "message"
     }
