@@ -6,7 +6,6 @@ export async function POST() {
     const session = await getServerSession();
     if (session && session.user && session.user.email) {
         const email = session.user.email;
-        await getStoreData(email)
         return NextResponse.json({
             "data": "hello"
         })
