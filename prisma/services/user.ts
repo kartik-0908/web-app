@@ -633,7 +633,7 @@ export async function updateUserPassword(email: string, newPassword: string) {
 
 export const getStoreData = async (shop: string, accessToken: string) => {
   try {
-      const res = await redis.lpush('fetch-shopify', JSON.stringify({id:0,shop: shop,accessToken: accessToken}));
+      const res = await redis.lpush('fetch-shopify', JSON.stringify({shop: shop,accessToken: accessToken}));
       console.log("pushed in reddis")
       console.log(res)
     return {

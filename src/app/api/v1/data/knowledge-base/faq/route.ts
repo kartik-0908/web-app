@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { addFaqUrl, deleteFaqUrl } from "../../../../../../../prisma/services/user";
+import { addFaqUrl, deleteFaqUrl, getShop } from "../../../../../../../prisma/services/user";
+import redis from "../../../../../../../lib/redis";
 
 export async function POST(request: Request) {
   const session = await getServerSession();
@@ -11,6 +12,9 @@ export async function POST(request: Request) {
 
     try {
       await addFaqUrl(email, faqurl);
+      const shop = await getShop(email)
+      const res = await redis.lpush('fetch-links', JSON.stringify({id: 0,shop: shop,url: faqurl}));
+
       return NextResponse.json({ message: "FAQ URL added successfully" });
     } catch (error) {
       console.error("Error adding FAQ URL:", error);

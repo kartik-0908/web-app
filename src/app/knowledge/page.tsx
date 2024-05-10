@@ -145,7 +145,7 @@ const Knowledge = () => {
     const filteredNewFiles = selected.filter(
       file => !savedFileNames.includes(file.name) && !newFiles.some(f => f.name === file.name)
     );
-  
+
     if (filteredNewFiles.length > 0) {
       if (newFiles.length + filteredNewFiles.length <= 10) {
         setNewFileNames(prevNames => [...prevNames, ...filteredNewFiles.map(file => file.name)]);
@@ -737,7 +737,7 @@ const Knowledge = () => {
         </div>
 
 
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        {/* <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
               Add Video Links
@@ -817,7 +817,7 @@ const Knowledge = () => {
             </div>
 
           </div>
-        </div>
+        </div> */}
 
       </DefaultLayout>
     </AuthWrapper>

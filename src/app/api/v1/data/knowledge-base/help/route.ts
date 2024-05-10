@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import {  addHelpUrl,  deleteHelpUrl } from "../../../../../../../prisma/services/user";
+import {  addHelpUrl,  deleteHelpUrl, getShop } from "../../../../../../../prisma/services/user";
+import redis from "../../../../../../../lib/redis";
 
 export async function POST(request: Request) {
   const session = await getServerSession();
@@ -11,6 +12,10 @@ export async function POST(request: Request) {
 
     try {
       await addHelpUrl(email, helpurl);
+      const shop = await getShop(email)
+
+      const res = await redis.lpush('fetch-links', JSON.stringify({id: 2,shop: shop,url: helpurl}));
+
       return NextResponse.json({ message: "help added successfully" });
     } catch (error) {
       console.error("Error adding help URL:", error);
