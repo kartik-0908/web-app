@@ -83,8 +83,11 @@ const Knowledge = () => {
         const data = response.data;
         console.log(data)
         if (data.faqUrl) setFaqUrl(data.faqUrl)
+        if (data.faqUrl) setcurrentfaqurl(data.faqUrl)
         if (data.helpUrl) sethelpUrl(data.helpUrl)
+        if (data.helpUrl) setcurrenthelpurl(data.helpUrl)
         if (data.termsAndConditionsUrl) settermsUrl(data.termsAndConditionsUrl)
+        if (data.termsAndConditionsUrl) setcurrenttermsurl(data.termsAndConditionsUrl)
         const fileNames = getFilenames(data.documents);
         setSavedFileNames(fileNames)
         setVideoUrls(data.videoLinkUrls)

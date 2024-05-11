@@ -1,17 +1,7 @@
 import client from '../index';
 import { hashPassword, verifyPassword as verifyUserPassword } from '../../lib/auth';
-import axios from 'axios';
-import { Pinecone } from '@pinecone-database/pinecone';
-import OpenAI from "openai";
-import { getHash } from 'next/dist/server/image-optimizer';
-import { error } from 'console';
 import redis from '../../lib/redis';
-const pc = new Pinecone({
-  apiKey: 'ad1612ee-9b3f-4269-9e18-362ff724713d'
-});
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+
 
 export const findUserByEmail = async (email: string) => {
   return await client.user.findUnique({
