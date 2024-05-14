@@ -2,6 +2,24 @@ import client from '../index';
 import { hashPassword, verifyPassword as verifyUserPassword } from '../../lib/auth';
 import redis from '../../lib/redis';
 
+export async function getEmail(shopDomain: string) {
+  try {
+    const user = await client.user.findUnique({
+      where: {
+        shopifyDomain: shopDomain,
+      },
+      select: {
+        email: true,
+      },
+    });
+
+    return user ? user.email : null;
+  } catch (error) {
+    console.error('Error fetching email for shopDomain:', error);
+    return null;
+  }
+}
+
 
 export const findUserByEmail = async (email: string) => {
   return await client.user.findUnique({
@@ -623,9 +641,9 @@ export async function updateUserPassword(email: string, newPassword: string) {
 
 export const getStoreData = async (shop: string, accessToken: string) => {
   try {
-      const res = await redis.lpush('fetch-shopify', JSON.stringify({shop: shop,accessToken: accessToken}));
-      console.log("pushed in reddis")
-      console.log(res)
+    const res = await redis.lpush('fetch-shopify', JSON.stringify({ shop: shop, accessToken: accessToken }));
+    console.log("pushed in reddis")
+    console.log(res)
     return {
       "hello": "message"
     }
@@ -966,13 +984,13 @@ interface Document {
   fileName: string;
 }
 
-function getDocuments(document: any, fileName: string){
+function getDocuments(document: any, fileName: string) {
   let newDoc = [];
-  for(let i=0;i<document.length;i++){
+  for (let i = 0; i < document.length; i++) {
     const body = document[i];
     console.log(body.fileName)
     console.log(fileName)
-    if(body.fileName === fileName){
+    if (body.fileName === fileName) {
       continue;
     }
     else {

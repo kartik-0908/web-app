@@ -312,7 +312,7 @@ const TablesPage = () => {
                         </div>
                       </div>
                       <RadioGroup
-                        label="Widget Psotion"
+                        label="Widget Position"
                         orientation="horizontal"
                         value={widgetPosition}
                         onValueChange={setWidgetPosition}

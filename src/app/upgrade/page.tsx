@@ -296,13 +296,13 @@ const Upgrade = () => {
                         Highest Priority Access
                       </div>
                       <div>
-                        Early access to Updats
+                        Early access to updates
                       </div>
                       <div>
                         Dedicated Account Manager
                       </div>
                       <div>
-                        Round the clock Chat suppport (Whatsapp, Slack, Teams)
+                        Round the Clock chat suppport (Whatsapp, Slack, Teams)
                       </div>
                     </CardBody>
                     <Divider />
