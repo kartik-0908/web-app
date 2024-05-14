@@ -239,10 +239,11 @@ export const getHomeData = async (email: string) => {
   }
 }
 
-async function getConversationStats(startDate: Date, endDate: Date) {
+async function getConversationStats(shopDomain: string,startDate: Date, endDate: Date) {
   endDate.setDate(endDate.getDate() + 1);
   const totalConversations = await client.conversation.count({
     where: {
+      shopDomain: shopDomain,
       startedAt: {
         gte: startDate,
         lte: endDate,
@@ -253,6 +254,7 @@ async function getConversationStats(startDate: Date, endDate: Date) {
   const totalMessages = await client.message.count({
     where: {
       Conversation: {
+        shopDomain: shopDomain,
         startedAt: {
           gte: startDate,
           lte: endDate,
@@ -265,6 +267,7 @@ async function getConversationStats(startDate: Date, endDate: Date) {
     where: {
       unanswered: true,
       Conversation: {
+        shopDomain: shopDomain,
         startedAt: {
           gte: startDate,
           lte: endDate,
@@ -276,6 +279,7 @@ async function getConversationStats(startDate: Date, endDate: Date) {
 
   const conversations = await client.conversation.findMany({
     where: {
+      shopDomain: shopDomain,
       startedAt: {
         gte: startDate,
         lte: endDate,
@@ -317,15 +321,13 @@ export const getAnalyticsData = async (email: string, startDate: string, endDate
   const shop = await getShop(email);
   console.log("inside getanalytics" + email)
   console.log("shop" + shop)
-  console.log("shop" + startDate)
-  console.log("shop" + endDate)
   if (shop) {
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(endDate);
     if (isNaN(startDateObj.getTime()) || isNaN(endDateObj.getTime())) {
       throw new Error("Invalid date format. Please ensure your dates are in a recognizable format.");
     }
-    const data = await getConversationStats(startDateObj, endDateObj)
+    const data = await getConversationStats(shop,startDateObj, endDateObj)
     return {
       analyticsData: data
     }
