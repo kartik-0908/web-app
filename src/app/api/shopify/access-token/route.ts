@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
-import { getStoreData, saveWebhookDetails, store_token } from '../../../../../prisma/services/user';
+import { getStoreData, initializePlan, saveWebhookDetails, store_token } from '../../../../../prisma/services/user';
 
 const webhookurl = "https://api.yugaa.tech/webhooks/"
 
@@ -28,7 +28,10 @@ export async function POST(req: NextRequest) {
     const accessToken = response.data.access_token
     console.log("starting storing token")
     await store_token(accessToken, shop)
+    await initializePlan(shop);
+
     await getStoreData(shop, accessToken)
+
     await subscribeToWebhooks(shop, accessToken);
     return NextResponse.json({ status: true });
   } catch (error) {

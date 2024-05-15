@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
   const { shopifyDomain } = data;
   const user = await createUser(email, password, shopifyDomain);
   await initializeDefaultCustomization(email)
-  await initializePlan(shopifyDomain);
   console.log(user)
   return NextResponse.json({
     "data": "success"
