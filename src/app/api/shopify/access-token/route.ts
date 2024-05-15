@@ -2,7 +2,7 @@ import axios from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 import { getStoreData, saveWebhookDetails, store_token } from '../../../../../prisma/services/user';
 
-const webhookurl = "https://my-app.kartikagarwal0908.workers.dev/webhooks/"
+const webhookurl = "https://api.yugaa.tech/v1/webhooks/"
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
