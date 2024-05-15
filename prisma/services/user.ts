@@ -22,9 +22,13 @@ export async function getEmail(shopDomain: string) {
 
 
 export const findUserByEmail = async (email: string) => {
-  return await client.user.findUnique({
-    where: { email },
-  });
+  try {
+    return await client.user.findUnique({
+      where: { email },
+    });
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 export async function initializeDefaultCustomization(email: string) {
@@ -107,15 +111,40 @@ export const isShopInstalled = async (email: string) => {
   return shop !== null;
 }
 export const store_token = async (token: string, shop: string) => {
-  const new_installed_shop = await client.shopify_installed_shop.create({
-    data: {
-      shop: shop,
-      accessToken: token,
+  try {
+    // Check if the shop already exists
+    const existingShop = await client.shopify_installed_shop.findUnique({
+      where: {
+        shop: shop,
+      },
+    });
+
+    if (existingShop) {
+      // If the shop exists, update the token
+      const updatedShop = await client.shopify_installed_shop.update({
+        where: {
+          shop: shop,
+        },
+        data: {
+          accessToken: token,
+        },
+      });
+      console.log("Updated token for existing shop: ", updatedShop);
+    } else {
+      // If the shop does not exist, create a new row
+      const newInstalledShop = await client.shopify_installed_shop.create({
+        data: {
+          shop: shop,
+          accessToken: token,
+        },
+      });
+      console.log("Stored token for new shop: ", newInstalledShop);
     }
-  });
-  console.log("stored_token: ");
-  console.log(new_installed_shop);
-}
+  } catch (error) {
+    console.error('Error storing or updating token:', error);
+  }
+};
+
 export async function getShop(email: string) {
   console.log(email)
   const existingUser = await client.user.findUnique({
@@ -660,17 +689,23 @@ export const updateLogo = async (email: string, logoUrl: string) => {
   if (!email) {
     throw new Error("Email is required");
   }
+  try {
 
-  const updatedCustomization = await client.chatbotCustomization.updateMany({
-    where: {
-      userEmail: email,
-    },
-    data: {
-      logo: logoUrl,
-    },
-  });
+    const updatedCustomization = await client.chatbotCustomization.updateMany({
+      where: {
+        userEmail: email,
+      },
+      data: {
+        logo: logoUrl,
+      },
+    });
 
-  return updatedCustomization;
+    return updatedCustomization;
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+
 };
 
 export const getProfileData = async (email: string) => {
@@ -734,20 +769,27 @@ export async function saveWebhookDetails(webhookResponse: any, shopDomain: any) 
 export async function getCurrentPlan(email: string) {
   if (email) {
     const shop = await getShop(email)
-    const user = await client.planDetails.findUnique({
-      where: {
-        shopifyDomain: shop,
-      },
-      select: {
-        convleft: true,
-        planId: true,
-      },
-    });
+    try {
+      const user = await client.planDetails.findUnique({
+        where: {
+          shopifyDomain: shop,
+        },
+        select: {
+          convleft: true,
+          planId: true,
+        },
+      });
 
-    if (user) {
-      return { plan: user.planId, convleft: user.convleft };
-    } else {
-      return null;
+      if (user) {
+        return { plan: user.planId, convleft: user.convleft };
+      } else {
+        return null;
+      }
+
+    } catch (error) {
+      console.log(error)
+      return null
+
     }
 
 
