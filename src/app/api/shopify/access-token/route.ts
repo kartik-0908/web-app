@@ -29,9 +29,7 @@ export async function POST(req: NextRequest) {
     console.log("starting storing token")
     await store_token(accessToken, shop)
     await initializePlan(shop);
-
     await getStoreData(shop, accessToken)
-
     await subscribeToWebhooks(shop, accessToken);
     return NextResponse.json({ status: true });
   } catch (error) {

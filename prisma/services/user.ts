@@ -239,7 +239,7 @@ export const getHomeData = async (email: string) => {
   }
 }
 
-async function getConversationStats(shopDomain: string,startDate: Date, endDate: Date) {
+async function getConversationStats(shopDomain: string, startDate: Date, endDate: Date) {
   endDate.setDate(endDate.getDate() + 1);
   const totalConversations = await client.conversation.count({
     where: {
@@ -327,7 +327,7 @@ export const getAnalyticsData = async (email: string, startDate: string, endDate
     if (isNaN(startDateObj.getTime()) || isNaN(endDateObj.getTime())) {
       throw new Error("Invalid date format. Please ensure your dates are in a recognizable format.");
     }
-    const data = await getConversationStats(shop,startDateObj, endDateObj)
+    const data = await getConversationStats(shop, startDateObj, endDateObj)
     return {
       analyticsData: data
     }
@@ -755,14 +755,19 @@ export async function getCurrentPlan(email: string) {
 }
 
 export async function initializePlan(shop: string) {
-  const planDetails = await client.planDetails.create({
-    data: {
-      shopifyDomain: shop,
-      planId: 0,
-      planStartDate: new Date(),
-      convleft: 50
-    },
-  });
+  try {
+    const planDetails = await client.planDetails.create({
+      data: {
+        shopifyDomain: shop,
+        planId: 0,
+        planStartDate: new Date(),
+        convleft: 50
+      },
+    });
+  } catch (error) {
+    console.log(error)
+  }
+
 }
 
 export async function getKnowledgeData(email: string) {
