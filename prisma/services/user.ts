@@ -904,6 +904,8 @@ export async function deleteFaqUrl(email: string): Promise<void> {
         where: { shopDomain },
         data: { faqUrl: null },
       });
+      const res = await redis.lpush('fetch-links', JSON.stringify({ id: 0, shop: shopDomain, url: "termsurl", type: "delete" }));
+
     }
   } catch (error) {
     console.log(error);
@@ -952,6 +954,8 @@ export async function deleteTermsAndConditionsUrl(email: string): Promise<void> 
         where: { shopDomain },
         data: { termsAndConditionsUrl: null },
       });
+      const res = await redis.lpush('fetch-links', JSON.stringify({ id: 1, shop: shopDomain, url: "termsurl", type: "delete" }));
+
     }
   } catch (error) {
     console.log(error);
@@ -1000,6 +1004,8 @@ export async function deleteHelpUrl(email: string): Promise<void> {
         where: { shopDomain },
         data: { helpUrl: null },
       });
+      const res = await redis.lpush('fetch-links', JSON.stringify({ id: 2, shop: shopDomain, url: "termsurl", type: "delete" }));
+
     }
   } catch (error) {
     console.log(error);

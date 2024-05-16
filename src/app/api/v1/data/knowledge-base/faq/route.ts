@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     try {
       await addFaqUrl(email, faqurl);
       const shop = await getShop(email)
-      const res = await redis.lpush('fetch-links', JSON.stringify({id: 0,shop: shop,url: faqurl}));
+      const res = await redis.lpush('fetch-links', JSON.stringify({id: 0,shop: shop,url: faqurl, type:"update"}));
 
       return NextResponse.json({ message: "FAQ URL added successfully" });
     } catch (error) {

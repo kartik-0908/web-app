@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       await addHelpUrl(email, helpurl);
       const shop = await getShop(email)
 
-      const res = await redis.lpush('fetch-links', JSON.stringify({id: 2,shop: shop,url: helpurl}));
+      const res = await redis.lpush('fetch-links', JSON.stringify({id: 2,shop: shop,url: helpurl,type: "update"}));
 
       return NextResponse.json({ message: "help added successfully" });
     } catch (error) {

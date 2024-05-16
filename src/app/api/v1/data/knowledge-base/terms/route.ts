@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import {  addTermsAndConditionsUrl, deleteTermsAndConditionsUrl, getShop } from "../../../../../../../prisma/services/user";
+import { addTermsAndConditionsUrl, deleteTermsAndConditionsUrl, getShop } from "../../../../../../../prisma/services/user";
 import redis from "../../../../../../../lib/redis";
 
 export async function POST(request: Request) {
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     try {
       await addTermsAndConditionsUrl(email, termsurl);
       const shop = await getShop(email)
-      const res = await redis.lpush('fetch-links', JSON.stringify({id: 1,shop: shop,url: termsurl}));
+      const res = await redis.lpush('fetch-links', JSON.stringify({ id: 1, shop: shop, url: termsurl, type: "update" }));
 
       return NextResponse.json({ message: "terms added successfully" });
     } catch (error) {
