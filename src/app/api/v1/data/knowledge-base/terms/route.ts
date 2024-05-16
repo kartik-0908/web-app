@@ -32,7 +32,7 @@ export async function DELETE(request: Request) {
     const email = session.user.email;
 
     try {
-      await deleteTermsAndConditionsUrl(email);
+      const link = await deleteTermsAndConditionsUrl(email);
       return NextResponse.json({ message: "terms deleted successfully" });
     } catch (error) {
       console.error("Error deleting terms:", error);
