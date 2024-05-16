@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 import { getStoreData, initializePlan, saveWebhookDetails, store_token } from '../../../../../prisma/services/user';
+import redis from '../../../../../lib/redis';
 
-const webhookurl = "https://api.yugaa.tech/webhooks/"
+
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -38,69 +39,11 @@ export async function POST(req: NextRequest) {
 }
 
 async function subscribeToWebhooks(shop: string, accessToken: string) {
-  const webhooks = [
-    {
-      address: `${webhookurl}app/uninstalled`,
-      topic: 'app/uninstalled',
-      format: 'json',
-    },
-    {
-      address: `${webhookurl}app_subscriptions/update`,
-      topic: 'app_subscriptions/update',
-      format: 'json',
-    },
-    {
-      address: `${webhookurl}products/create`,
-      topic: 'products/create',
-      format: 'json',
-    },
-    {
-      address: `${webhookurl}products/delete`,
-      topic: 'products/delete',
-      format: 'json',
-    },
-    {
-      address: `${webhookurl}products/update`,
-      topic: 'products/update',
-      format: 'json',
-    },
-
-  ];
-
-  for (const webhookData of webhooks) {
-    try {
-      await createWebhook(shop, accessToken, webhookData);
-      await delay(1000); // Delay for 1 second (1000 milliseconds)
-    } catch (error) {
-      console.error('Error creating webhook:', error);
-    }
-  }
-
-  console.log('All webhooks subscribed successfully');
+  
+  await redis.lpush('subs-webhook', JSON.stringify({
+    shop: shop,
+    accessToken: accessToken
+  }))
+  console.log('Pushed to queue for webhooks subscription');
 }
 
-async function createWebhook(shop: any, accessToken: any, webhookData: any) {
-  try {
-    const response = await axios.post(
-      `https://${shop}/admin/api/2024-01/webhooks.json`,
-      { webhook: webhookData },
-      {
-        headers: {
-          'X-Shopify-Access-Token': accessToken,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    console.log('Webhook created:', response.data);
-    await saveWebhookDetails(response.data, shop)
-    // Handle the successful webhook creation
-  } catch (error) {
-    console.error('Error creating webhook:');
-    // Handle the error
-  }
-}
-
-function delay(ms: any) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
