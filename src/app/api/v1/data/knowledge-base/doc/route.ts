@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         const file_url = await uploadFileToFolder(doc, shop)
         if (file_url) {
           updateKbDoc(email, doc.name, file_url)
-          const res = await redis.lpush('fetch-docs', JSON.stringify({ fileName: doc.name, shop: shop, publicUrl: file_url }));
+          const res = await redis.lpush('fetch-docs', JSON.stringify({ fileName: doc.name, shop: shop, publicUrl: file_url,type:"update" }));
         }
       }
       return NextResponse.json({
@@ -49,6 +49,8 @@ export async function DELETE(req: Request) {
 
         // Delete the file record from the database
         await deleteKbDoc(email, fileName);
+        const res = await redis.lpush('fetch-docs', JSON.stringify({ fileName: fileName, shop: shop, publicUrl: "file_url",type:"delete" }));
+
 
         return NextResponse.json({ "data": "File deleted successfully" });
       } else {
