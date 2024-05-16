@@ -62,7 +62,7 @@ export async function initializeDefaultCustomization(email: string) {
           clarificationPrompt: "I need more information top assist you. Could you provide additional details",
           apologyAndRetryAttempt: "I apologize for any confusion. Could you please provide your query again?",
           errorMessageStyle: "Standard",
-          logo: "https://storage.googleapis.com/yugaa-logo-storage/user.png"
+          logo: "https://storage.googleapis.com/logo-files/user.png"
         },
       });
 
