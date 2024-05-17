@@ -18,7 +18,7 @@ export async function POST(req: Request) {
       if (doc && shop) {
         const file_url = await uploadFileToFolder(doc, shop)
         if (file_url) {
-          updateKbDoc(email, doc.name, file_url)
+          await updateKbDoc(email, doc.name, file_url)
           const res = await redis.lpush('fetch-docs', JSON.stringify({ fileName: doc.name, shop: shop, publicUrl: file_url,type:"update" }));
         }
       }
