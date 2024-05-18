@@ -59,7 +59,7 @@ export async function initializeDefaultCustomization(email: string) {
           clarityAndSimplicity: "Prioritize straightforward language. Avoid complex jargon and use concise sentences. Break down information into easily digestible chunks.",
           personalization: "Address users by name whenever possible. Reference past interactions to create a personalized experience. Use personalized greetings based on user history.",
           responseLength: "Medium",
-          clarificationPrompt: "I need more information top assist you. Could you provide additional details",
+          clarificationPrompt: "I need more information to assist you. Could you provide additional details?",
           apologyAndRetryAttempt: "I apologize for any confusion. Could you please provide your query again?",
           errorMessageStyle: "Standard",
           logo: "https://storage.googleapis.com/logo-files/user.png"

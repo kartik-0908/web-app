@@ -136,7 +136,7 @@ const TablesPage = () => {
     setbuttonloading(false)
 
   };
-   const handlelanguageSave = async (e: any) => {
+  const handlelanguageSave = async (e: any) => {
     e.preventDefault(); // Prevent default form submission behavior
     setbuttonloading(true)
 
@@ -231,7 +231,7 @@ const TablesPage = () => {
                 >
                   <Tab key="appearance" title="Appearance">
                     <form className="flex flex-col gap-4">
-                    <Input
+                      <Input
                         label="Bot Name"
                         placeholder="Name of your Bot"
                         type="text"
@@ -358,7 +358,7 @@ const TablesPage = () => {
                       </div>
                     </form>
                   </Tab>
-                  <Tab key="language" title="Language">
+                  <Tab key="language" title="Persona">
                     <form className="flex flex-col gap-4 ">
                       <Textarea
                         label="Tone and Style"
@@ -594,9 +594,8 @@ const TablesPage = () => {
                     </div>
                   ))}
                 </div>
-                <div className="bg-white rounded-r-3xl rounded-l-3xl "
+                <div className="bg-white rounded-r-3xl rounded-l-3xl pl-2 pr-2 "
                   style={{
-
                     color: fontColor
                   }}>
                   <div className="col-span-8 ">
@@ -606,10 +605,7 @@ const TablesPage = () => {
                         borderWidth: 2,
                       }}
                     >
-                      <div className="rounded-3xl w-full"
-                        style={{
-
-                        }}>
+                      <div className="rounded-3xl w-full">
                         <input
                           disabled={true}
                           type="text" placeholder="Type here..." />

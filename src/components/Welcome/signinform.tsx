@@ -154,7 +154,7 @@ export default function () {
                     }
                     type="submit"
                     fullWidth color="primary">
-                    {buttonloading ? "" : "Signin"}
+                    {buttonloading ? "" : "Login"}
                   </Button>
                 </div>
               </form>
