@@ -630,7 +630,7 @@ const TablesPage = () => {
 
                     <div className={styles.branding}>
                       <p>
-                        Powered by <span style={{ fontFamily: 'Montserrat Alternates, sans-serif', fontWeight: 600 }}>yugaa</span>
+                        Powered by <span style={{ fontFamily: 'Montserrat Alternates, sans-serif', fontWeight: 600 }}>Yugaa</span>
                       </p>
                     </div>
 
