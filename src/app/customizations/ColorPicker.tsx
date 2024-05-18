@@ -1,5 +1,7 @@
+import { Button } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 import { SketchPicker } from 'react-color'
+import { HexColorPicker } from "react-colorful";
 
 interface ColorPickerProps {
   colors: string[]; // Predefined colors
@@ -11,16 +13,22 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, onSelect, defaultColo
   const [displayColorPicker, setDisplayColorPicker] = useState<boolean>(false);
   const [currentColor, setCurrentColor] = useState<string>(defaultColor || colors[0]);
   const [selectedColor, setSelectedColor] = useState<string>(defaultColor || colors[0]);
+  const [displayColors, setDisplayColors] = useState<string[]>([])
+  const isColorInPredefined = (color: string) => colors.includes(color);
 
-  const isColorInPredefined = (color: string) => colors.includes(color) || color === defaultColor;
-
-  useEffect(()=>{
+  useEffect(() => {
     setCurrentColor(defaultColor || colors[0])
     setSelectedColor(defaultColor || colors[0])
     onSelect(defaultColor || colors[0])
-    // console.log("inside useefect currentc olor "+ currentColor )
-    // console.log("inside useefect elected olor "+ selectedColor )
-  },[])
+    console.log("inside useefect currentc olor " + currentColor)
+    if (isColorInPredefined(currentColor)) {
+      setDisplayColors(colors)
+      console.log(colors)
+    }
+    else {
+      setDisplayColors([...colors, currentColor]);
+    }
+  }, [])
   const handleColorSelect = (event: React.MouseEvent<HTMLButtonElement>, color: string) => {
     event.preventDefault();
     setCurrentColor(color);
@@ -29,12 +37,16 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, onSelect, defaultColo
     onSelect(color);
   };
 
-  const handleApplyColor = () => {
-    setSelectedColor(currentColor);
-    setCurrentColor(currentColor)
-    setDisplayColorPicker(false); // Close the picker
-    onSelect(currentColor); // Apply the selected color
+  const handleApplyColor = (e: string) => {
+    setSelectedColor(e);
+    setCurrentColor(e)
+    onSelect(e); // Apply the selected color
   };
+  const removeColorPicker = () => {
+    setDisplayColorPicker(false); // Close the picker
+    setDisplayColors([...displayColors, selectedColor])
+  };
+
 
   const handleChangeComplete = (color: any) => {
     setCurrentColor(color.hex);
@@ -46,8 +58,6 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, onSelect, defaultColo
   };
 
   // Display the predefined colors and the selected custom color if it's not predefined
-  const displayColors = isColorInPredefined(currentColor) ? colors : [...colors, currentColor];
-
   return (
     <div className="flex flex-wrap gap-2 items-center">
       {displayColors.map((color, index) => (
@@ -63,14 +73,17 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, onSelect, defaultColo
       </button>
       {displayColorPicker && (
         <div className="fixed inset-0 z-999 flex items-center justify-center">
-          <div className="bg-white p-5 shadow-lg rounded-lg">
-            <SketchPicker color={selectedColor} onChangeComplete={handleChangeComplete} />
-            <button
-              onClick={handleApplyColor}
-              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300"
+          <div className="bg-white p-2 shadow-xl rounded-lg text-center">
+            {/* <SketchPicker color={selectedColor} onChangeComplete={handleChangeComplete} /> */}
+            <HexColorPicker color={selectedColor} onChange={handleApplyColor} />
+            <Button
+              color='default'
+              onClick={removeColorPicker}
+              className="mt-2"
             >
+
               Apply
-            </button>
+            </Button>
           </div>
         </div>
       )}

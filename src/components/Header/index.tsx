@@ -55,12 +55,12 @@ const Header = (props: {
         <div className="">
           <div className="relative ">
             <Link href="/">
-              {/* <Image
+              <Image
                 width={160}
                 height={32}
                 src={"/images/logo/logoblue.png"}
                 alt="Logo"
-              /> */}
+              />
             </Link>
           </div>
         </div>
