@@ -1,6 +1,5 @@
 import { Button } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
-import { SketchPicker } from 'react-color'
 import { HexColorPicker } from "react-colorful";
 
 interface ColorPickerProps {
@@ -36,7 +35,6 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, onSelect, defaultColo
     setDisplayColorPicker(false);
     onSelect(color);
   };
-
   const handleApplyColor = (e: string) => {
     setSelectedColor(e);
     setCurrentColor(e)
@@ -46,12 +44,6 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, onSelect, defaultColo
     setDisplayColorPicker(false); // Close the picker
     setDisplayColors([...displayColors, selectedColor])
   };
-
-
-  const handleChangeComplete = (color: any) => {
-    setCurrentColor(color.hex);
-  };
-
   const toggleColorPicker = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setDisplayColorPicker(!displayColorPicker);
