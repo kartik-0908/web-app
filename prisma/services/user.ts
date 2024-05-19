@@ -270,6 +270,7 @@ export const getHomeData = async (email: string) => {
 
 async function getConversationStats(shopDomain: string, startDate: Date, endDate: Date) {
   endDate.setDate(endDate.getDate() + 1);
+
   const totalConversations = await client.conversation.count({
     where: {
       shopDomain: shopDomain,
@@ -305,7 +306,6 @@ async function getConversationStats(shopDomain: string, startDate: Date, endDate
     },
   });
 
-
   const conversations = await client.conversation.findMany({
     where: {
       shopDomain: shopDomain,
@@ -326,23 +326,37 @@ async function getConversationStats(shopDomain: string, startDate: Date, endDate
 
   let totalDurationSeconds = 0;
 
+  const conversationIntervals: { [key: string]: number } = {};
+
+  const intervalCount = 12;
+  const intervalDuration = (endDate.getTime() - startDate.getTime()) / intervalCount;
+  const intervals = new Array(intervalCount).fill(0);
+
+
   conversations.forEach(conversation => {
     if (conversation.Message.length > 0) {
       const lastMessageTimestamp = conversation.Message[0].timestamp;
       const duration = lastMessageTimestamp.getTime() - conversation.startedAt.getTime();
       totalDurationSeconds += duration / 1000; // Convert milliseconds to seconds
     }
+    const timestamp = new Date(conversation.startedAt);
+    if (timestamp >= startDate && timestamp <= endDate) {
+      const intervalIndex = Math.floor((timestamp.getTime() - startDate.getTime()) / intervalDuration);
+      intervals[intervalIndex] += 1;
+    }
+    
   });
 
-  // Calculate the average duration in seconds
   const averageDurationSeconds = totalDurationSeconds / conversations.length;
+
 
   // Return aggregated data
   return {
     totalConversations,
     totalMessages,
     unansweredMessages,
-    averageDurationSeconds
+    averageDurationSeconds,
+    conversationsOverTime: {intervals},
   };
 }
 
