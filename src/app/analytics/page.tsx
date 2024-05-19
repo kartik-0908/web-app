@@ -8,7 +8,10 @@ import EndDatePicker from '@/components/FormElements/DatePicker/EndDatePicker';
 import axios from 'axios';
 import Loader from '@/components/common/Loader';
 import AuthWrapper from "../AuthWrapper";
-import ChartTwo from "@/components/Charts/AnalyticsChart"; // Import the ChartTwo component
+import dynamic from "next/dynamic";
+// import ChartTwo from "@/components/Charts/AnalyticsChart"; // Import the ChartTwo component
+const ChartTwo = dynamic(() => import('@/components/Charts/AnalyticsChart'), { ssr: false });
+
 
 const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
   try {
