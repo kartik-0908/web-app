@@ -13,6 +13,7 @@ import dynamic from "next/dynamic";
 const ChartTwo = dynamic(() => import('@/components/Charts/AnalyticsChart'), { ssr: false });
 import { RangeCalendar } from "@nextui-org/calendar";
 import { today, getLocalTimeZone } from '@internationalized/date';
+import { Button } from "@nextui-org/react";
 
 const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
   try {
@@ -32,7 +33,7 @@ const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
 
     return response.data.data;
   } catch (error) {
-    console.error('Error fetching analytics data:', error);
+    // console.error('Error fetching analytics data:', error);
     return null;
   }
 };
@@ -50,6 +51,7 @@ const Analytics = () => {
   const [totalconv, settotalconv] = useState(0);
   const [avgDuration, setavgDuration] = useState(0);
   const [conversationsOverTime, setConversationsOverTime] = useState<number[]>([]);
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
   useEffect(() => {
     const fetchAndSetData = async () => {
@@ -90,57 +92,47 @@ const Analytics = () => {
 
   const loggingcalneder = (e: any) => {
     const { start, end } = e;
-
-    // Create new Date objects
     const newStartDate = new Date(start.year, start.month - 1, start.day);
     const newEndDate = new Date(end.year, end.month - 1, end.day);
-
-    // Update state variables
     setStartDate(newStartDate);
     setEndDate(newEndDate);
-
-    // Log for debugging
-    console.log('Start Date:', newStartDate);
-    console.log('End Date:', newEndDate);
+    setIsCalendarVisible(false);
   };
   return (
     <AuthWrapper>
       <DefaultLayout>
         <Breadcrumb pageName="Analytics" />
-        {/* <div>
-          <RangeCalendar
-            aria-label="Date (Uncontrolled)"
-            maxValue={today(getLocalTimeZone())}
-            defaultValue={{
-              start: today(getLocalTimeZone()),
-              end: today(getLocalTimeZone()).subtract({ weeks: 1 }),
-            }}
-            visibleMonths={3}
-            pageBehavior="single"
-            onChange={loggingcalneder}
-          />
-        </div> */}
-
         <div className="grid grid-cols-12">
-          <div className="col-span-12 p-6 pt-0 text-center">
-            <label className="mb-3 text-center block text-sm font-medium text-black dark:text-white">
+          <div className="col-span-12 p-6 pt-0 text-center relative flex justify-center">
+            <Button
+              onClick={() => setIsCalendarVisible(true)}
+              className="mb-3 text-center block text-sm font-medium text-black dark:text-white"
+            >
               Choose Date Range
-            </label>
-            {/* <StartDatePicker
-              value={startDate} onChange={(date: Date) => setStartDate(date)}
-            ></StartDatePicker> */}
-            <RangeCalendar
-            aria-label="Date (Uncontrolled)"
-            maxValue={today(getLocalTimeZone())}
-            defaultValue={{
-              start: today(getLocalTimeZone()),
-              end: today(getLocalTimeZone()).subtract({ weeks: 1 }),
-            }}
-            visibleMonths={3}
-            pageBehavior="single"
-            onChange={loggingcalneder}
-          />
+            </Button>
+            {isCalendarVisible && (
+              <>
+                <div
+                  className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"
+                  onClick={() => setIsCalendarVisible(false)}
+                />
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 mt-10 p-4 z-50">
+                  <RangeCalendar
+                    aria-label="Date (Uncontrolled)"
+                    maxValue={today(getLocalTimeZone())}
+                    defaultValue={{
+                      start: today(getLocalTimeZone()),
+                      end: today(getLocalTimeZone()).subtract({ weeks: 1 }),
+                    }}
+                    visibleMonths={3}
+                    pageBehavior="single"
+                    onChange={loggingcalneder}
+                  />
+                </div>
+              </>
+            )}
           </div>
+
         </div>
         {loading ? (
           <div>

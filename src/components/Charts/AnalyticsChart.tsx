@@ -104,9 +104,9 @@ const ChartTwo: React.FC<ChartTwoProps> = ({ data, startTime, endTime }) => {
         const d = data[i];
         intervals[i].y = data[i]
       }
-      console.log(data)
-      console.log("above data below inetrvals")
-      console.log(intervals)
+      // console.log(data)
+      // console.log("above data below inetrvals")
+      // console.log(intervals)
 
       setState({
         series: [{ name: "Conversations", data: intervals }],
