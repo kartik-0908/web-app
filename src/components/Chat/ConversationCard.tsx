@@ -67,19 +67,19 @@ const ConversationDetails: React.FC<{ conversation: Conversation }> = ({ convers
     );
   };
 
-  const renderProducts = (products: { name: string; price: string; imageUrl: string }[]) => {
-    return (
-      <div className="product-carousel mt-4">
-        {products.map((product, index) => (
-          <div key={index} className="product-card border p-2 rounded-lg">
-            <Image src={product.imageUrl} alt={product.name} width={100} height={100} />
-            <h3 className="font-semibold">{product.name}</h3>
-            <p>Price: {product.price}</p>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  // const renderProducts = (products: { name: string; price: string; imageUrl: string }[]) => {
+  //   return (
+  //     <div className="product-carousel mt-4">
+  //       {products.map((product, index) => (
+  //         <div key={index} className="product-card border p-2 rounded-lg">
+  //           <Image src={product.imageUrl} alt={product.name} width={100} height={100} />
+  //           <h3 className="font-semibold">{product.name}</h3>
+  //           <p>Price: {product.price}</p>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 dark:border-strokedark dark:bg-boxdark xl:col-span-8 h-[600px] overflow-y-auto">
@@ -120,7 +120,7 @@ const ConversationDetails: React.FC<{ conversation: Conversation }> = ({ convers
                             {createCardElement(chunk, false)}
                           </div>
                         ))}
-                        {parsedMessage.products.length > 0 && renderProducts(parsedMessage.products)}
+                        {/* {parsedMessage.products.length > 0 && renderProducts(parsedMessage.products)} */}
                       </>
                     )}
                     <p className="text-xs text-gray-500 text-right pt-1">{formatTime(message.timestamp)}</p>

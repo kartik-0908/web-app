@@ -36,6 +36,13 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
   const [page, setPage] = React.useState(1);
   const [limit] = React.useState(10);
 
+  const truncateText = (text: string, wordLimit: number) => {
+    const words = text.split(' ');
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(' ') + '...';
+  };
+
+
   const fetchMoreData = async () => {
     try {
       const response = await axios.get(`/api/v1/data/chat?page=${page}&limit=${limit}`);
@@ -78,7 +85,27 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
             {chatData.map((conversation) => {
               const messages = conversation.Message;
               const firstMessage = messages[0];
+              let firstMessageText;
+              let secondMessageText;
+              // console.log(firstMessage)
+              if (firstMessage.senderType === "user") {
+                firstMessageText = truncateText(messages[0].text, 10); // Show first 10 words
+              }
+              else {
+                firstMessageText = truncateText(JSON.parse(messages[0].text).reply, 10); // Show first 10 words
+              }
               const secondMessage = messages[1];
+              console.log(messages[1])
+
+              if (secondMessage && secondMessage.senderType === "user") {
+                secondMessageText = truncateText(messages[1].text, 10); // Show first 10 words
+              }
+              else if (secondMessage) {
+                secondMessageText = truncateText(JSON.parse(messages[1].text).reply, 10); // Show first 10 words
+              }
+
+
+
 
               return (
                 <Link
@@ -100,17 +127,18 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
                   <div className="flex flex-1 items-center justify-between">
                     <div>
                       <h5 className="font-medium text-black dark:text-white">
-                        {conversation.id}
+                        {/* {conversation.id} */}
+                        Anonymous user
                       </h5>
                       <p className="text-sm text-black dark:text-white">
                         {firstMessage && (
                           <div>
-                            {firstMessage.senderType}: {firstMessage.text}
+                            {firstMessage.senderType}: {firstMessageText}
                           </div>
                         )}
                         {secondMessage && (
                           <div>
-                            {secondMessage.senderType}: {secondMessage.text}
+                            {secondMessage.senderType}: {secondMessageText}
                           </div>
                         )}
                       </p>

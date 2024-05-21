@@ -1171,3 +1171,4 @@ export async function getKbDetails(email: string) {
     throw new Error('Failed to fetch KnowledgeBase details');
   }
 }
+
