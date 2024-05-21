@@ -75,7 +75,7 @@ const Analytics = () => {
   function formatDuration(durationInSeconds: number): string {
     const hours = Math.floor(durationInSeconds / 3600);
     const minutes = Math.floor((durationInSeconds % 3600) / 60);
-    const seconds = durationInSeconds % 60;
+    const seconds = Math.floor(durationInSeconds % 60);
 
     const hoursPart = hours > 0 ? `${hours} hour${hours > 1 ? 's' : ''} ` : '';
     const minutesPart = minutes > 0 ? `${minutes} minute${minutes > 1 ? 's' : ''}` : '';
