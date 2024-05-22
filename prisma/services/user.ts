@@ -1027,9 +1027,19 @@ export async function deleteHelpUrl(email: string): Promise<void> {
 }
 
 export async function updateKbDoc(email: string, fileName: string, file_url: string) {
-  const shop = await getShop(email)
+  const shop = await getShop(email) || "";
   try {
-
+    const knowledgeBase = await client.knowledgeBase.findUnique({
+      where: { shopDomain: shop },
+    });
+    if (knowledgeBase) {
+    } else {
+      await client.knowledgeBase.create({
+         data:{
+          shopDomain: shop
+         }
+      });
+    }
     await client.knowledgeBase.update({
       where: { shopDomain: shop },
       data: {
@@ -1042,7 +1052,6 @@ export async function updateKbDoc(email: string, fileName: string, file_url: str
       },
     });
     return true;
-
   } catch (error) {
     console.error('Database update failed:', error);
     return false
