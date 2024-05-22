@@ -1,5 +1,4 @@
-"use client"
-// import { Chat } from "@/types/chat";
+"use client";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,10 +22,28 @@ interface Conversation {
   Message: Message[];
 }
 
-type ChatData = Conversation[];
+interface TicketConversation {
+  id: number;
+  ticketId: string;
+  conversationId: string;
+  shopDomain: string;
+  createdAt: string;
+  updatedAt: string;
+  Conversation: Conversation;
+}
+
+interface Ticket {
+  id: string;
+  shopDomain: string;
+  createdAt: string;
+  updatedAt: string;
+  TicketConversation: TicketConversation[];
+}
+
+type ChatData = Ticket[];
 
 interface ChatCard2Props {
-  onConversationClick: (conversation: Conversation) => void; // Add this line
+  onConversationClick: (conversations: Conversation[]) => void;
   setHasConversations: (hasConversations: boolean) => void;
 }
 
@@ -42,7 +59,6 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
     return words.slice(0, wordLimit).join(' ') + '...';
   };
 
-
   const fetchMoreData = async () => {
     try {
       const response = await axios.get(`/api/v1/data/chat?page=${page}&limit=${limit}`);
@@ -51,12 +67,11 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
       if (data.data && data.data.length > 0) {
         setChatData((prevData) => [...prevData, ...data.data]);
         setHasConversations(true);
-        // console.log(data.data)
         setPage((prevPage) => prevPage + 1);
       } else {
         setHasMore(false);
         if (chatData.length === 0) {
-          setHasConversations(false); // Add this line
+          setHasConversations(false);
         }
       }
     } catch (error) {
@@ -72,7 +87,7 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
   return (
     <div className="h-[600px] overflow-y-auto col-span-12 rounded-sm border border-stroke bg-white py-6 dark:border-strokedark dark:bg-boxdark xl:col-span-4">
       <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
-        Conversations
+        Tickets
       </h4>
       <div>
         <div>
@@ -82,30 +97,30 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
           >
-            {chatData.map((conversation) => {
-              const messages = conversation.Message;
+            {chatData.map((ticket) => {
+              const firstTicketConversation = ticket.TicketConversation[0];
+              if (!firstTicketConversation) {
+                return null;
+              }
+
+              const conversation = firstTicketConversation.Conversation;
+              const messages = conversation.Message.slice(0, 2); // Get the first two messages
               const firstMessage = messages[0];
               let firstMessageText;
               let secondMessageText;
-              // console.log(firstMessage)
+
               if (firstMessage.senderType === "user") {
-                firstMessageText = truncateText(messages[0].text, 10); // Show first 10 words
+                firstMessageText = truncateText(firstMessage.text, 10);
+              } else {
+                firstMessageText = truncateText(JSON.parse(firstMessage.text).reply, 10);
               }
-              else {
-                firstMessageText = truncateText(JSON.parse(messages[0].text).reply, 10); // Show first 10 words
-              }
+
               const secondMessage = messages[1];
-              console.log(messages[1])
-
               if (secondMessage && secondMessage.senderType === "user") {
-                secondMessageText = truncateText(messages[1].text, 10); // Show first 10 words
+                secondMessageText = truncateText(secondMessage.text, 10);
+              } else if (secondMessage) {
+                secondMessageText = truncateText(JSON.parse(secondMessage.text).reply, 10);
               }
-              else if (secondMessage) {
-                secondMessageText = truncateText(JSON.parse(messages[1].text).reply, 10); // Show first 10 words
-              }
-
-
-
 
               return (
                 <Link
@@ -113,7 +128,7 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
                   className="flex items-center gap-5 px-7.5 py-3 hover:bg-gray-3 dark:hover:bg-meta-4"
                   onClick={(e) => {
                     e.preventDefault(); // Prevent link navigation
-                    onConversationClick(conversation); // Use the passed callback
+                    onConversationClick(ticket.TicketConversation.map(tc => tc.Conversation)); // Pass all conversations of the ticket
                   }}
                   key={conversation.id}
                 >
@@ -127,7 +142,6 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
                   <div className="flex flex-1 items-center justify-between">
                     <div>
                       <h5 className="font-medium text-black dark:text-white">
-                        {/* {conversation.id} */}
                         Anonymous user
                       </h5>
                       <p className="text-sm text-black dark:text-white">

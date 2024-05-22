@@ -8,11 +8,12 @@ datasource db {
 }
 
 model Conversation {
-  id            String    @id @default(uuid())
-  shopDomain    String
-  startedAt     DateTime  @default(now())
-  customerEmail String?
-  Message       Message[]
+  id                 String               @id @default(uuid())
+  shopDomain         String
+  startedAt          DateTime             @default(now())
+  customerEmail      String?
+  Message            Message[]
+  TicketConversation TicketConversation[]
 
   @@index([shopDomain])
 }
@@ -67,10 +68,10 @@ model ChatbotCustomization {
   apologyAndRetryAttempt String
   errorMessageStyle      String
   logo                   String?
-  logoFilename           String   @default("defalut")
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
   userEmail              String   @id
+  logoFilename           String   @default("defalut")
   user                   User     @relation(fields: [userEmail], references: [email])
 }
 
@@ -113,6 +114,27 @@ model KnowledgeBase {
   faqUrl                String?
   termsAndConditionsUrl String?
   helpUrl               String?
-  documents             Json[] // Array of objects, each containing fileName and fileUrl
   videoLinkUrls         String[]
+  documents             Json[]
+}
+
+model Ticket {
+  id                 String               @id
+  shopDomain         String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime
+  TicketConversation TicketConversation[]
+}
+
+model TicketConversation {
+  id             Int          @id @default(autoincrement())
+  ticketId       String
+  conversationId String
+  shopDomain     String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime
+  Conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  Ticket         Ticket       @relation(fields: [ticketId], references: [id])
+
+  @@index([ticketId])
 }

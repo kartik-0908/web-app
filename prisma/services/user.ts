@@ -516,20 +516,28 @@ export const getChatsData = async (email: string, page: number, limit: number) =
   if (shop) {
     const skip = (page - 1) * limit;
 
-    const conversations = await client.conversation.findMany({
+    const conversations = await client.ticket.findMany({
       where: {
         shopDomain: shop,
       },
       skip,
       take: limit,
       orderBy: {
-        startedAt: 'desc',
+        createdAt: 'desc',
       },
       include: {
-        Message: {
-          orderBy: {
-            timestamp: 'asc',
-          },
+        TicketConversation: {
+          include:{
+            Conversation:{
+              include: {
+                Message:{
+                  orderBy:{
+                    timestamp:'asc'
+                  }
+                }
+              }
+            }
+          }
         },
       },
     });
