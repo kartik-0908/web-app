@@ -374,6 +374,7 @@ const Knowledge = () => {
                   innerWrapper: "bg-transparent",
                   inputWrapper: [
                     "border-[1.5px]",
+                    "border-black",
                     "focus:border-red",
                     "px-5",
                     "py-3",
@@ -479,6 +480,7 @@ const Knowledge = () => {
                     "outline-none",
                     "transition",
                     "bg-transparent",
+                    "border-black",
                   ],
                 }}
                 value={termsurl}
@@ -576,6 +578,7 @@ const Knowledge = () => {
                     "outline-none",
                     "transition",
                     "bg-transparent",
+                    "border-black"
                   ],
                 }}
                 value={helpurl}
