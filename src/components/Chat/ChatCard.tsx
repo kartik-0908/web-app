@@ -15,7 +15,7 @@ interface Conversation {
   id: string;
   shopDomain: string;
   startedAt: Date;
-  customerEmail?: string
+  customerEmail?: string;
   Message: Message[];
 }
 
@@ -33,7 +33,26 @@ const ChatCard: React.FC<ChatCardProps> = ({ lastThreeConversations = [] }) => {
         {lastThreeConversations.map((conversation, index) => {
           const userMessage = conversation.Message.find((m) => m.senderType === 'user');
           const botMessage = conversation.Message.find((m) => m.senderType === 'bot');
-          const customerEmail = conversation.customerEmail || "Anonymour user"
+          const customerEmail = conversation.customerEmail || "Anonymous user";
+          let botReply = '';
+
+          if (botMessage) {
+            try {
+              const parsedMessage = JSON.parse(botMessage.text);
+              botReply = parsedMessage.reply;
+            } catch (error) {
+              console.error('Failed to parse bot message JSON:', error);
+              botReply = botMessage.text;
+            }
+          }
+
+          const truncateText = (text: string, wordLimit: number) => {
+            const words = text.split(' ');
+            if (words.length > wordLimit) {
+              return words.slice(0, wordLimit).join(' ') + '...';
+            }
+            return text;
+          };
 
           return (
             <Link href="/chat" className="flex items-center gap-5 px-7.5 py-3 " key={index}>
@@ -48,10 +67,9 @@ const ChatCard: React.FC<ChatCardProps> = ({ lastThreeConversations = [] }) => {
                   </h5>
                   <p className="text-sm text-black dark:text-white">
                     <div>
-                      {` User: ${userMessage?.text}`}
-
+                      {`User: ${truncateText(userMessage?.text || '', 5)}`}
                     </div>
-                    {botMessage ? ` Bot: ${botMessage.text}` : ''}
+                    {botMessage ? ` Bot: ${truncateText(botReply, 10)}` : ''}
                   </p>
                 </div>
               </div>
