@@ -13,8 +13,10 @@ export async function GET(request: NextRequest) {
     if (session && session.user && session.user.email) {
         try {
             // Adjust getAnalyticsData to your needs. Ensure it returns a type that matches AnalyticsData.
+            // console.log(startDate)
+            // console.log(endDate)
+           
             const analyticsData = await getAnalyticsData(session.user.email, startDate, endDate);
-            // console.log(analyticsData)
             if ('error' in analyticsData) {
                 // If the response contains an 'error' property, forward it to the frontend
                 return new NextResponse(JSON.stringify({ error: analyticsData.error }), { status: 400 });

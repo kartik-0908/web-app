@@ -269,7 +269,8 @@ export const getHomeData = async (email: string) => {
 }
 
 async function getConversationStats(shopDomain: string, startDate: Date, endDate: Date) {
-  endDate.setDate(endDate.getDate() + 1);
+  console.log(startDate)
+  console.log(endDate)
 
   const totalConversations = await client.conversation.count({
     where: {
@@ -325,29 +326,47 @@ async function getConversationStats(shopDomain: string, startDate: Date, endDate
   });
 
   let totalDurationSeconds = 0;
+  const daysDifference = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  let intervals: number[];
 
-  const conversationIntervals: { [key: string]: number } = {};
+  if (daysDifference <= 12) {
+    intervals = new Array(12).fill(0);
 
-  const intervalCount = 12;
-  const intervalDuration = (endDate.getTime() - startDate.getTime()) / intervalCount;
-  const intervals = new Array(intervalCount).fill(0);
+    conversations.forEach(conversation => {
+      if (conversation.Message.length > 0) {
+        const lastMessageTimestamp = conversation.Message[0].timestamp;
+        const duration = lastMessageTimestamp.getTime() - conversation.startedAt.getTime();
+        totalDurationSeconds += duration / 1000; // Convert milliseconds to seconds
+      }
 
+      const dayIndex = Math.floor((conversation.startedAt.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      intervals[dayIndex] += 1;
+    });
 
-  conversations.forEach(conversation => {
-    if (conversation.Message.length > 0) {
-      const lastMessageTimestamp = conversation.Message[0].timestamp;
-      const duration = lastMessageTimestamp.getTime() - conversation.startedAt.getTime();
-      totalDurationSeconds += duration / 1000; // Convert milliseconds to seconds
-    }
-    const timestamp = new Date(conversation.startedAt);
-    if (timestamp >= startDate && timestamp <= endDate) {
-      const intervalIndex = Math.floor((timestamp.getTime() - startDate.getTime()) / intervalDuration);
-      intervals[intervalIndex] += 1;
-    }
-    
-  });
+  } else {
+    const intervalSize = Math.floor(daysDifference / 12);
+    intervals = new Array(12).fill(0);
+
+    conversations.forEach(conversation => {
+      if (conversation.Message.length > 0) {
+        const lastMessageTimestamp = conversation.Message[0].timestamp;
+        const duration = lastMessageTimestamp.getTime() - conversation.startedAt.getTime();
+        totalDurationSeconds += duration / 1000; // Convert milliseconds to seconds
+      }
+
+      const dayIndex = Math.floor((conversation.startedAt.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      const intervalIndex = Math.floor(dayIndex / intervalSize);
+
+      if (intervalIndex < 12) {
+        intervals[intervalIndex] += 1;
+      } else {
+        intervals[11] += 1;
+      }
+    });
+  }
 
   const averageDurationSeconds = totalDurationSeconds / conversations.length;
+  console.log({intervals})
 
 
   // Return aggregated data

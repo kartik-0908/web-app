@@ -93,21 +93,26 @@ const ChartTwo: React.FC<ChartTwoProps> = ({ data, startTime, endTime }) => {
     if (data) {
       const start = new Date(startTime).getTime();
       const end = new Date(endTime).getTime();
-      const intervalDuration = (end - start) / 12;
+      const daysDifference = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+      const numberOfBars = daysDifference < 12 ? daysDifference : 12;
+      const intervalDuration = (end - start) / numberOfBars;
 
-      const intervals = Array.from({ length: 12 }, (_, i) => ({
-        x: new Date(start + i * intervalDuration).toISOString(),
-        y: 0,
-      }));
+      const shiftDateByTimeZone = (date: Date, shiftHours: number, shiftMinutes: number) => {
+        return new Date(date.getTime() + shiftHours * 60 * 60 * 1000 + shiftMinutes * 60 * 1000);
+      };
 
-      for (let i = 0; i < 12; i++) {
-        const d = data[i];
-        intervals[i].y = data[i]
+      const intervals = Array.from({ length: numberOfBars }, (_, i) => {
+        const adjustedDate = shiftDateByTimeZone(new Date(start + i * intervalDuration), 5, 31);
+        return {
+          x: adjustedDate.toISOString(),
+          y: 0,
+        };
+      });
+
+      for (let i = 0; i < numberOfBars; i++) {
+        intervals[i].y = data[i] || 0;
       }
-      // console.log(data)
-      // console.log("above data below inetrvals")
-      // console.log(intervals)
-
+      console.log(intervals)
       setState({
         series: [{ name: "Conversations", data: intervals }],
       });

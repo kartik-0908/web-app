@@ -3,27 +3,23 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CardDataStats from "@/components/CardDataStats";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { useEffect, useState } from 'react';
-import StartDatePicker from '@/components/FormElements/DatePicker/StartDatePicker';
-import EndDatePicker from '@/components/FormElements/DatePicker/EndDatePicker';
 import axios from 'axios';
 import Loader from '@/components/common/Loader';
 import AuthWrapper from "../AuthWrapper";
 import dynamic from "next/dynamic";
-// import ChartTwo from "@/components/Charts/AnalyticsChart"; // Import the ChartTwo component
 const ChartTwo = dynamic(() => import('@/components/Charts/AnalyticsChart'), { ssr: false });
 import { RangeCalendar } from "@nextui-org/calendar";
-import { today, getLocalTimeZone } from '@internationalized/date';
+import { today, getLocalTimeZone, parseDate } from '@internationalized/date';
+import { DateTime } from 'luxon'; // Import Luxon to handle time shifting
 import { Button } from "@nextui-org/react";
 
 const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
   try {
-    const formattedStartDate = startDate.toISOString().split('T')[0];
-    const formattedEndDate = endDate.toISOString().split('T')[0];
 
     const response = await axios.get('/api/v1/data/analytics', {
       params: {
-        startDate: formattedStartDate,
-        endDate: formattedEndDate,
+        startDate: startDate,
+        endDate: endDate,
       },
     });
 
@@ -33,7 +29,6 @@ const fetchAnalyticsData = async (startDate: Date, endDate: Date) => {
 
     return response.data.data;
   } catch (error) {
-    // console.error('Error fetching analytics data:', error);
     return null;
   }
 };
@@ -42,9 +37,16 @@ const Analytics = () => {
   const [startDate, setStartDate] = useState<Date>(() => {
     const date = new Date();
     date.setDate(date.getDate() - 7);
+    date.setHours(0, 0, 0, 0); // Set to 00:00:00
     return date;
   });
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  
+  const [endDate, setEndDate] = useState<Date>(() => {
+    const date = new Date();
+    date.setHours(23, 59, 59, 999); // Set to 23:59:59
+    return date;
+  });
+  
   const [loading, setLoading] = useState<boolean>(false);
   const [totalmssg, settotalmssg] = useState(0);
   const [unanswered, setUnanswered] = useState(0);
@@ -93,11 +95,21 @@ const Analytics = () => {
   const loggingcalneder = (e: any) => {
     const { start, end } = e;
     const newStartDate = new Date(start.year, start.month - 1, start.day);
-    const newEndDate = new Date(end.year, end.month - 1, end.day);
+    const newEndDate = new Date(end.year, end.month - 1, end.day,23, 59, 59); // Set to the last minute of the day
     setStartDate(newStartDate);
     setEndDate(newEndDate);
+    // console.log(newEndDate)
+    // console.log(newStartDate)
     setIsCalendarVisible(false);
   };
+  const shiftDateByTimeZone = (date: Date, shiftHours: number, shiftMinutes: number) => {
+    console.log(date)
+    return DateTime.fromJSDate(date).plus({ hours: shiftHours, minutes: shiftMinutes }).toJSDate();
+  };
+
+  const adjustedStartDate = shiftDateByTimeZone(startDate, 5, 30);
+  const adjustedEndDate = shiftDateByTimeZone(endDate, 5, 30);
+
   return (
     <AuthWrapper>
       <DefaultLayout>
@@ -121,8 +133,8 @@ const Analytics = () => {
                     aria-label="Date (Uncontrolled)"
                     maxValue={today(getLocalTimeZone())}
                     defaultValue={{
-                      start: today(getLocalTimeZone()),
-                      end: today(getLocalTimeZone()).subtract({ weeks: 1 }),
+                      start: parseDate(adjustedStartDate.toISOString().split('T')[0]),
+                      end: parseDate(adjustedEndDate.toISOString().split('T')[0]),
                     }}
                     visibleMonths={3}
                     pageBehavior="single"
@@ -132,7 +144,6 @@ const Analytics = () => {
               </>
             )}
           </div>
-
         </div>
         {loading ? (
           <div>
