@@ -54,11 +54,17 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
   const [hasMore, setHasMore] = React.useState(true);
   const [page, setPage] = React.useState(1);
   const [limit] = React.useState(10);
+  const [selectedTicketId, setSelectedTicketId] = React.useState<string | null>(null);
 
   const truncateText = (text: string, wordLimit: number) => {
     const words = text.split(' ');
     if (words.length <= wordLimit) return text;
     return words.slice(0, wordLimit).join(' ') + '...';
+  };
+
+  const isDuplicate = (newTickets: any, existingTickets: any) => {
+    const existingIds = new Set(existingTickets.map((ticket: any) => ticket.id));
+    return newTickets.filter((ticket: any) => !existingIds.has(ticket.id));
   };
 
   const fetchMoreData = async () => {
@@ -76,7 +82,9 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
           return true;
         });
 
-        setChatData((prevData) => [...prevData, ...filteredData]);
+        const uniqueFilteredData = isDuplicate(filteredData, chatData);
+
+        setChatData((prevData) => [...prevData, ...uniqueFilteredData]);
         setHasConversations(true);
         setPage((prevPage) => prevPage + 1);
       } else {
@@ -101,16 +109,17 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
   }, [page]);
 
   useEffect(() => {
-    fetchMoreData();
+    // fetchMoreData();
   }, [filter]);
 
-  // const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   onFilterChange(e.target.value);
-  // };
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newFilter = e.target.value;
-    // onFilterChange(newFilter);
     window.location.href = `/chat?filter=${newFilter}`;
+  };
+
+  const handleTicketClick = (ticketId: string, conversations: Conversation[]) => {
+    setSelectedTicketId(ticketId);
+    onConversationClick(conversations);
   };
 
   return (
@@ -163,12 +172,12 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
             return (
               <Link
                 href="#"
-                className="flex items-center gap-5 px-7.5 py-3 hover:bg-gray-3 dark:hover:bg-meta-4"
+                className={`flex items-center gap-5 px-7.5 py-3 ${selectedTicketId === ticket.id ? 'bg-blue-200' : 'hover:bg-gray-3 dark:hover:bg-meta-4'}`}
                 onClick={(e) => {
                   e.preventDefault(); // Prevent link navigation
-                  onConversationClick(ticket.TicketConversation.map(tc => tc.Conversation)); // Pass all conversations of the ticket
+                  handleTicketClick(ticket.id, ticket.TicketConversation.map(tc => tc.Conversation)); // Pass all conversations of the ticket
                 }}
-                key={conversation.id}
+                key={ticket.id}
               >
                 <div className="relative h-14 w-14 rounded-full">
                   <Image
