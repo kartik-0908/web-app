@@ -2,7 +2,7 @@
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 interface Message {
@@ -45,9 +45,11 @@ type ChatData = Ticket[];
 interface ChatCard2Props {
   onConversationClick: (conversations: Conversation[]) => void;
   setHasConversations: (hasConversations: boolean) => void;
+  filter: string; // Accept filter prop
+  onFilterChange: (filter: string) => void; // Handler for filter change
 }
 
-const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConversations }) => {
+const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConversations, filter, onFilterChange }) => {
   const [chatData, setChatData] = React.useState<ChatData>([]);
   const [hasMore, setHasMore] = React.useState(true);
   const [page, setPage] = React.useState(1);
@@ -65,7 +67,16 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
       const data = response.data;
 
       if (data.data && data.data.length > 0) {
-        setChatData((prevData) => [...prevData, ...data.data]);
+        const filteredData = data.data.filter((ticket: Ticket) => {
+          if (filter === 'unanswered') {
+            return ticket.TicketConversation.some(tc =>
+              tc.Conversation.Message.some(message => message.unanswered)
+            );
+          }
+          return true;
+        });
+
+        setChatData((prevData) => [...prevData, ...filteredData]);
         setHasConversations(true);
         setPage((prevPage) => prevPage + 1);
       } else {
@@ -79,90 +90,111 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
     }
   };
 
-  React.useEffect(() => {
-    // Fetch initial data
+  useEffect(() => {
+    // Reset page and chat data, then fetch initial data
+    setChatData([]);
+    setPage(1);
+  }, [filter]);
+
+  useEffect(() => {
     fetchMoreData();
-  }, []);
+  }, [page]);
+
+  useEffect(() => {
+    fetchMoreData();
+  }, [filter]);
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onFilterChange(e.target.value);
+  };
 
   return (
     <div className="h-[600px] overflow-y-auto col-span-12 rounded-sm border border-stroke bg-white py-6 dark:border-strokedark dark:bg-boxdark xl:col-span-4">
-      <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
-        Tickets
-      </h4>
+      <div className="flex justify-between items-center px-7.5 mb-6">
+        <h4 className="text-xl font-semibold text-black dark:text-white">
+          Tickets
+        </h4>
+        <select
+          className="border border-gray-300 rounded px-2 py-1"
+          value={filter}
+          onChange={handleFilterChange}
+        >
+          <option value="all">All</option>
+          <option value="unanswered">Unanswered</option>
+        </select>
+      </div>
       <div>
-        <div>
-          <InfiniteScroll
-            dataLength={chatData.length}
-            next={fetchMoreData}
-            hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
-          >
-            {chatData.map((ticket) => {
-              const firstTicketConversation = ticket.TicketConversation[0];
-              if (!firstTicketConversation) {
-                return null;
-              }
+        <InfiniteScroll
+          dataLength={chatData.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={<h4>Loading...</h4>}
+        >
+          {chatData.map((ticket) => {
+            const firstTicketConversation = ticket.TicketConversation[0];
+            if (!firstTicketConversation) {
+              return null;
+            }
 
-              const conversation = firstTicketConversation.Conversation;
-              const messages = conversation.Message.slice(0, 2); // Get the first two messages
-              const firstMessage = messages[0];
-              let firstMessageText;
-              let secondMessageText;
+            const conversation = firstTicketConversation.Conversation;
+            const messages = conversation.Message.slice(0, 2); // Get the first two messages
+            const firstMessage = messages[0];
+            let firstMessageText;
+            let secondMessageText;
 
-              if (firstMessage.senderType === "user") {
-                firstMessageText = truncateText(firstMessage.text, 10);
-              } else {
-                firstMessageText = truncateText(JSON.parse(firstMessage.text).reply, 10);
-              }
+            if (firstMessage.senderType === "user") {
+              firstMessageText = truncateText(firstMessage.text, 10);
+            } else {
+              firstMessageText = truncateText(JSON.parse(firstMessage.text).reply, 10);
+            }
 
-              const secondMessage = messages[1];
-              if (secondMessage && secondMessage.senderType === "user") {
-                secondMessageText = truncateText(secondMessage.text, 10);
-              } else if (secondMessage) {
-                secondMessageText = truncateText(JSON.parse(secondMessage.text).reply, 10);
-              }
+            const secondMessage = messages[1];
+            if (secondMessage && secondMessage.senderType === "user") {
+              secondMessageText = truncateText(secondMessage.text, 10);
+            } else if (secondMessage) {
+              secondMessageText = truncateText(JSON.parse(secondMessage.text).reply, 10);
+            }
 
-              return (
-                <Link
-                  href="#"
-                  className="flex items-center gap-5 px-7.5 py-3 hover:bg-gray-3 dark:hover:bg-meta-4"
-                  onClick={(e) => {
-                    e.preventDefault(); // Prevent link navigation
-                    onConversationClick(ticket.TicketConversation.map(tc => tc.Conversation)); // Pass all conversations of the ticket
-                  }}
-                  key={conversation.id}
-                >
-                  <div className="relative h-14 w-14 rounded-full">
-                    <Image
-                      src="/images/user/user-01.png"
-                      alt="User"
-                      layout="fill"
-                    />
+            return (
+              <Link
+                href="#"
+                className="flex items-center gap-5 px-7.5 py-3 hover:bg-gray-3 dark:hover:bg-meta-4"
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent link navigation
+                  onConversationClick(ticket.TicketConversation.map(tc => tc.Conversation)); // Pass all conversations of the ticket
+                }}
+                key={conversation.id}
+              >
+                <div className="relative h-14 w-14 rounded-full">
+                  <Image
+                    src="/images/user/user-01.png"
+                    alt="User"
+                    layout="fill"
+                  />
+                </div>
+                <div className="flex flex-1 items-center justify-between">
+                  <div>
+                    <h5 className="font-medium text-black dark:text-white">
+                      Anonymous user
+                    </h5>
+                    <p className="text-sm text-black dark:text-white">
+                      {firstMessage && (
+                        <div>
+                          {firstMessage.senderType}: {firstMessageText}
+                        </div>
+                      )}
+                      {secondMessage && (
+                        <div>
+                          {secondMessage.senderType}: {secondMessageText}
+                        </div>
+                      )}
+                    </p>
                   </div>
-                  <div className="flex flex-1 items-center justify-between">
-                    <div>
-                      <h5 className="font-medium text-black dark:text-white">
-                        Anonymous user
-                      </h5>
-                      <p className="text-sm text-black dark:text-white">
-                        {firstMessage && (
-                          <div>
-                            {firstMessage.senderType}: {firstMessageText}
-                          </div>
-                        )}
-                        {secondMessage && (
-                          <div>
-                            {secondMessage.senderType}: {secondMessageText}
-                          </div>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </InfiniteScroll>
-        </div>
+                </div>
+              </Link>
+            );
+          })}
+        </InfiniteScroll>
       </div>
     </div>
   );
