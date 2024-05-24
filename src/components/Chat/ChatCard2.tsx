@@ -109,7 +109,7 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
   // };
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newFilter = e.target.value;
-    onFilterChange(newFilter);
+    // onFilterChange(newFilter);
     window.location.href = `/chat?filter=${newFilter}`;
   };
 
