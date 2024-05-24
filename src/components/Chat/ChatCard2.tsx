@@ -104,8 +104,13 @@ const ChatCard2: React.FC<ChatCard2Props> = ({ onConversationClick, setHasConver
     fetchMoreData();
   }, [filter]);
 
+  // const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   onFilterChange(e.target.value);
+  // };
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onFilterChange(e.target.value);
+    const newFilter = e.target.value;
+    onFilterChange(newFilter);
+    window.location.href = `/chat?filter=${newFilter}`;
   };
 
   return (
