@@ -4,38 +4,34 @@ import { signIn } from 'next-auth/react';
 import { Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { showToast } from "../Toast";
 
 export default function () {
   const router = useRouter()
   const [selected, setSelected] = useState<string>('login');
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [buttonloading, setbuttonloading] = useState(false);
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setbuttonloading(true);
     const form = event.currentTarget;
     const email = form.email.value;
     const password = form.password.value;
-
     const result = await signIn<'credentials'>('credentials', {
       email,
       password,
       redirect: false
     });
-
     if (result?.error) {
-      // router.push(selected === 'login' ? '/home' : '/install');
-      setErrorMessage(result.error)
+      showToast("error", <p>{result.error}</p>)
     }
-    else if(result?.ok){
+    else if (result?.ok) {
+      showToast("success", <p>Logged in Successfull. Redirecting to Home</p>)
       router.push('/home')
     }
     else {
-      setErrorMessage('Failed to authenticate. Please check your credentials and try again.');
+      showToast("error", <p>Failed to authenticate. Please check your credentials and try again.</p>)
     }
     setbuttonloading(false)
-
   };
 
   const habdleSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -62,30 +58,6 @@ export default function () {
     setbuttonloading(false);
   }
 
-  const handleForgotPassword = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setbuttonloading(true);
-    const form = event.currentTarget;
-    const email = form.email.value;
-    const password = form.password.value;
-
-    try {
-      const response = await axios.post('/api/change-password', { email, password });
-
-      if (response) {
-        // Display success message to the user
-        alert('Password reset successfull');
-      } else {
-        // Display error message to the user
-        alert('Failed to send password reset email. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error sending password reset email:', error);
-      alert('An error occurred. Please try again later.');
-    }
-    setbuttonloading(false)
-  };
-
   return (
     <div className="flex flex-col w-full  items-center justify-center w-full  ">
       <Card className="max-w-full w-full sm:w-[25rem] mx-4 sm:mx-0 ">
@@ -104,7 +76,6 @@ export default function () {
               <form
                 onSubmit={handleSubmit}
                 className="flex flex-col gap-4">
-                {errorMessage && <div className="text-center text-small text-red-500">{errorMessage}</div>}
                 <Input isRequired label="Email" placeholder="Enter your email" type="email" name="email" />
                 <Input
                   isRequired
@@ -163,7 +134,6 @@ export default function () {
               <form
                 onSubmit={habdleSignUpSubmit}
                 className="flex flex-col gap-4">
-                {errorMessage && <div className="text-center text-small text-red-500">{errorMessage}</div>}
                 <Input isRequired label="Email" placeholder="Enter your email" type="email" name="email" />
                 <Input
                   isRequired
@@ -211,57 +181,6 @@ export default function () {
                     type="submit"
                     fullWidth color="primary">
                     {buttonloading ? "" : "SignUp"}
-                  </Button>
-                </div>
-              </form>
-            </Tab>
-            <Tab key="forgot-password" title="Change Password">
-              <form onSubmit={handleForgotPassword} className="flex flex-col gap-4">
-                <Input isRequired label="Email" placeholder="Enter your email" type="email" name="email" />
-                <Input
-                  isRequired
-                  label="Change Password"
-                  placeholder="Enter your new password"
-                  type="password"
-                  name="password"
-                />
-                <p className="text-center text-small">
-                  Remember your password?{" "}
-                  <Link size="sm" onPress={() => setSelected("login")}>
-                    Login
-                  </Link>
-                </p>
-                <div className="flex gap-2 justify-end">
-                  <Button
-                    isLoading={buttonloading}
-                    spinner={
-                      <div className="flex flex-row">
-                        <svg
-                          className="animate-spin h-5 w-5 text-current"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          />
-                          <path
-                            className="opacity-75"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                        <h1>Resetting your password</h1>
-                      </div>
-                    }
-                    type="submit"
-                    fullWidth color="primary">
-                    {buttonloading ? "" : "Reset Password"}
                   </Button>
                 </div>
               </form>

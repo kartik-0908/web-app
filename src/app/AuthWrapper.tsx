@@ -1,3 +1,4 @@
+"use client"
 import Loader from '@/components/common/Loader';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';

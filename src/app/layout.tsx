@@ -9,10 +9,6 @@ export const metadata: Metadata = {
   title: 'Yugaa Dashboard',
   description: 'Yugaa Dashboard.',
 };
-
-
-
-
 export default function RootLayout({
   children,
 }: Readonly<{

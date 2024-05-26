@@ -248,8 +248,8 @@ async function getConversationCountsForLast7Days(shopDomain: string): Promise<nu
   return counts;
 }
 
-export const getHomeData = async (email: string) => {
-  const shop = await getShop(email);
+export const getHomeData = async (shop: string) => {
+  // const shop = await getShop(email);
   console.log("shop" + shop)
   if (shop) {
     const currentWeekData = await getWeeklyConversationStartTimes(shop)

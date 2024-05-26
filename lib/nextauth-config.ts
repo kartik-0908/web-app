@@ -2,7 +2,7 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { verifyPassword } from '../lib/auth';
-import { createUser, findUserByEmail, updateLastLoginAt } from '../prisma/services/user';
+import { createUser, findUserByEmail, getShop, updateLastLoginAt } from '../prisma/services/user';
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -17,7 +17,7 @@ export const nextAuthOptions: NextAuthOptions = {
         console.log(credentials)
         let user = await findUserByEmail(email);
         if (!user) {
-          throw new Error("User not found. Please do signUp first");
+          throw new Error("User not found. Please do sign up first");
         }
         else {
           const passwordIsValid = await verifyPassword(password, user.password);
@@ -28,10 +28,22 @@ export const nextAuthOptions: NextAuthOptions = {
             await updateLastLoginAt(email);
           }
         }
-        return {
-          id: user.id.toString(),
-          email: user.email
-        };
+        let shop = await getShop(email);
+        if (shop) {
+          console.log("inside authh" + shop)
+          return {
+            id: user.id.toString(),
+            email: user.email,
+            shopDomain: shop
+          };
+        }
+        else {
+          console.log("inside authh without shop")
+          return {
+            id: user.id.toString(),
+            email: user.email
+          };
+        }
       },
     }),
   ],
@@ -39,20 +51,20 @@ export const nextAuthOptions: NextAuthOptions = {
     signIn: '/auth/signin', // Specify your custom sign-in page path
     error: '', // Specify your error page path
   },
-  // callbacks: {
-  //   jwt: async ({ user, token }: any) => {
-  //     if (user) {
-  //       token.uid = user.id;
-  //     }
-  //     return token;
-  //   },
-  //   session: ({ session, token, user }: any) => {
-  //     if (session.user) {
-  //       session.user.id = token.uid
-  //     }
-  //     return session
-  //   }
-  // },
+  callbacks: {
+    jwt: async ({ user, token }: any) => {
+      if (user && user.shopDomain) {
+        token.shopDomain = user.shopDomain;
+      }
+      return token;
+    },
+    session: ({ session, token, user }: any) => {
+      if (session.user) {
+        session.user.shopDomain = token.shopDomain
+      }
+      return session
+    }
+  },
 };
 
 export default nextAuthOptions;

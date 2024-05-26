@@ -1,30 +1,57 @@
-"use client"
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import Loader from "@/components/common/Loader";
-import { useEffect, useState } from "react";
-import dynamic from 'next/dynamic';
-import AuthWrapper from "../AuthWrapper";
-const ECommerce = dynamic(() => import('@/components/Dashboard/E-commerce'), { ssr: false });
+import { getServerSession } from "next-auth";
+import nextAuthOptions from "../../../lib/nextauth-config";
+import { getHomeData } from "../../../prisma/services/user";
+import ScatterChart from "@/components/Charts/scatterchart";
+import ChartTwo from "@/components/Charts/ChartTwo";
+import ChatCard from "@/components/Chat/ChatCard";
 
+interface Message {
+  conversationId: string;
+  id: string;
+  senderId: number;
+  senderType: "user" | "bot";
+  text: string;
+  timestamp: string;
+}
 
-export default function Home() {
-  const [loading, setloading] = useState(true);
-  useEffect(() => {
+interface Conversation {
+  id: string;
+  shopDomain: string;
+  startedAt: Date;
+  customerEmail?: string;
+  Message: Message[];
+}
 
-    setloading(false);
-  }, [])
-  if (loading) {
-    <Loader />
-  }
-  else {
-    return (
-      <AuthWrapper>
-        <DefaultLayout>
-          <ECommerce />
-        </DefaultLayout>
-      </AuthWrapper>
-    )
-
-
-  }
+async function getUser() {
+  const session = await getServerSession(nextAuthOptions);
+  console.log('Session:', session);
+  return session;
+}
+export default async function Home() {
+  const session = await getUser()
+  const data = await getHomeData(session?.user?.shopDomain)
+  return (
+    <DefaultLayout>
+      <>
+        <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
+          <ScatterChart
+            currentWeekData={data.currentWeekData || []}
+          />
+          <ChartTwo
+            last7days={data.last7Days || []}
+          />
+          <div className="col-span-12">
+            <ChatCard
+              lastThreeConversations={data?.lastThreeConversations  }
+            />
+          </div>
+        </div>
+      </>
+      <h1>
+        {/* {JSON.stringify(session?.user?.shopDomain)} */}
+        {/* {JSON.stringify(data.lastThreeConversations)} */}
+      </h1>
+    </DefaultLayout>
+  )
 }

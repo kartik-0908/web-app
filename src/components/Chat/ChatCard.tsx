@@ -20,7 +20,7 @@ interface Conversation {
 }
 
 interface ChatCardProps {
-  lastThreeConversations: Conversation[];
+  lastThreeConversations: any;
 }
 
 const ChatCard: React.FC<ChatCardProps> = ({ lastThreeConversations = [] }) => {
@@ -30,9 +30,9 @@ const ChatCard: React.FC<ChatCardProps> = ({ lastThreeConversations = [] }) => {
         Recent conversations
       </h4>
       <div>
-        {lastThreeConversations.map((conversation, index) => {
-          const userMessage = conversation.Message.find((m) => m.senderType === 'user');
-          const botMessage = conversation.Message.find((m) => m.senderType === 'bot');
+        {lastThreeConversations.map((conversation: any, index: any) => {
+          const userMessage = conversation.Message.find((m: any) => m.senderType === 'user');
+          const botMessage = conversation.Message.find((m: any) => m.senderType === 'bot');
           const customerEmail = conversation.customerEmail || "Anonymous user";
           let botReply = '';
 
@@ -47,9 +47,11 @@ const ChatCard: React.FC<ChatCardProps> = ({ lastThreeConversations = [] }) => {
           }
 
           const truncateText = (text: string, wordLimit: number) => {
-            const words = text.split(' ');
-            if (words.length > wordLimit) {
-              return words.slice(0, wordLimit).join(' ') + '...';
+            if(text){
+              const words = text.split(' ');
+              if (words.length > wordLimit) {
+                return words.slice(0, wordLimit).join(' ') + '...';
+              }
             }
             return text;
           };
