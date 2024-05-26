@@ -1,11 +1,11 @@
-import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server";
 import { updateAppearance, updateLogo } from "../../../../../../../prisma/services/user";
 import { checkFileExists, deleteFileByEmail, uploadLogo } from "../../../../../../../prisma/services/gcpservices";
+import { auth } from "@/app/auth";
 
 
 export async function POST(req: Request) {
-    const session = await getServerSession();
+    const session = await auth();
     const formData = await req.formData();
     console.log(formData)
     if (session && session.user && session.user.email) {

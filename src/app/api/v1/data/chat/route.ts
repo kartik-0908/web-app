@@ -1,9 +1,9 @@
-import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server";
 import { getChatsData, getHomeData } from "../../../../../../prisma/services/user";
+import { auth } from "@/app/auth";
 
 export async function GET(req: NextRequest) {
-    const session = await getServerSession();
+    const session = await auth();
     if (session && session.user && session.user.email) {
         const url = req.nextUrl;
         const page = parseInt(url.searchParams.get("page") || "1", 10);

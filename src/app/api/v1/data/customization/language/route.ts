@@ -1,9 +1,9 @@
-import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server";
 import { updateLanguageCustomization } from "../../../../../../../prisma/services/user";
+import { auth } from "@/app/auth";
 
 export async function POST(req: NextRequest) {
-    const session = await getServerSession();
+    const session = await auth();
     if (session && session.user && session.user.email) {
         const formData = await req.json();
         const email = session.user.email;

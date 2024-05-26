@@ -1,7 +1,7 @@
-import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server";
 import { cancelData, getCurrentPlan, updatePlanDetails, upgradeData } from "../../../../../../prisma/services/user";
 import axios from "axios";
+import { auth } from "@/app/auth";
 
 
 async function cancelAppSubscription(access_token: string, subscriptionId: string, shop:string) {
@@ -46,7 +46,7 @@ async function cancelAppSubscription(access_token: string, subscriptionId: strin
 
 
 export async function POST() {
-  const session = await getServerSession();
+  const session = await auth();
   if (session && session.user && session.user.email) {
     const email = session.user.email;
     const updateResult = await cancelData(email);

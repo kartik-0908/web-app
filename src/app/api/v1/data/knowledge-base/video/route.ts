@@ -1,13 +1,13 @@
-import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server";
 import { addVideoLink, getShop, removeVideoLink, updateAppearance, updateKbDoc, updateLogo } from "../../../../../../../prisma/services/user";
 import { checkFileExists, deleteFileByEmail, uploadFileToFolder, uploadLogo } from "../../../../../../../prisma/services/gcpservices";
 import redis from "../../../../../../../lib/redis";
 import { get } from "http";
+import { auth } from "@/app/auth";
 
 
 export async function POST(req: Request) {
-    const session = await getServerSession();
+    const session = await auth();
     const body = await req.json();
     if (session && session.user && session.user.email) {
         try {
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-    const session = await getServerSession();
+    const session = await auth();
     const body = await req.json();
     if (session && session.user && session.user.email) {
         try {

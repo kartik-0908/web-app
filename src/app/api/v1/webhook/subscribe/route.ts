@@ -1,13 +1,13 @@
-import { getServerSession } from "next-auth";
 import { getTokenwithShop, saveWebhookDetails } from "../../../../../../prisma/services/user";
 import { NextResponse } from "next/server";
 import axios from 'axios';
+import { auth } from "@/app/auth";
 
 const webhookurl = "https://my-app.kartikagarwal0908.workers.dev/webhooks/"
 
 
 export async function POST() {
-  const session = await getServerSession();
+  const session = await auth();
   if (session && session.user && session.user.email) {
     const data = await getTokenwithShop(session.user.email)
     console.log(data);

@@ -5,23 +5,6 @@ import ChartTwo from "@/components/Charts/ChartTwo";
 import ChatCard from "@/components/Chat/ChatCard";
 import { auth } from "../auth";
 
-// interface Message {
-//   conversationId: string;
-//   id: string;
-//   senderId: number;
-//   senderType: "user" | "bot";
-//   text: string;
-//   timestamp: string;
-// }
-
-// interface Conversation {
-//   id: string;
-//   shopDomain: string;
-//   startedAt: Date;
-//   customerEmail?: string;
-//   Message: Message[];
-// }
-
 async function getUser() {
   const session = await auth()
   console.log('Session:', session);
@@ -29,6 +12,13 @@ async function getUser() {
 }
 export default async function Home() {
   const session = await getUser()
+  if(!session || !session.user){
+    return (
+      <h1>
+        login first
+      </h1>
+    )
+  }
   if (session && session.user && session.user.shopDomain) {
     const data = await getHomeData(session.user.shopDomain)
     return (
@@ -48,10 +38,10 @@ export default async function Home() {
             </div>
           </div>
         </>
-        <h1>
+        {/* <h1> */}
           {/* {JSON.stringify(session)} */}
           {/* {JSON.stringify(data.lastThreeConversations)} */}
-        </h1>
+        {/* </h1> */}
       </DefaultLayout>
     )
   }

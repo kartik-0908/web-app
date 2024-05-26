@@ -1,12 +1,12 @@
-import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server";
 import { deleteKbDoc, getShop, updateKbDoc } from "../../../../../../../prisma/services/user";
 import { deleteFileFromFolder, uploadFileToFolder, uploadLogo } from "../../../../../../../prisma/services/gcpservices";
 import redis from "../../../../../../../lib/redis";
+import { auth } from "@/app/auth";
 
 
 export async function POST(req: Request) {
-  const session = await getServerSession();
+  const session = await auth();
   const formData = await req.formData();
   console.log(formData)
   if (session && session.user && session.user.email) {
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
 
 export async function DELETE(req: Request) {
-  const session = await getServerSession();
+  const session = await auth();
   const body = await req.json();
 
   if (session && session.user && session.user.email) {

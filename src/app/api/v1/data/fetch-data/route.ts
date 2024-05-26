@@ -1,9 +1,9 @@
-import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server";
 import { getStoreData } from "../../../../../../prisma/services/user";
+import { auth } from "@/app/auth";
 
 export async function POST() {
-    const session = await getServerSession();
+    const session = await auth();
     if (session && session.user && session.user.email) {
         const email = session.user.email;
         return NextResponse.json({

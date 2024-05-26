@@ -1,6 +1,5 @@
 import { Card, CardHeader, Image } from "@nextui-org/react";
 import Signinform from "@/components/Welcome/signinform";
-import  getServerSession from "next-auth";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import { auth } from "./auth";

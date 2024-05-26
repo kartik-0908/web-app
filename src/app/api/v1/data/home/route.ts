@@ -1,10 +1,10 @@
-import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server";
 import { getHomeData } from "../../../../../../prisma/services/user";
+import { auth } from "@/app/auth";
 
 export async function GET() {
     console.log("hi inside route")
-    const session = await getServerSession();
+    const session = await auth();
     console.log("hi inside route")
     if (session && session.user && session.user.email) {
         console.log("hi inside route")

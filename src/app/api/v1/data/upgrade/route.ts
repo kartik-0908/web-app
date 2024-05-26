@@ -1,7 +1,7 @@
-import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentPlan, upgradeData } from "../../../../../../prisma/services/user";
 import axios from "axios";
+import { auth } from "@/app/auth";
 
 async function createAppSubscription(access_token: string, shop: string, dollar: number, plan_name: string) {
   const accessToken = access_token;
@@ -64,7 +64,7 @@ async function createAppSubscription(access_token: string, shop: string, dollar:
 
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession();
+  const session = await auth();
   if (session && session.user && session.user.email) {
     const email = session.user.email;
     const updateResult = await upgradeData(email);
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
   }
 }
 export async function GET() {
-  const session = await getServerSession();
+  const session = await auth();
   if (session && session.user && session.user.email) {
     const email = session.user.email;
     const data = await getCurrentPlan(email);

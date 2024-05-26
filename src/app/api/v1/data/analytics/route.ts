@@ -1,9 +1,9 @@
-import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server";
 import { getAnalyticsData, getHomeData } from "../../../../../../prisma/services/user";
+import { auth } from "@/app/auth";
 
 export async function GET(request: NextRequest) {
-    const session = await getServerSession();
+    const session = await auth();
     const url = request.nextUrl;
     const startDate = url.searchParams.get('startDate');
     const endDate = url.searchParams.get('endDate');

@@ -1,10 +1,10 @@
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { addFaqUrl, deleteFaqUrl, getShop } from "../../../../../../../prisma/services/user";
 import redis from "../../../../../../../lib/redis";
+import { auth } from "@/app/auth";
 
 export async function POST(request: Request) {
-  const session = await getServerSession();
+  const session = await auth();
 
   if (session && session.user && session.user.email) {
     const email = session.user.email;
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const session = await getServerSession();
+  const session = await auth();
 
   if (session && session.user && session.user.email) {
     const email = session.user.email;
