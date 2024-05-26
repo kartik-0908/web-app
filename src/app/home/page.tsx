@@ -1,57 +1,59 @@
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import { getServerSession } from "next-auth";
-import nextAuthOptions from "../../../lib/nextauth-config";
 import { getHomeData } from "../../../prisma/services/user";
 import ScatterChart from "@/components/Charts/scatterchart";
 import ChartTwo from "@/components/Charts/ChartTwo";
 import ChatCard from "@/components/Chat/ChatCard";
+import { auth } from "../auth";
 
-interface Message {
-  conversationId: string;
-  id: string;
-  senderId: number;
-  senderType: "user" | "bot";
-  text: string;
-  timestamp: string;
-}
+// interface Message {
+//   conversationId: string;
+//   id: string;
+//   senderId: number;
+//   senderType: "user" | "bot";
+//   text: string;
+//   timestamp: string;
+// }
 
-interface Conversation {
-  id: string;
-  shopDomain: string;
-  startedAt: Date;
-  customerEmail?: string;
-  Message: Message[];
-}
+// interface Conversation {
+//   id: string;
+//   shopDomain: string;
+//   startedAt: Date;
+//   customerEmail?: string;
+//   Message: Message[];
+// }
 
 async function getUser() {
-  const session = await getServerSession(nextAuthOptions);
+  const session = await auth()
   console.log('Session:', session);
   return session;
 }
 export default async function Home() {
   const session = await getUser()
-  const data = await getHomeData(session?.user?.shopDomain)
-  return (
-    <DefaultLayout>
-      <>
-        <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-          <ScatterChart
-            currentWeekData={data.currentWeekData || []}
-          />
-          <ChartTwo
-            last7days={data.last7Days || []}
-          />
-          <div className="col-span-12">
-            <ChatCard
-              lastThreeConversations={data?.lastThreeConversations  }
+  if (session && session.user && session.user.shopDomain) {
+    const data = await getHomeData(session.user.shopDomain)
+    return (
+      <DefaultLayout>
+        <>
+          <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
+            <ScatterChart
+              currentWeekData={data.currentWeekData || []}
             />
+            <ChartTwo
+              last7days={data.last7Days || []}
+            />
+            <div className="col-span-12">
+              <ChatCard
+                lastThreeConversations={data?.lastThreeConversations  }
+              />
+            </div>
           </div>
-        </div>
-      </>
-      <h1>
-        {/* {JSON.stringify(session?.user?.shopDomain)} */}
-        {/* {JSON.stringify(data.lastThreeConversations)} */}
-      </h1>
-    </DefaultLayout>
-  )
+        </>
+        <h1>
+          {/* {JSON.stringify(session)} */}
+          {/* {JSON.stringify(data.lastThreeConversations)} */}
+        </h1>
+      </DefaultLayout>
+    )
+  }
+
 }

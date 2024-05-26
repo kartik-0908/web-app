@@ -1,9 +1,9 @@
 import { Card, CardHeader, Image } from "@nextui-org/react";
 import Signinform from "@/components/Welcome/signinform";
-import { getServerSession } from "next-auth";
-import nextAuthOptions from "../../lib/nextauth-config";
+import  getServerSession from "next-auth";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
+import { auth } from "./auth";
 
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function Home(props: { searchParams: { [key: string]: string | string[] | undefined } }) {
   // console.log("search paarms :", props.searchParams)
-  const session = await getServerSession(nextAuthOptions);
+  const session = await auth();
   const { shop, timestamp, hmac } = props.searchParams;
   if (shop) {
     const clientId = process.env.NEXT_PUBLIC_clientId;
