@@ -5,8 +5,8 @@ import ChatCard from "@/components/Chat/ChatCard";
 import { auth, unstable_update } from "../auth";
 import { redirect } from "next/navigation";
 import { Button } from "@nextui-org/react";
-import { getHomeData } from "../../../lib/services/user";
-import AuthWrapper from "../AuthWrapper";
+import { getHomeData } from "../../../../lib/services/user";
+import AuthWrapper from "../../AuthWrapper";
 
 async function getUser() {
   const session = await auth()

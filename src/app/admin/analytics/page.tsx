@@ -5,7 +5,6 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Loader from '@/components/common/Loader';
-import AuthWrapper from "../AuthWrapper";
 import dynamic from "next/dynamic";
 const ChartTwo = dynamic(() => import('@/components/Charts/AnalyticsChart'), { ssr: false });
 import { RangeCalendar } from "@nextui-org/calendar";
@@ -119,7 +118,6 @@ const Analytics = () => {
   const adjustedEndDate = shiftDateByTimeZone(endDate, 5, 30);
 
   return (
-    <AuthWrapper>
       <DefaultLayout>
         <Breadcrumb pageName="Analytics" />
         <div className="grid grid-cols-12">
@@ -243,7 +241,6 @@ const Analytics = () => {
           />
         )}
       </DefaultLayout>
-    </AuthWrapper>
   );
 };
 

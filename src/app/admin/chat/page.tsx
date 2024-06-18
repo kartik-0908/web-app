@@ -5,7 +5,6 @@ import ChatCard2 from "@/components/Chat/ChatCard2";
 import { useEffect, useState } from "react";
 import ConversationDetails from "@/components/Chat/ConversationCard";
 import ConversationDetailsEmpty from "@/components/Chat/ConversationCardempty";
-import AuthWrapper from "../AuthWrapper";
 
 interface Message {
   id: string;
@@ -48,7 +47,6 @@ const Chat = () => {
   };
 
   return (
-    <AuthWrapper>
       <DefaultLayout>
         <div className="mx-auto max-w-270">
           <Breadcrumb pageName="Chat History" />
@@ -72,7 +70,6 @@ const Chat = () => {
           </div>
         </div>
       </DefaultLayout>
-    </AuthWrapper>
   );
 };
 

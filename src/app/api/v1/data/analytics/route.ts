@@ -1,36 +1,35 @@
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/app/auth";
-import { getAnalyticsData } from "../../../../../../lib/services/user";
+// import { NextRequest, NextResponse } from "next/server";
+// import { getAnalyticsData } from "../../../../../../lib/services/user";
 
-export async function GET(request: NextRequest) {
-    const session = await auth();
-    const url = request.nextUrl;
-    const startDate = url.searchParams.get('startDate');
-    const endDate = url.searchParams.get('endDate');
-    if (!startDate || !endDate) {
-        return new NextResponse(JSON.stringify({ error: 'Missing startDate or endDate query parameters' }), { status: 400 });
-    }
-    if (session && session.user && session.user.email) {
-        try {
-            // Adjust getAnalyticsData to your needs. Ensure it returns a type that matches AnalyticsData.
-            // console.log(startDate)
-            // console.log(endDate)
+// export async function GET(request: NextRequest) {
+//     const session = await auth();
+//     const url = request.nextUrl;
+//     const startDate = url.searchParams.get('startDate');
+//     const endDate = url.searchParams.get('endDate');
+//     if (!startDate || !endDate) {
+//         return new NextResponse(JSON.stringify({ error: 'Missing startDate or endDate query parameters' }), { status: 400 });
+//     }
+//     if (session && session.user && session.user.email) {
+//         try {
+//             // Adjust getAnalyticsData to your needs. Ensure it returns a type that matches AnalyticsData.
+//             // console.log(startDate)
+//             // console.log(endDate)
            
-            const analyticsData = await getAnalyticsData(session.user.email, startDate, endDate);
-            if ('error' in analyticsData) {
-                // If the response contains an 'error' property, forward it to the frontend
-                return new NextResponse(JSON.stringify({ error: analyticsData.error }), { status: 400 });
-            } else {
-                // If the response is successful, return the analytics data
-                console.log(analyticsData);
-                return new NextResponse(JSON.stringify({ data: analyticsData }));
-            }
-        } catch (error) {
-            console.error('Error fetching analytics data:', error);
-            return new NextResponse(JSON.stringify({ error: 'Failed to fetch analytics data' }), { status: 500 });
-        }
-    } else {
-        return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    }
+//             const analyticsData = await getAnalyticsData(session.user.email, startDate, endDate);
+//             if ('error' in analyticsData) {
+//                 // If the response contains an 'error' property, forward it to the frontend
+//                 return new NextResponse(JSON.stringify({ error: analyticsData.error }), { status: 400 });
+//             } else {
+//                 // If the response is successful, return the analytics data
+//                 console.log(analyticsData);
+//                 return new NextResponse(JSON.stringify({ data: analyticsData }));
+//             }
+//         } catch (error) {
+//             console.error('Error fetching analytics data:', error);
+//             return new NextResponse(JSON.stringify({ error: 'Failed to fetch analytics data' }), { status: 500 });
+//         }
+//     } else {
+//         return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+//     }
 
-}
+// }
