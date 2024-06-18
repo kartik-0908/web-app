@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { addFaqUrl, deleteFaqUrl, getShop } from "../../../../../../../prisma/services/user";
 import redis from "../../../../../../../lib/redis";
 import { auth } from "@/app/auth";
+import { addFaqUrl, deleteFaqUrl, getShop } from "../../../../../../../lib/services/user";
 
 export async function POST(request: Request) {
   const session = await auth();

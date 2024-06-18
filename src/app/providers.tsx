@@ -1,17 +1,34 @@
 'use client'
 import { NextUIProvider } from '@nextui-org/react'
-import { SessionProvider } from "next-auth/react";
 import ToastProvider from './ToastWrapper';
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs'
 
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider>
-      <NextUIProvider>
-        <ToastProvider>
-          {children}
-        </ToastProvider>
-      </NextUIProvider>
-    </SessionProvider>
+    <NextUIProvider>
+      <ToastProvider>
+        <ClerkProvider>
+          {/* <html lang='en'>
+            <body>
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn> */}
+              {children}
+            {/* </body> */}
+          {/* </html>/ */}
+        </ClerkProvider>
+
+      </ToastProvider>
+    </NextUIProvider>
   )
 }

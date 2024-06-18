@@ -1,29 +1,50 @@
-"use client"
-import Loader from '@/components/common/Loader';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { ReactNode } from 'react';
+// import { auth } from './auth';
+import { redirect } from 'next/navigation';
+import { FormLayout } from '@/components/updateForm';
 
 interface AuthWrapperProps {
   children: ReactNode;
 }
 
-const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
-  const { status } = useSession();
-  const router = useRouter();
+async function getUser() {
+  // const session = await auth()
+  // console.log(session)
+  // return session;
+}
 
-  if (status === 'loading') {
-    return (
-      <Loader />
-    );
-  }
+const AuthWrapper: React.FC<AuthWrapperProps> = async ({ children }) => {
+  const session = await getUser();
 
-  if (status === 'unauthenticated') {
-    router.push('/');
-    return null;
-  }
+  // if (!session || !session.user) {
+  //   // return <>{children}</>;
+  //   redirect('/');
+  // } else if (session && session.user) {
+  //   if (!session.user.emailVerified) {
+  //     return (
+  //       <div className="flex flex-col items-center justify-center h-screen ">
+  //         <VerifyAccountMessage />
+  //         {session?.user.email}
+  //       </div>
+  //     )
+  //   }
+  //   if (!session.user.shopDomain) {
+  //     return <FormLayout roleId={session.user.role || "member"} />;
+  //     // return <>{children}</>;
+  //   } else {
+  //     // return <FormLayout roleId={session.user.roleId || "member"} />;e
 
-  return <>{children}</>;
+  //     return <>{children}</>;
+  //   }
+      return <>{children}</>;
+
+  // }
+};
+export default AuthWrapper;
+
+const VerifyAccountMessage: React.FC = () => {
+  return (
+    <h1>Please verify your account using the activation link in your email.</h1>
+  );
 };
 
-export default AuthWrapper;

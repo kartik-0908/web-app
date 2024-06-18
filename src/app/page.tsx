@@ -1,8 +1,7 @@
 import { Card, CardHeader, Image } from "@nextui-org/react";
-import Signinform from "@/components/Welcome/signinform";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import { auth } from "./auth";
+import { SignIn } from "@clerk/nextjs";
 
 
 export const metadata: Metadata = {
@@ -12,9 +11,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Home(props: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  // console.log("search paarms :", props.searchParams)
-  const session = await auth();
-  const { shop, timestamp, hmac } = props.searchParams;
+  // const session = await auth();
+  const { shop } = props.searchParams;
   if (shop) {
     const clientId = process.env.NEXT_PUBLIC_clientId;
     const scopes = process.env.NEXT_PUBLIC_scopes;
@@ -24,9 +22,9 @@ export default async function Home(props: { searchParams: { [key: string]: strin
     redirect(shopifyAuthUrl);
   }
 
-  if (session) {
-    redirect("/home");
-  }
+  // if (session) {
+  //   redirect("/home");
+  // }
 
   return (
     <>
@@ -47,10 +45,8 @@ export default async function Home(props: { searchParams: { [key: string]: strin
             />
           </Card>
         </div>
-        <div className="bg-black flex justify-center items-center h-screen">
-          <div className="rounded-lg border border-stroke bg-white  dark:border-strokedark dark:bg-boxdark">
-            <Signinform />
-          </div>
+        <div className="bg-black grid grid-rows-2 justify-center items-center h-screen">
+          
         </div>
       </div>
     </>

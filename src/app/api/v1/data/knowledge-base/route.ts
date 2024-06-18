@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getKbDetails } from "../../../../../../prisma/services/user";
 import { auth } from "@/app/auth";
+import { getKbDetails } from "../../../../../../lib/services/user";
 
 export async function GET() {
     const session = await auth();

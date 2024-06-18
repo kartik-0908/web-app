@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cancelData, getCurrentPlan, updatePlanDetails, upgradeData } from "../../../../../../prisma/services/user";
 import axios from "axios";
 import { auth } from "@/app/auth";
+import { cancelData } from "../../../../../../lib/services/user";
 
 
 async function cancelAppSubscription(access_token: string, subscriptionId: string, shop:string) {

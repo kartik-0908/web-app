@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import { addVideoLink, getShop, removeVideoLink, updateAppearance, updateKbDoc, updateLogo } from "../../../../../../../prisma/services/user";
-import { checkFileExists, deleteFileByEmail, uploadFileToFolder, uploadLogo } from "../../../../../../../prisma/services/gcpservices";
 import redis from "../../../../../../../lib/redis";
 import { get } from "http";
 import { auth } from "@/app/auth";
+import { addVideoLink ,getShop, removeVideoLink, updateAppearance, updateKbDoc, updateLogo} from "../../../../../../../lib/services/user";
 
 
 export async function POST(req: Request) {

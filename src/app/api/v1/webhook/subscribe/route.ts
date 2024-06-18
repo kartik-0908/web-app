@@ -1,7 +1,7 @@
-import { getTokenwithShop, saveWebhookDetails } from "../../../../../../prisma/services/user";
 import { NextResponse } from "next/server";
 import axios from 'axios';
 import { auth } from "@/app/auth";
+import { getTokenwithShop } from "../../../../../../lib/services/user";
 
 const webhookurl = "https://my-app.kartikagarwal0908.workers.dev/webhooks/"
 

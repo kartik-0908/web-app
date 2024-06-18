@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentPlan, upgradeData } from "../../../../../../prisma/services/user";
 import axios from "axios";
 import { auth } from "@/app/auth";
+import { getCurrentPlan, upgradeData } from "../../../../../../lib/services/user";
 
 async function createAppSubscription(access_token: string, shop: string, dollar: number, plan_name: string) {
   const accessToken = access_token;

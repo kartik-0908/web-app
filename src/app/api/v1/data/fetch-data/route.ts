@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { getStoreData } from "../../../../../../prisma/services/user";
 import { auth } from "@/app/auth";
 
 export async function POST() {

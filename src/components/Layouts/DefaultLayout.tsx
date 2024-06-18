@@ -3,12 +3,13 @@ import React, { useState, ReactNode } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 
-export default function DefaultLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+interface DefaultLayoutProps {
+  children: ReactNode;
+}
+
+export default function DefaultLayout({ children }: DefaultLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <>
       {/* <!-- ===== Page Wrapper Start ===== --> */}

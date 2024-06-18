@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { updateAppearance, updateLogo } from "../../../../../../../prisma/services/user";
-import { checkFileExists, deleteFileByEmail, uploadLogo } from "../../../../../../../prisma/services/gcpservices";
 import { auth } from "@/app/auth";
+import { updateAppearance, updateLogo } from "../../../../../../../lib/services/user";
+import { checkFileExists, deleteFileByEmail, uploadLogo } from "../../../../../../../lib/services/gcpservices";
 
 
 export async function POST(req: Request) {

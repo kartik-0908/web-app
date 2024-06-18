@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { updateBehavioralCustomization } from "../../../../../../../prisma/services/user";
 import { auth } from "@/app/auth";
+import { updateBehavioralCustomization } from "../../../../../../../lib/services/user";
 
 export async function POST(req: NextRequest) {
     const session = await auth();

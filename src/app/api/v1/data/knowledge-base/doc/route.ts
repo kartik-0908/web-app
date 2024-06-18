@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { deleteKbDoc, getShop, updateKbDoc } from "../../../../../../../prisma/services/user";
-import { deleteFileFromFolder, uploadFileToFolder, uploadLogo } from "../../../../../../../prisma/services/gcpservices";
 import redis from "../../../../../../../lib/redis";
 import { auth } from "@/app/auth";
+import { deleteKbDoc, getShop, updateKbDoc } from "../../../../../../../lib/services/user";
+import { deleteFileFromFolder, uploadFileToFolder } from "../../../../../../../lib/services/gcpservices";
 
 
 export async function POST(req: Request) {

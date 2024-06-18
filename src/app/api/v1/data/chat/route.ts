@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getChatsData, getHomeData } from "../../../../../../prisma/services/user";
 import { auth } from "@/app/auth";
+import { getChatsData } from "../../../../../../lib/services/user";
 
 export async function GET(req: NextRequest) {
     const session = await auth();
