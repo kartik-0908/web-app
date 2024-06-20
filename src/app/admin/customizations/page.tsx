@@ -37,7 +37,7 @@
 
 
 
-// const TablesPage = () => {
+const TablesPage = () => {
 //   const [pageLoading, setpageLoading] = useState(true);
 //   const [newMessage, setNewMessage] = useState('');
 //   const [messages, setMessages] = useState<string[]>(demo_mssgs);
@@ -705,6 +705,6 @@
 //     </AuthWrapper>
 
 //   );
-// };
+};
 
-// export default TablesPage;
+export default TablesPage;
