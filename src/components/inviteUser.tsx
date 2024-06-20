@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getMembers } from "../../lib/services/user";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { showToast } from "./Toast";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import axios from "axios";
+import { auth } from "@clerk/nextjs/server";
 
 interface Member {
     name: string;
@@ -11,7 +12,18 @@ interface Member {
     email: string;
 }
 
-const MembersComponent = () => {
+type MembersCompType = {
+    memberLink: string,
+    adminLink: string,
+    users: {
+        firstName?: string,
+        lastName?: string,
+        role: string,
+        email: string
+    }[]
+}
+
+export default function MembersComponent({ memberLink, adminLink, users }: MembersCompType) {
     const [members, setMembers] = useState<Member[]>([]);
     const [showRemoveModal, setShowRemoveModal] = useState(false);
     const [memberToRemove, setMemberToRemove] = useState<number | null>(null);
@@ -20,7 +32,7 @@ const MembersComponent = () => {
 
     useEffect(() => {
         const fetchMembers = async () => {
-            const { users, adminLink, memberLink } = await getMembers();
+
             if (memberLink) {
                 setMemberInviteLink(memberLink)
             }
@@ -34,7 +46,7 @@ const MembersComponent = () => {
                     const name = users[i].firstName + " " + users[i].lastName;
                     allMembers.push({
                         name: name,
-                        role: users[i].roleId,
+                        role: users[i].role,
                         email: users[i].email,
                     });
                 }
@@ -42,7 +54,7 @@ const MembersComponent = () => {
             }
         };
         fetchMembers();
-    }, []);
+    }, [memberLink, adminLink, users]);
 
     const handleRoleChange = (index: number, newRole: string) => {
         const updatedMembers = [...members];
@@ -160,5 +172,3 @@ const MembersComponent = () => {
         </div>
     );
 };
-
-export default MembersComponent;

@@ -1,10 +1,10 @@
 "use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import ChatCard2 from "@/components/Chat/ChatCard2";
 import { useEffect, useState } from "react";
 import ConversationDetails from "@/components/Chat/ConversationCard";
 import ConversationDetailsEmpty from "@/components/Chat/ConversationCardempty";
+import AdminLayout from "@/components/Layouts/AdminLayout";
 
 interface Message {
   id: string;
@@ -47,7 +47,7 @@ const Chat = () => {
   };
 
   return (
-      <DefaultLayout>
+      <AdminLayout>
         <div className="mx-auto max-w-270">
           <Breadcrumb pageName="Chat History" />
 
@@ -69,7 +69,7 @@ const Chat = () => {
             </div>
           </div>
         </div>
-      </DefaultLayout>
+      </AdminLayout>
   );
 };
 

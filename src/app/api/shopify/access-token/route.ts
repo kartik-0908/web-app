@@ -27,7 +27,7 @@
 //     console.log("access_token: " + response.data.access_token)
 //     const accessToken = response.data.access_token
 //     console.log("starting storing token")
-//     await store_token(accessToken, shop)
+    // await store_token(accessToken, shop)
 //     await initializePlan(shop);
 //     await getStoreData(shop, accessToken)
 //     await subscribeToWebhooks(shop, accessToken);

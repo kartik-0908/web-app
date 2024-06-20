@@ -1,10 +1,10 @@
-import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import AdminLayout from "@/components/Layouts/AdminLayout";
 import Loader from "@/components/common/Loader";
 
 export default function () {
     return (
-        <DefaultLayout>
+        <AdminLayout>
             <Loader></Loader>
-        </DefaultLayout>
+        </AdminLayout>
     )
 }

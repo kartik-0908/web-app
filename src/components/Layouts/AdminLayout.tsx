@@ -7,7 +7,7 @@ interface DefaultLayoutProps {
   children: ReactNode;
 }
 
-export default function DefaultLayout({ children }: DefaultLayoutProps) {
+export default function AdminLayout({ children }: DefaultLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (

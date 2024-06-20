@@ -6,3 +6,8 @@ export const checkRole = (role: Roles) => {
 
   return sessionClaims?.metadata.role === role;
 }
+
+export const checkDomain = () => {
+  const { sessionClaims } = auth()
+  return sessionClaims?.metadata.shopDomain ;
+}
