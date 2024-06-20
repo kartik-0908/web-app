@@ -135,40 +135,6 @@
 
 //   return shop !== null;
 // }
-// export const store_token = async (token: string, shop: string) => {
-//   try {
-//     // Check if the shop already exists
-//     const existingShop = await prisma.shopifyInstalledShop.findUnique({
-//       where: {
-//         shop: shop,
-//       },
-//     });
-
-//     if (existingShop) {
-//       // If the shop exists, update the token
-//       const updatedShop = await prisma.shopifyInstalledShop.update({
-//         where: {
-//           shop: shop,
-//         },
-//         data: {
-//           accessToken: token,
-//         },
-//       });
-//       console.log("Updated token for existing shop: ", updatedShop);
-//     } else {
-//       // If the shop does not exist, create a new row
-//       const newInstalledShop = await prisma.shopifyInstalledShop.create({
-//         data: {
-//           shop: shop,
-//           accessToken: token,
-//         },
-//       });
-//       console.log("Stored token for new shop: ", newInstalledShop);
-//     }
-//   } catch (error) {
-//     console.error('Error storing or updating token:', error);
-//   }
-// };
 
 // export async function getShop(email: string) {
 //   console.log(email)
