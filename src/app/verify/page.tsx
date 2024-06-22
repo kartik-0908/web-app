@@ -18,11 +18,11 @@
 //   }
 // }
 
-// export default async function Verify({
+export default async function Verify({
 //   searchParams,
 // }: {
 //   searchParams?: { [key: string]: string };
-// }) {
+}) {
 
 //   const { token } = searchParams ?? { token: "" };
 //   const data = await check(token)
@@ -52,5 +52,5 @@
 //   }
 
 
-// }
+}
 
