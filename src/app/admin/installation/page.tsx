@@ -1,9 +1,9 @@
-// "use client"
+"use client"
 // import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 // import DefaultLayout from "@/components/Layouts/DefaultLayout";
 // import InstallationCard from "@/components/Chat/installationCard";
 // import AuthWrapper from "../../AuthWrapper";
-// const Settings = () => {
+const Settings = () => {
 //   return (
 //     <AuthWrapper>
 //       <DefaultLayout>
@@ -16,5 +16,5 @@
 //       </DefaultLayout>
 //     </AuthWrapper>
 //   );
-// };
-// export default Settings;
+};
+export default Settings;

@@ -17,7 +17,7 @@
 // };
 
 
-// const Knowledge = () => {
+const Knowledge = () => {
 //   const [faqurl, setFaqUrl] = useState("");
 //   const [pageloading, setpageloading] = useState(true);
 //   const [currentfaqurl, setcurrentfaqurl] = useState("");
@@ -828,6 +828,6 @@
 //       </DefaultLayout>
 //     </AuthWrapper>
 //   );
-// };
+};
 
-// export default Knowledge;
+export default Knowledge;

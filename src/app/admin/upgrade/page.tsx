@@ -12,7 +12,7 @@
 
 
 
-// const Upgrade = () => {
+const Upgrade = () => {
 //   const router = useRouter();
  
 
@@ -373,6 +373,6 @@
 //       </AuthWrapper>
 //     </Suspense>
 //   );
-// };
+};
 
-// export default Upgrade;
+export default Upgrade;

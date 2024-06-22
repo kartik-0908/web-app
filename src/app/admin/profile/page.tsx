@@ -6,7 +6,7 @@
 // import { useEffect, useState } from "react";
 // import axios from "axios";
 
-// const Profile = () => {
+const Profile = () => {
 //   const [pageloading, setpageLoading] = useState(true)
 //   const [userEmail, setuserEmail] = useState("")
 //   const [shopDomain, setshopDomain] = useState("")
@@ -145,6 +145,6 @@
 //       </DefaultLayout>
 //     </AuthWrapper>
 //   );
-// };
+};
 
-// export default Profile;
+export default Profile;
