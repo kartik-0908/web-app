@@ -2,6 +2,9 @@ import Link from "next/link";
 import DarkModeSwitcher from "./DarkModeSwitcher";
 import DropdownUser from "./DropdownUser";
 import Image from "next/image";
+import DropdownMessage from "./DropdownMessage";
+import DropdownNotification from "./DropdownNotification";
+import Invite from "./Invite";
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
@@ -70,13 +73,16 @@ const Header = (props: {
             {/* <!-- Dark Mode Toggler --> */}
             {/* <DarkModeSwitcher /> */}
             {/* <!-- Dark Mode Toggler --> */}
+            <Invite />
 
             {/* <!-- Notification Menu Area --> */}
-            {/* <DropdownNotification /> */}
+            <DropdownNotification />
             {/* <!-- Notification Menu Area --> */}
 
             {/* <!-- Chat Notification Area --> */}
             {/* <DropdownMessage /> */}
+            
+            
             {/* <!-- Chat Notification Area --> */}
           </ul>
 

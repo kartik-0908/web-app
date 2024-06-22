@@ -80,6 +80,7 @@ export async function handleSubmit(state: any, formdata: FormData) {
   const role = formdata.get("role")
   console.log(shop)
   console.log(email)
+  console.log(role)
   console.log("before resposne")
 
   const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/v1/user/invite`, {
@@ -98,4 +99,5 @@ export async function handleSubmit(state: any, formdata: FormData) {
   if(res.data.message === "error"){
       return {status:"error"}
   }
+  return {status:"hey"}
 }

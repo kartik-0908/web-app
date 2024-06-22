@@ -1,6 +1,5 @@
 import axios from "axios";
 import { Adminform } from "@/components/admin-signup";
-import { revalidatePath } from "next/cache";
 
 export default async function Verify(props: { searchParams: { [key: string]: string | string[] | undefined } }) {
     const { admin } = props.searchParams;

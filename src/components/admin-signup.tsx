@@ -40,7 +40,6 @@ export function Adminform({shopDomain, role}: any){
                                         defaultValue={role}
                                     />
                                     <input
-                                        disabled
                                         name='shopDomain'
                                         type="text"
                                         defaultValue={shopDomain}

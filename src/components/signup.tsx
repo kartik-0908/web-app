@@ -1,18 +1,23 @@
-import axios from "axios"
+"use client"
+import { useFormState } from "react-dom"
+import { handleSubmit } from "../../lib/actions"
+import { useEffect } from "react"
+import { showToast } from "./Toast"
 
 export default function Customsignup() {
-    async function handleSubmit(formdata: FormData) {
-        'use server'
-        const shop = formdata.get("shopDomain")
-        const email = formdata.get("email")
-        console.log(shop)
-        console.log(email)
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/v1/user/invite`,{
-            shop,
-            email,
-            role: "admin"
-        })
-    }
+    const [state, formAction] = useFormState(handleSubmit, {
+        status: '',
+    })
+
+    useEffect(() => {
+        console.log(state)
+        if (state?.status === "success") {
+            showToast("success", <p>Go to your email Inbox</p>)
+        }
+        if (state?.status === "error") {
+            showToast("error", <p>Some Technical Issues</p>)
+        }
+    }, [state])
     return (
         <div className="bg-black flex justify-center items-center min-h-screen py-12">
             <div className="bg-zinc-900 rounded-lg shadow-xl p-8 w-full max-w-md">
@@ -23,11 +28,16 @@ export default function Customsignup() {
                         </svg>
                         <h1 className="mt-4 text-xl font-medium tracking-tight text-white">Create an account</h1>
                     </header>
-                    <form action={handleSubmit}>
+                    <form action={formAction}>
                         <div className="space-y-6">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-white">Shopify Domain</label>
                                 <div className="flex">
+                                <input
+                                        hidden
+                                        name='role'
+                                        defaultValue={"admin"}
+                                    />
                                     <input
                                         required
                                         name='shopDomain'
