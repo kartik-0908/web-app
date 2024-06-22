@@ -26,7 +26,7 @@
 // ];
 
 
-// const feature = () => {
+const feature = () => {
 //   const [shortdesc, setShortdesc] = useState("")
 //   const [message, setMessage] = useState("")
 //   const [category, setCategory] = useState("")
@@ -143,6 +143,6 @@
 //       </DefaultLayout>
 //     </AuthWrapper>
 //   );
-// };
+};
 
-// export default feature;
+export default feature;

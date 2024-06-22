@@ -8,17 +8,17 @@ export default async function PageComponent() {
   const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/v1/user/get-members`, {
     shopDomain: sessionClaims?.metadata.shopDomain
   });
-  const { memberLink } = res.data.memberLink;
-  const { adminLink } = res.data.adminLink;
-  const { users } = res.data.users;
+  console.log(res.data)
+  const { memberInviteCode } = res.data;
+  const { adminInviteCode } = res.data;
+  const { users } = res.data;
 
   return (
     <AdminLayout>
       <MembersComponent 
-      memberLink = {memberLink}
-      adminLink = {adminLink}
+      memberLink = {memberInviteCode}
+      adminLink = {adminInviteCode}
       users = {users}
-      
       />
     </AdminLayout>
   );

@@ -108,7 +108,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
               <li>
                 <Link
-                  href="/home"
+                  href="/admin/home"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("home") &&
                     "bg-graydark dark:bg-meta-4"
                     }`}
@@ -124,7 +124,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Analytics --> */}
               <li>
                 <Link
-                  href="/analytics"
+                  href="/admin/analytics"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("analytics") &&
                     "bg-graydark dark:bg-meta-4"
                     }`}
@@ -140,7 +140,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Knowledge Base --> */}
               <li>
                 <Link
-                  href="/knowledge"
+                  href="/admin/knowledge"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("knowledge") && "bg-graydark dark:bg-meta-4"
                     }`}
                 >
@@ -154,7 +154,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Customizations --> */}
               <li>
                 <Link
-                  href="/customizations"
+                  href="/admin/customizations"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("customizations") && "bg-graydark dark:bg-meta-4"
                     }`}
                 >
@@ -169,7 +169,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Chat History --> */}
               <li>
                 <Link
-                  href="/chat"
+                  href="/admin/chat"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("chat") &&
                     "bg-graydark dark:bg-meta-4"
                     }`}
@@ -185,7 +185,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Installation --> */}
               <li>
                 <Link
-                  href="/installation"
+                  href="/admin/installation"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("installation") &&
                     "bg-graydark dark:bg-meta-4"
                     }`}
@@ -226,7 +226,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Request Feature --> */}
               <li>
                 <Link
-                  href="/feature"
+                  href="/admin/feature"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("feature") &&
                     "bg-graydark dark:bg-meta-4"
                     }`}
@@ -241,7 +241,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Request Feature --> */}
               <li>
                 <Link
-                  href="/invite"
+                  href="/admin/invite"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("feature") &&
                     "bg-graydark dark:bg-meta-4"
                     }`}

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/elements": "^0.8.0",
     "@clerk/nextjs": "^5.1.5",
     "@fontsource/montserrat": "^5.0.18",
     "@fontsource/open-sans": "^5.0.28",

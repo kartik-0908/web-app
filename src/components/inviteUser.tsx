@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { showToast } from "./Toast";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import axios from "axios";
-import { auth } from "@clerk/nextjs/server";
 
 interface Member {
     name: string;
@@ -19,7 +17,8 @@ type MembersCompType = {
         firstName?: string,
         lastName?: string,
         role: string,
-        email: string
+        email: string,
+        image?: string
     }[]
 }
 
@@ -32,12 +31,15 @@ export default function MembersComponent({ memberLink, adminLink, users }: Membe
 
     useEffect(() => {
         const fetchMembers = async () => {
+            // console.log(memberLink)
+            // console.log(adminLink)
+            // console.log(users)
 
             if (memberLink) {
-                setMemberInviteLink(memberLink)
+                setMemberInviteLink(`${process.env.NEXT_PUBLIC_APP_URL}/verify/invite?member=${memberLink}`)
             }
             if (adminLink) {
-                setAdminInviteLink(adminLink)
+                setAdminInviteLink(`${process.env.NEXT_PUBLIC_APP_URL}/verify/invite?admin=${adminLink}`)
             }
             if (users) {
                 let allMembers = [];
@@ -50,6 +52,7 @@ export default function MembersComponent({ memberLink, adminLink, users }: Membe
                         email: users[i].email,
                     });
                 }
+                // console.log(allMembers)
                 setMembers(allMembers);
             }
         };

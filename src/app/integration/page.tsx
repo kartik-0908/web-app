@@ -1,40 +1,12 @@
-"use client"
 import axios from "axios";
-import { useEffect } from "react";
-import { useRouter } from 'next/navigation'
-import Loader from "@/components/common/Loader";
+import { redirect, useRouter } from 'next/navigation'
 
-export default function Integration() {
-  // const searchParams = useSearchParams()
-  const router = useRouter();
-
-  useEffect(() => {
-
-    const getShopifyToken = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code'); // Extract code
-      const shop = urlParams.get('shop');// Extract code
-      // console.log("integration code: " + code)
-      // console.log("integration shop: " + shop)
-      if (code && shop) {
-        try {
-          // console.log("insdie useeffect of integration")
-          const response = await axios.post('/api/shopify/access-token', { shop, code });
-          console.log(response);
-          router.push('/installation')
-        } catch (error) {
-          console.error("Failed to retrieve access token:", error);
-        }
-
-      }
-    };
-
-    getShopifyToken();
-  }, []);
-  return (
-    <div className="mx-auto max-w-270 p-6 h-screen">
-      <Loader />
-    </div>
-
-  );
-};
+export default async function Integration(props: { searchParams: { [key: string]: string | string[] | undefined } }) {
+  const { shop } = props.searchParams;
+  const { code } = props.searchParams;
+  if (shop && code) {
+    const response = await axios.post('http://localhost:3001/v1/shopify/access-token', { shop, code });
+    console.log(response);
+    redirect('/');
+  }
+}

@@ -56,7 +56,25 @@ const fetchRole = async (id: string): Promise<string | null> => {
 
 async function middleware(request: NextRequest, role: any, shopDomain: string | undefined, id: any) {
   console.log(request.nextUrl.pathname)
+  if(request.nextUrl.pathname === '/integration'){
+    // const url = new URL(request.url);
+    // const shop = url.searchParams.get('shop');
+    // const code = url.searchParams.get('code');
+    // const response = await axios.post('http://localhost:3001/api/v1/shopify/access-token', { shop, code });
+    // console.log(response);
+    return NextResponse.next();
+
+  }
   if (request.nextUrl.pathname === '/') {
+    const url = new URL(request.url);
+    console.log("url")
+    const shop = url.searchParams.get('shop');
+    // const code = url.searchParams.get('code');
+
+    // If 'shop' and 'code' query params are present, allow the user to proceed
+    if (shop) {
+      return NextResponse.next();
+    }
     if (!role) {
       if (id) {
         return NextResponse.redirect(new URL(`/apply-changes?id=${id}`, request.url))
@@ -95,6 +113,7 @@ async function middleware(request: NextRequest, role: any, shopDomain: string | 
       return NextResponse.redirect(new URL('/permission-denied', request.url))
     }
   }
+  return NextResponse.next();
 }
 
 
