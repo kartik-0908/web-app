@@ -14,22 +14,20 @@ export default clerkMiddleware((auth, req) => {
   const { sessionClaims } = auth()
   console.log("sessionClaims")
   console.log(sessionClaims)
-  if(!sessionClaims){
-    return NextResponse.redirect('/sign-in')
-  }
+  
 
   if (isMemberRoute(req) || isAdminRoute(req)) {
     auth().protect()
   }
   console.log("after checking auth")
   // console.log(checkRole("admin"))
+
   return middleware(
-    req, sessionClaims?.metadata.role,
-    sessionClaims?.metadata.shopDomain,
+    req, sessionClaims
   );
 });
 
-async function middleware(request: NextRequest, role: any, shopDomain: string | undefined) {
+async function middleware(request: NextRequest, sessionClaims: any) {
   console.log(request.nextUrl.pathname)
   if (request.nextUrl.pathname === '/integration') {
     return NextResponse.next();
@@ -44,20 +42,26 @@ async function middleware(request: NextRequest, role: any, shopDomain: string | 
     if (shop) {
       return NextResponse.next();
     }
-
-    if (role === "admin") {
-      return NextResponse.redirect(new URL('/admin/home', request.url))
-    }
-    else if (role === "member") {
-      return NextResponse.redirect(new URL('/member/home', request.url))
-    }
     else {
-      return NextResponse.redirect(new URL('/role-not-found', request.url))
+      if(!sessionClaims){
+        return NextResponse.redirect(new URL('/sign-in', request.url))
+      }
+      else {
+        if(!sessionClaims.metadata || !sessionClaims.metadata.role){
+        return NextResponse.redirect(new URL('/permission-denied', request.url))
+        }
+        else if(sessionClaims.metadata.role === "admin"){
+          return NextResponse.redirect(new URL('/admin/home', request.url))
+        }
+        else if(sessionClaims.metadata.role === "member"){
+          return NextResponse.redirect(new URL('/member/home', request.url))
+        }
+      }
     }
   }
   if (request.nextUrl.pathname.startsWith('/admin')) {
     console.log("inside /admin")
-    if (role !== "admin") {
+    if (sessionClaims.metadata.role !== "admin") {
       console.log("role admin notfound but")
       return NextResponse.redirect(new URL('/permission-denied', request.url))
     }
@@ -67,7 +71,7 @@ async function middleware(request: NextRequest, role: any, shopDomain: string | 
     }
   }
   else if (request.nextUrl.pathname.startsWith('/member')) {
-    if (role != "member") {
+    if (sessionClaims.metadata.role != "member") {
       return NextResponse.redirect(new URL('/permission-denied', request.url))
     }
   }
