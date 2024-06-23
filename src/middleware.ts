@@ -14,6 +14,10 @@ export default clerkMiddleware((auth, req) => {
   const { sessionClaims } = auth()
   console.log("sessionClaims")
   console.log(sessionClaims)
+  if(!sessionClaims){
+    return NextResponse.redirect('/sign-in')
+  }
+
   if (isMemberRoute(req) || isAdminRoute(req)) {
     auth().protect()
   }
