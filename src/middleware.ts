@@ -2,9 +2,7 @@ import {
   clerkMiddleware,
   createRouteMatcher
 } from '@clerk/nextjs/server';
-import {  checkRole } from './utils/roles';
 import { NextRequest, NextResponse } from 'next/server';
-import { setRole } from '../lib/actions';
 
 
 const isMemberRoute = createRouteMatcher(['/member(.*)']);
@@ -24,46 +22,13 @@ export default clerkMiddleware((auth, req) => {
   return middleware(
     req, sessionClaims?.metadata.role,
     sessionClaims?.metadata.shopDomain,
-    sessionClaims?.sub
   );
 });
 
-const fetchRole = async (id: string): Promise<string | null> => {
-  const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/v1/user/get-role?id=${id}`;
-  const maxAttempts = 5;
-  const delay = 3000; // 3 seconds delay between attempts
-
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    try {
-      const response = await fetch(endpoint);
-      // console.log(response)
-      if (response.ok) {
-        console.log("repose ok")
-        const data = await response.json();
-        console.log(data)
-        if (data.role === "admin") {
-          return data.role;
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching role:', error);
-    }
-    await new Promise((resolve) => setTimeout(resolve, delay));
-  }
-  return null;
-};
-
-
-async function middleware(request: NextRequest, role: any, shopDomain: string | undefined, id: any) {
+async function middleware(request: NextRequest, role: any, shopDomain: string | undefined) {
   console.log(request.nextUrl.pathname)
-  if(request.nextUrl.pathname === '/integration'){
-    // const url = new URL(request.url);
-    // const shop = url.searchParams.get('shop');
-    // const code = url.searchParams.get('code');
-    // const response = await axios.post('http://localhost:3001/api/v1/shopify/access-token', { shop, code });
-    // console.log(response);
+  if (request.nextUrl.pathname === '/integration') {
     return NextResponse.next();
-
   }
   if (request.nextUrl.pathname === '/') {
     const url = new URL(request.url);
@@ -74,14 +39,6 @@ async function middleware(request: NextRequest, role: any, shopDomain: string | 
     // If 'shop' and 'code' query params are present, allow the user to proceed
     if (shop) {
       return NextResponse.next();
-    }
-    if (!role) {
-      if (id) {
-        return NextResponse.redirect(new URL(`/apply-changes?id=${id}`, request.url))
-      }
-      else if (!id) {
-        return NextResponse.redirect(new URL('/sign-in', request.url))
-      }
     }
 
     if (role === "admin") {
@@ -102,14 +59,11 @@ async function middleware(request: NextRequest, role: any, shopDomain: string | 
     }
     else {
       console.log("found role admin")
-      if (!shopDomain) {
-        console.log("shop domain not found")
-        return NextResponse.redirect(new URL(`/enter-details?id=${id}`, request.url))
-      }
+      return NextResponse.next()
     }
   }
   else if (request.nextUrl.pathname.startsWith('/member')) {
-    if (!checkRole("member")) {
+    if (role != "user") {
       return NextResponse.redirect(new URL('/permission-denied', request.url))
     }
   }
