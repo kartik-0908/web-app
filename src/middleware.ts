@@ -63,7 +63,7 @@ async function middleware(request: NextRequest, role: any, shopDomain: string | 
     }
   }
   else if (request.nextUrl.pathname.startsWith('/member')) {
-    if (role != "user") {
+    if (role != "member") {
       return NextResponse.redirect(new URL('/permission-denied', request.url))
     }
   }
