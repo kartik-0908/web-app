@@ -3,10 +3,6 @@ import { NextUIProvider } from '@nextui-org/react'
 import ToastProvider from './ToastWrapper';
 import {
   ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
 } from '@clerk/nextjs'
 
 

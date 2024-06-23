@@ -37,9 +37,11 @@ export function Inviteform({ shopDomain }: any) {
                                         required
                                         className="w-full rounded-md  px-3.5 py-2 text-sm text-black outline-none ring-1 ring-inset ring-zinc-700 hover:ring-zinc-600 focus:bg-transparent focus:ring-[1.5px] focus:ring-blue-400 data-[invalid]:ring-red-400"
                                     >
-                                        <option
+                                        <option 
+                                        // key="admin"
                                         >Admin</option>
-                                        <option
+                                        <option 
+                                        // key="member"
                                         >Member</option>
                                     </select>
                                    
