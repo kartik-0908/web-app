@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, ReactNode } from "react";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/Sidebar/MainLayout";
 import Header from "@/components/Header";
 
 interface DefaultLayoutProps {
